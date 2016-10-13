@@ -1,0 +1,50 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output extension="cshtml" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<# var viewDataType = (CodeType) Model.ViewDataType;
+   var modelType = (CodeType)Model.ModelType;
+   var modelName = modelType.Name;
+#>
+<script>
+<#
+foreach (RelatedEntityInfo relation in ParentRelations.Where(x => x.RelationName != "UsuarioCad")) {
+	var displayRelated = GetDisplayColumn(relation.RelatedEntityType);
+	var displayRelatedLower = displayRelated.ToLower();
+#>	
+	var engine<#= relation.RelationNamePlural #> = new Bloodhound({
+        remote: { url: '@Url.Action("Pesquisar<#= relation.RelationNamePlural #>", "<#= Model.ControllerName #>")?<#=displayRelatedLower#>=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('<#=displayRelatedLower#>'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engine<#= relation.RelationNamePlural #>.initialize();
+
+    $('#<#= relation.RelationName #><#=displayRelated#>').typeahead(null, {
+        source: engine<#= relation.RelationNamePlural #>.ttAdapter(),
+		limit: 15,
+        displayKey: "<#=displayRelated#>",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data.<#=displayRelated#> + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#<#= relation.RelationProperty.Name #>").val(suggestion.<#= relation.RelationProperty.Name #>);
+    });
+<# 
+} 
+#>
+</script>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

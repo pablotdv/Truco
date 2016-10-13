@@ -1,0 +1,75 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="sql" #>
+<#@ include file="_AssmbliesAndImports.cs.include.t4" #>
+<#@ include file="_Variavies.cs.include.t4" #>
+<#
+	var viewDataType = (EnvDTE.CodeType) Model.ModelType; 
+	var propridades = GetModelProperties(Model.ModelType);
+	var entidade = viewDataType.Name;
+	var tabela = GetModelTabel(Model.ModelType);
+#>
+-- =============================================
+-- Author:		Tondolo, Pablo
+-- Create date: <#= DateTime.Now.ToLongDateString() #> <#= DateTime.Now.ToLongTimeString() #>
+-- Description:	Trigger responsavel por manter conectado o banco de dados do sistema em delphi
+--				com o sistema em C#
+-- =============================================
+    
+DISABLE TRIGGER ALL ON [dbo].[<#=entidade#>]
+
+go
+
+set identity_insert [dbo].[<#=entidade#>] on
+
+INSERT INTO [dbo].[<#=entidade#>]
+           ([<#=entidade#>Id]
+		   
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+#>
+			,[<#=prop.Propriedade#>]
+<#
+        }
+    }
+#>
+           
+		   ,[UsuarioCad]
+           ,[DataHoraCad]
+           ,[Ativo])
+select 
+	ID_<#=tabela#>									
+	
+<#
+	foreach(var prop in propridades) {
+		if (prop.Coluna != "ID_"+tabela) {		
+			if (!string.IsNullOrWhiteSpace(prop.Remapeamento)) {
+#>
+	,<#=prop.Remapeamento#>
+<#
+            }
+			else {            
+#>
+	,<#=GetCoalesce(connectionString, prop.Coluna, entidade, prop.Propriedade)#>
+<#
+			}
+        }
+    }
+#>		
+	
+	,coalesce((SELECT U.UserName FROM SYNSWEB.DBO.AspNetUsers U WHERE U.Email = COALESCE((SELECT UU.EMAIL FROM SYNS.DBO.USUARIO UU WHERE UU.ID_USUARIO = FT1.ID_USUARIO_CADASTRO_ALTERACAO), 'administrador@syns.com.br')), (select UserName from AspNetUsers where Email = 'administrador@syns.com.br'))
+	,coalesce(FT1.DATA_HORA_CADASTRO_ALTERACAO, getdate())
+	,FT1.ATIVO 
+FROM syns.dbo.<#=tabela#> FT1
+where NOT EXISTS (
+	SELECT NULL
+	FROM [dbo].[<#=entidade#>] ft2
+	where ft1.ID_<#=tabela#> = FT2.<#=entidade#>Id
+)
+set identity_insert [dbo].[<#=entidade#>] off
+
+go
+
+enable TRIGGER ALL ON [dbo].[<#=entidade#>]
+
+<#@ include file="_Metodos.cs.include.t4" #>

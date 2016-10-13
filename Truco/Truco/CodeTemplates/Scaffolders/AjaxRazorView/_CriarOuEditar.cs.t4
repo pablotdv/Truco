@@ -1,0 +1,84 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output extension="cshtml" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<# var viewDataType = (EnvDTE.CodeType) Model.ViewDataType; 
+   var relatedEntities = ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>()
+			.Where(x => x.RelationType == RelationType.Parent)
+			.Where(x => !Model.FkName.StartsWith(x.RelationName));
+	
+   var modelType = (CodeType)Model.ModelType;
+   var modelName = modelType.Name;
+   var modelNamePlural = Model.ModelTypePluralized; 
+   var modelVariable = Char.ToLower(modelName[0]) + modelName.Substring(1); 
+   var fkName = Char.ToLower(Model.FkName[0]) + Model.FkName.Substring(1);#>
+<# if(viewDataType != null) { #>
+@model <#= viewDataType.FullName #>
+<# } #>
+<#
+foreach (ModelProperty property in GetModelProperties(Model.ViewDataType, false)) {
+    if (property.IsPrimaryKey) {
+#>  
+@Html.HiddenFor(model => model.<#= property.Name #>)
+<#
+    }
+}
+#>
+@Html.HiddenFor(model => model.<#= Model.FkName #>)
+<div class="row form-group">
+<#
+	List<ModelProperty> temp = GetModelProperties(Model.ViewDataType, false);
+	var properties = temp.Where(a=> a.Name != "Ativo" && a.Name != "DataHoraCad" && a.Name != "UsuarioCad");
+
+foreach (ModelProperty property in properties) {
+    if (!property.IsPrimaryKey && !property.IsForeignKey && !property.IsReadOnly) {
+#>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.<#= property.Name #>, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.<#= property.Name #>, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.<#= property.Name #>, "", new { @class = "text-danger" })
+    </div>
+<#
+    }
+}
+#>
+
+<#
+foreach (RelatedEntityInfo relation in ParentRelations.Where(x => x.RelationName != "UsuarioCad" && x.RelationName != Model.FkName)) {
+	if (Model.FkName != relation.RelationProperty.Name)
+    {
+		var displayRelated = GetDisplayColumn(relation.RelatedEntityType);
+		var displayRelatedLower = displayRelated.ToLower();
+#>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.<#= relation.RelationProperty.Name #>, htmlAttributes: new { @class = "control-label" })
+		@*DropDownListFor <#= relation.RelationName #> *@		
+        @Html.DropDownListFor(model => model.<#= relation.RelationProperty.Name #>, 
+			(SelectList)ViewBag.<#= relation.RelationNamePlural #>, 
+			"Selecione um <#= relation.RelationName #>...",
+			new { @class = "form-control selectpicker" })        
+		@*End DropDownListFor <#= relation.RelationName #> *@
+		@*TypeaHead <#= relation.RelationName #> *@
+		<input type="text" id="<#= relation.RelationName #><#=displayRelated#>" name="<#= relation.RelationName #><#=displayRelated#>" placeholder="Digite <#= relation.RelationName #>" class="form-control"  value="@(Model?.<#= relation.RelationName #>?.<#=displayRelated#>)">
+        @Html.HiddenFor(a => a.<#= relation.RelationProperty.Name #>)
+		@*End TypeaHead <#= relation.RelationName #> *@
+		@Html.ValidationMessageFor(model => model.<#= relation.RelationProperty.Name #>, "", new { @class = "text-danger" })
+    </div>
+<#
+    }
+}
+#>
+</div> <!-- ./row -->
+
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

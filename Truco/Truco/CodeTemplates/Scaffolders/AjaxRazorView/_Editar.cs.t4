@@ -1,0 +1,51 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output extension="cshtml" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<# var viewDataType = (EnvDTE.CodeType) Model.ViewDataType; 
+   var relatedEntities = ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>()
+			.Where(x => x.RelationType == RelationType.Parent)
+			.Where(x => !Model.FkName.StartsWith(x.RelationName));
+	
+   var modelType = (CodeType)Model.ModelType;
+   var modelName = modelType.Name;
+   var modelNamePlural = Model.ModelTypePluralized; 
+   var modelVariable = Char.ToLower(modelName[0]) + modelName.Substring(1); 
+   var fkName = Char.ToLower(Model.FkName[0]) + Model.FkName.Substring(1);#>
+@model <#= viewDataType.FullName #>
+@{
+    var ajaxOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "<#=modelVariable#>",
+    };
+}
+
+@using (Ajax.BeginForm("Editar", "<#=modelName#>Partial", ajaxOptions))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.Partial("_CriarOuEditar")
+
+    <div class="row form-group">
+        <div class="col-lg-12">
+            @Ajax.RawActionLink("<i class=\"fa fa-arrow-left fa-fw\"></i> Cancelar", "Cancelar", "<#=modelName#>Partial", null, ajaxOptions, new { @class= "btn btn-default" })            
+            <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Salvar</button>
+        </div>
+    </div>
+}
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

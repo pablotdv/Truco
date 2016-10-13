@@ -1,0 +1,268 @@
+﻿<#@ template language="C#" HostSpecific="True"  inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Threading.Tasks;
+using PagedList.EntityFramework;
+using Newtonsoft.Json;
+using System.Net;
+using <#= Model.DefaultNamespace #>.Helpers;
+using <#= Model.ViewModelsNamespace #>;
+<# if(!string.IsNullOrEmpty(Model.ModelTypeNamespace)) { #>
+using <#= Model.ModelTypeNamespace #>;
+<# } #>
+<# if(Model.DbContextNamespace != Model.ModelTypeNamespace) { #>
+using <#= Model.DbContextNamespace #>;
+<# } #>
+
+namespace <#= Model.ControllerNamespace #>
+{   
+<#  
+   
+    var modelType = (CodeType)Model.ModelType; 	
+	var displayColumn = GetDisplayColumn(modelType);
+
+    var modelName = modelType.Name; 
+    var modelNamePlural = Model.ModelTypePluralized; 
+    var modelVariable = Char.ToLower(modelName[0]) + modelName.Substring(1); 
+	var fkName = Char.ToLower(Model.FkName[0]) + Model.FkName.Substring(1);
+   //modelType.FkName.ToLower();
+    var relatedEntities = ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>()
+			.Where(x => x.RelationType == RelationType.Parent)
+			.Where(x => x.RelationName != "UsuarioCad")
+			.Where(x => !Model.FkName.StartsWith(x.RelationName));
+    var primaryKeyProperty = modelType.VisibleMembers().OfType<CodeProperty>().Single(x => x.Name == Model.PrimaryKey); 
+    var routingName = Regex.Replace(Model.ControllerName, "Controller$", "", RegexOptions.IgnoreCase);
+    var isObjectContext = ((CodeType)Model.DbContextType).IsAssignableTo<System.Data.Objects.ObjectContext>();
+
+	var primaryKeyShortTypeName = primaryKeyProperty.Type.AsString;
+    var primaryKeyType = primaryKeyProperty.Type.AsFullName;
+	
+	var primaryKeyNullableTypeName = GetNullableTypeName(primaryKeyType, primaryKeyShortTypeName);
+	
+#>
+
+    public class <#= Model.ControllerName #> : Controller
+    {		        
+        //
+        // GET: /<#= routingName #>/
+        public async Task<ActionResult> Indice(<#= modelName#>PartialViewModel viewModel)
+        {
+			if (viewModel.Pesquisa == null)
+                viewModel.Pesquisa = new <#= modelName#>ViewModel() { <#=Model.FkName#> = viewModel.<#=Model.FkName#> };
+
+            var query = context.<#= modelNamePlural #>.Where(a => a.<#=Model.FkName#> == viewModel.<#=Model.FkName#>);
+
+            viewModel.Pesquisa.Resultados = await query.OrderBy(a => a.<#=displayColumn#>).ToPagedListAsync(viewModel.Pesquisa.Pagina, viewModel.Pesquisa.TamanhoPagina);
+
+            return PartialView("_Indice", viewModel);
+        }
+
+		//
+        // GET: /<#= routingName #>/Pesquisa
+		public async Task<ActionResult> Pesquisar(<#= modelName#>ViewModel viewModel)
+        {
+            await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
+
+            var query = context.<#= modelNamePlural #>.Where(a => a.<#=Model.FkName#> == viewModel.<#=Model.FkName#>);
+
+            if (!String.IsNullOrWhiteSpace(viewModel.<#=displayColumn#>))
+            {
+                query = query.Where(a => a.<#=displayColumn#>.Contains(viewModel.<#=displayColumn#>));
+            }
+
+            viewModel.Resultados = await query.OrderBy(a => a.<#=displayColumn#>).ToPagedListAsync(viewModel.Pagina, viewModel.TamanhoPagina);
+
+            return PartialView("_Listar", viewModel);
+        }
+		
+        //
+        // GET: /<#= routingName #>/Criar        
+<#if(relatedEntities.Count() > 0 ) {#>          
+		public async Task<ActionResult> Criar(int <#=fkName#>)
+        {
+			await ViewBags();
+<#} else {#>
+		public ActionResult Criar(int <#=fkName#>)
+        {
+<#}#>
+            return PartialView("_Criar", new <#= modelName #>() { <#=Model.FkName#> = <#=fkName#> });
+        } 
+
+        //
+        // POST: /<#= routingName #>/Criar
+        [HttpPost]
+		[ValidateAntiForgeryToken]
+        public async Task<ActionResult> Criar(<#= modelName #> <#= modelVariable #>)
+        {
+			//TODO: Validação de campo Unique
+			if (await context.<#= modelNamePlural #>.AnyAsync(a => a.<#=Model.FkName#> == <#= modelVariable #>.<#=Model.FkName#> && a.<#=displayColumn#>.Equals(<#= modelVariable #>.<#=displayColumn#>)))
+            {
+                ModelState.AddModelError("", $"A descrição {<#= modelVariable #>.<#=displayColumn#>} já está cadastrado");
+            }
+            if (ModelState.IsValid)
+            {
+<# if(primaryKeyProperty.Type.AsString == "System.Guid") { #>
+                <#= modelVariable #>.<#= primaryKeyProperty.Name #> = Guid.NewGuid();
+<# } #>
+<# if(isObjectContext) { #>
+                context.<#= modelNamePlural #>.AddObject(<#= modelVariable #>);
+<# } else { #>
+                context.<#= modelNamePlural #>.Add(<#= modelVariable #>);
+<# } #>
+                await context.SaveChangesAsync();
+                
+				var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+                return await Pesquisar(viewModel);
+            }
+
+<#if(relatedEntities.Count() > 0 ) {#>          
+			await ViewBags();
+<#}#>
+            return PartialView("_Criar", <#= modelVariable #>);
+        }
+        
+        //
+        // GET: /<#= routingName #>/Editar/5 
+        public async Task<ActionResult> Editar(<#= primaryKeyNullableTypeName #> id)
+        {
+			if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            if (<#= modelVariable #> == null)
+            {
+                return HttpNotFound();
+            }            
+<#if(relatedEntities.Count() > 0 ) {#>          
+			await ViewBags();
+<#}#>
+            return PartialView("_Editar", <#= modelVariable #>);
+        }
+
+        //
+        // POST: /<#= routingName #>/Editar/5
+        [HttpPost]
+		[ValidateAntiForgeryToken]
+        public async Task<ActionResult> Editar(<#= modelName #> <#= modelVariable #>)
+        {
+			if (await context.<#= modelNamePlural #>.AnyAsync(a => a.<#=Model.FkName#> == <#= modelVariable #>.<#=Model.FkName#> && a.<#= modelName #>Id != <#= modelVariable #>.<#= modelName #>Id && a.<#=displayColumn#>.Equals(<#= modelVariable #>.<#=displayColumn#>)))
+            {
+                ModelState.AddModelError("", $"A descrição {<#= modelVariable #>.<#=displayColumn#>} já está cadastrado");
+            }
+
+            if (ModelState.IsValid)
+            {
+<# if(isObjectContext) { #>
+                context.<#= modelNamePlural #>.Attach(<#= modelVariable #>);
+                context.ObjectStateManager.ChangeObjectState(<#= modelVariable #>, EntityState.Modified);
+<# } else { #>
+                context.Entry(<#= modelVariable #>).State = EntityState.Modified;
+<# } #>
+                await context.SaveChangesAsync();
+                
+				var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+                return await Pesquisar(viewModel);
+            }
+
+<#if(relatedEntities.Count() > 0 ) {#>          
+			await ViewBags();
+<#}#>
+            return PartialView("_Editar", <#= modelVariable #>);
+        }
+
+        //
+        // GET: /<#= routingName #>/Excluir/5 
+        public async Task<ActionResult> Excluir(<#= primaryKeyNullableTypeName #> id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            if (<#= modelVariable #> == null)
+            {
+                return HttpNotFound();
+            }   
+
+<#if(relatedEntities.Count() > 0 ) {#>          
+			await ViewBags();
+<#}#>
+  
+            return PartialView("_Excluir", <#= modelVariable #>);
+        }
+
+        //
+        // POST: /<#= routingName #>/Excluir/5
+        [HttpPost, ActionName("Excluir")]
+		[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ExcluirConfirmacao(<#= primaryKeyProperty.Type.AsString #> id)
+        {
+            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+<# if(isObjectContext) { #>
+            context.<#= modelNamePlural #>.DeleteObject(<#= modelVariable #>);
+<# } else { #>
+            context.<#= modelNamePlural #>.Remove(<#= modelVariable #>);
+<# } #>
+            await context.SaveChangesAsync();
+            var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+            return await Pesquisar(viewModel);
+        }
+<#if (relatedEntities.Count() > 0) {#>
+		private async Task ViewBags()
+		{
+<# foreach(var relatedEntity in relatedEntities) {
+	   var displayRelated = GetDisplayColumn(relatedEntity.RelatedEntityType);
+ #>
+            ViewBag.<#= relatedEntity.RelationNamePlural #> = new SelectList(await context.<#= relatedEntity.RelatedEntityTypeNamePlural #>.ToListAsync(), "<#= relatedEntity.RelatedEntityPrimaryKeyName #>", "<#=displayRelated#>");
+<# } #>    
+		}
+<# 
+foreach(var relatedEntity in relatedEntities) { 
+	var displayRelated = GetDisplayColumn(relatedEntity.RelatedEntityType);
+	var displayRelatedLower = displayRelated.ToLower();
+#>
+
+		[OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+        public async Task<JsonResult> Pesquisar<#= relatedEntity.RelationNamePlural#>(string <#=displayRelatedLower#>)
+        {
+			var <#=displayRelatedLower#>s = String.IsNullOrEmpty(<#=displayRelatedLower#>) ? new string[0] : <#=displayRelatedLower#>.Split(' ');
+            var dados = await context.<#= relatedEntity.RelationNamePlural#>
+			    .Where(b => <#=displayRelatedLower#>s.All(c => b.<#=displayRelated#>.Contains(c)))
+				.OrderBy(a => a.<#=displayRelated#>)
+				.Take(15)
+                .ToListAsync();
+
+            return Json(dados, JsonRequestBehavior.AllowGet);
+        }
+<# } #> 
+<#}#>
+
+		public async Task<ActionResult> Cancelar()
+        {
+            var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+            return await Pesquisar(viewModel);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) {
+                context.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

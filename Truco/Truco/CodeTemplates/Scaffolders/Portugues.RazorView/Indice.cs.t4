@@ -1,0 +1,46 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output extension="cshtml" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<# var viewDataType = (CodeType) Model.ViewDataType;
+   var modelType = (CodeType)Model.ModelType;
+   var modelName = modelType.Name;
+#>
+@using <#= Model.ViewModelsNamespace #>
+@model <#= modelName #>ViewModel
+@{
+	ViewBag.Title = "<#= Model.ControllerName #>";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Pesquisa - @ViewBag.Title
+    </div>
+        <div class="panel-body">
+		<div class="row form-group">
+			<div class="col-lg-12">                
+				@Html.Partial("_ParametrosPesquisa", Model)                            
+			</div> @*-- Fim row _ParametrosPesquisa*@
+		</div>	       
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="pesquisa">
+                    @Html.Partial("_Pesquisa", Model)
+                </div>          
+			</div>
+        </div>
+	</div>
+</div>		       
+    
+ <#@ include file="ModelMetadataFunctions.cs.include.t4" #>

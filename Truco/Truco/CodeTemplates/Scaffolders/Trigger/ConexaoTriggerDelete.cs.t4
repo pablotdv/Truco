@@ -1,0 +1,43 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="sql" #>
+<#@ include file="_AssmbliesAndImports.cs.include.t4" #>
+<#
+	var viewDataType = (EnvDTE.CodeType) Model.ModelType; 
+	var propridades = GetModelProperties(Model.ModelType);
+	var entidade = viewDataType.Name;
+	var tabela = GetModelTabel(Model.ModelType);
+#>
+-- =============================================
+-- Author:		Tondolo, Pablo
+-- Create date: <#=DateTime.Now.ToLongDateString()#> - <#=DateTime.Now.ToLongTimeString()#>
+-- Description:	Trigger responsável por manter conectado o banco de dados do sistema em delphi
+--				com o sistema em C#
+-- =============================================
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+if exists (select null from sys.objects where name = '<#=Model.TriggerName#>')
+	drop trigger <#=Model.TriggerName#>
+
+go
+
+CREATE TRIGGER <#=Model.TriggerName#>
+   ON  <#=entidade#>
+   FOR DELETE
+AS 
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	  
+	DELETE FROM [SYNS].[dbo].[<#=tabela#>]	
+	WHERE [ID_<#=tabela#>] IN (
+		SELECT A.<#=entidade#>Id
+		FROM DELETED A		
+	)
+END
+GO
+<#@ include file="_Metodos.cs.include.t4" #>

@@ -1,0 +1,116 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output extension="cshtml" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<# 
+	var viewDataType = (CodeType) Model.ViewDataType; 
+	var modelType = (CodeType)Model.ModelType; 
+	var displayColumn = GetDisplayColumn(modelType);
+    var modelName = modelType.Name; 
+#>
+@using <#= Model.ViewModelsNamespace #>
+@model <#= modelName #>ViewModel
+@{
+    bool isEditar = User.IsAuthorized("<#=Model.ControllerName#>", "Editar", "<#=Model.Area#>");
+    bool isDetalhes = User.IsAuthorized("<#=Model.ControllerName#>", "Detalhes", "<#=Model.Area#>");
+    bool isExcluir = User.IsAuthorized("<#=Model.ControllerName#>", "Excluir", "<#=Model.Area#>");
+}
+<div id="no-more-tables">
+	<table class="table-bordered table-striped table-condensed cf table-hover col-md-12">
+		<thead class="cf">
+			<tr>
+				@if (isEditar || isDetalhes || isExcluir)
+                {
+                    <th class="col-lg-2 col-md-3 col-xs-12"></th>
+                }
+<#
+List<ModelProperty> temp = GetModelProperties(Model.ViewDataType, false);
+var properties = temp.Where(a=> a.Name != "Ativo" && a.Name != "DataHoraCad" && a.Name != "UsuarioCad");
+foreach (ModelProperty property in properties) {
+    if (!property.IsPrimaryKey && !property.IsForeignKey) {
+#>
+				<th>
+					<#= property.Name #>
+				</th>
+<#
+    }
+}
+#>                                
+            </tr>
+        </thead>
+
+        <tbody>
+			@foreach (var item in Model.Resultados) 
+			{
+				<tr>
+<# if (!String.IsNullOrEmpty(Model.PrimaryKeyName)) { #>
+					<td data-title="">
+						<div class="btn-group">
+							@if (isEditar)
+                            {
+								<a class="btn btn-default" id="editar" title="Editar" href="@Url.Action("Editar", new { id=item.<#= Model.PrimaryKeyName #>})"><i class="fa fa-edit fa-align-left"></i></a>
+							}
+							@if (isDetalhes)
+                            {
+								<a class="btn btn-default" id="detalhes" title="Detalhes" href="@Url.Action("Detalhes", new {id=item.<#= Model.PrimaryKeyName #>})"><i class="fa fa-eye fa-align-right"></i></a>
+							}
+							@if (isExcluir)
+                            {
+								<a class="btn btn-default" id="Deletar" title="Excluir" href="@Url.Action("Excluir", new { id=item.<#= Model.PrimaryKeyName #> })"><i class="fa fa-trash fa-align-right"></i></a>
+							}
+						</div>									
+					</td>
+<# } else { #>
+					<td data-title="">
+						<div class="btn-group">
+							@if (isEditar)
+                            {
+								<a class="btn btn-default" id="editar" title="Editar" href="@Url.Action("Editar", new {  /* id=item.PrimaryKey */ })"><i class="fa fa-edit fa-align-left"></i></a>
+							}
+							@if (isDetalhes)
+                            {
+								<a class="btn btn-default" id="detalhes" title="Detalhes" href="@Url.Action("Detalhes", new { /* id=item.PrimaryKey */ })"><i class="fa fa-eye fa-align-right"></i></a>
+							}
+							@if (isExcluir)
+                            {
+								<a class="btn btn-default" id="Deletar" title="Excluir" href="@Url.Action("Excluir", new {  /* id=item.PrimaryKey */  })"><i class="fa fa-trash fa-align-right"></i></a>
+							}
+						</div>
+					</td>
+<# } #>
+<#  
+foreach (ModelProperty property in properties) {
+    if (!property.IsPrimaryKey && !property.IsForeignKey) {
+#>
+					<td data-title="<#= property.Name #>">
+						@<#= property.ValueExpression.Replace("Model.", "item.") #>
+					</td>
+<#
+    }
+}
+#>
+				</tr>
+			}                            
+        </tbody>
+    </table>
+</div>
+
+@Html.PagedListPager(Model.Resultados, page => Url.Action("Pesquisa", 
+	new <#= modelName #>ViewModel()
+    {
+        Pagina = page,
+        <#=displayColumn#> = Model.<#=displayColumn#>
+    }), PagedListRenderOptionsCustom.Custom)
+
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

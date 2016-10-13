@@ -1,0 +1,76 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="sql" #>
+<#@ include file="_AssmbliesAndImports.cs.include.t4" #>
+<#
+	var viewDataType = (EnvDTE.CodeType) Model.ModelType; 
+	var propridades = GetModelProperties(Model.ModelType);
+	var entidade = viewDataType.Name;
+	var tabela = GetModelTabel(Model.ModelType);
+#>
+-- =============================================
+-- Author:		Tondolo, Pablo
+-- Create date: <#= DateTime.Now.ToLongDateString() #> <#= DateTime.Now.ToLongTimeString() #>
+-- Description:	Trigger responsavel por manter conectado o banco de dados do sistema em delphi
+--				com o sistema em C#
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+if exists (select null from sys.objects where name = '<#=Model.TriggerName#>')
+	drop trigger <#=Model.TriggerName#>
+
+go
+
+CREATE TRIGGER <#=Model.TriggerName#>
+   ON  <#=entidade#>
+   FOR INSERT
+AS 
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+    
+	set identity_insert [SYNS].[dbo].[<#=tabela#>] on
+	INSERT INTO [SYNS].[dbo].[<#=tabela#>]
+				([ID_<#=tabela#>]
+<#
+	foreach(var prop in propridades) {
+		if (prop.Coluna != "ID_"+tabela) {
+#>
+				,[<#=prop.Coluna#>]
+<#
+        }
+    }
+#>				
+				,[DATA_HORA_CADASTRO_ALTERACAO]
+				,[ATIVO]
+				,[ID_USUARIO_CADASTRO_ALTERACAO])
+		SELECT <#=entidade#>Id					 --[ID_<#=tabela#>]
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+			if (!string.IsNullOrWhiteSpace(prop.Mapeamento)) {
+#>
+				,<#=prop.Mapeamento#>
+<#
+            }
+			else {
+            
+#>
+				,[<#=prop.Propriedade#>]
+<#
+			}
+        }
+    }
+#>								
+				,DataHoraCad                     --[DATA_HORA_CADASTRO_ALTERACAO]
+				,Ativo                           --[ATIVO]
+				,(SELECT max(ID_USUARIO) FROM [SYNS].DBO.USUARIO WHERE USUARIO.EMAIL = (select Email from AspNetUsers where UserName = inserted.UsuarioCad))--[ID_USUARIO_CADASTRO_ALTERACAO]
+		FROM inserted
+		set identity_insert [SYNS].[dbo].[<#=tabela#>] OFF
+END
+GO
+<#@ include file="_Metodos.cs.include.t4" #>

@@ -1,0 +1,65 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#@ include file="_AssmbliesAndImports.cs.include.t4" #>
+<#@ include file="_Variavies.cs.include.t4" #>
+<# 	List<Colum> columns = DatabaseScaffoldExtensions.GetColumns(connectionString, "SYNS", Model.Tabela);
+	columns = columns.Where(a=>!a.ColumnName.Equals("DATA_HORA_CADASTRO_ALTERACAO") && !a.ColumnName.Equals("ATIVO") && !a.ColumnName.Equals("ID_USUARIO_CADASTRO_ALTERACAO")).ToList();
+	List<TableRelation> relations = DatabaseScaffoldExtensions.GetRelations(connectionString, "SYNS", Model.Tabela);
+	relations = relations.Where(a=>!a.ColumName.Equals("DATA_HORA_CADASTRO_ALTERACAO") && !a.ColumName.Equals("ATIVO") && !a.ColumName.Equals("ID_USUARIO_CADASTRO_ALTERACAO")).ToList();#>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Syns.Lib;
+
+namespace <#= Model.Namespace #>.Models
+{ 	
+<# 
+if(Model.Tabela != "") {
+#>
+	[Tabela("<#=Model.Tabela#>")]
+<#
+} #>
+    public class <#=Model.Entidade#> : BaseEntity
+    {
+<# 
+if(Model.Tabela == "") {
+#>
+		[Key]
+		public int <#=Model.Entidade#>Id { get; set; }
+<#
+} #>
+<# 
+foreach(var colum in columns)
+{ #>
+		
+		[Coluna("<#=colum.ColumnName#>")]
+<#	if (colum.IsKey) {
+#>
+		[Key]
+<#
+}#>
+		public <#= colum.ColumnType #> <#= colum.PropertyName #> { get; set; }
+<#
+}
+#>	
+
+<#
+foreach(var relation in relations) {
+	if (relation.RelationType == 1) {
+#>
+
+		[ForeignKey(nameof(<#=Model.Entidade#>.<#=relation.PropertyName#>))]
+		public virtual <#=relation.Entity#> <#=relation.RelationName#> { get; set; }
+<#
+	} else {
+#>
+		public ICollection<<#=relation.Entity#>> <#=relation.Entity#>s { get; set; }
+<#
+    }
+#>
+<#
+}
+#>	
+	}
+}

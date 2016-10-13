@@ -1,0 +1,130 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="sql" #>
+<#@ include file="_AssmbliesAndImports.cs.include.t4" #>
+<#@ include file="_Variavies.cs.include.t4" #>
+<#
+	var viewDataType = (EnvDTE.CodeType) Model.ModelType; 
+	var propridades = GetModelProperties(Model.ModelType);
+	var entidade = viewDataType.Name;
+	var tabela = GetModelTabel(Model.ModelType);
+#>
+-- =============================================
+-- Author:		Tondolo, Pablo
+-- Create date: <#= DateTime.Now.ToLongDateString() #> <#= DateTime.Now.ToLongTimeString() #>
+-- Description:	Trigger responsavel por manter conectado o banco de dados do sistema em delphi
+--				com o sistema em C#
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+if exists (select null from sys.objects where name = '<#=Model.TriggerName#>')
+	drop trigger <#=Model.TriggerName#>
+
+go
+
+CREATE TRIGGER <#=Model.TriggerName#>
+   ON  <#=entidade#>
+   FOR UPDATE
+AS 
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	--
+    
+	DECLARE tmp CURSOR FAST_FORWARD FOR 
+	SELECT [<#=entidade#>Id]
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+#>
+			,[<#=prop.Propriedade#>]
+<#
+        }
+    }
+#>
+			,(SELECT Email FROM AspNetUsers WHERE UserName = [UsuarioCad])
+			,[DataHoraCad]
+			,[Ativo]
+	FROM inserted
+
+	declare @<#=entidade#>Id integer
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+#>
+	declare @<#=prop.Propriedade#> <#=Syns.Scaffold.TriggersScaffoldExtensions.GetDataType(connectionString, "SynsWeb", entidade, prop.Propriedade)#>
+<#
+        }
+    }
+#>
+	
+	declare @UsuarioEmail varchar(100)
+	declare @DataHoraCad datetime
+	declare @Ativo bit
+
+	OPEN tmp
+	FETCH NEXT FROM tmp
+	INTO  @<#=entidade#>Id
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+#>
+			,@<#=prop.Propriedade#>
+<#
+        }
+    }
+#>
+			,@UsuarioEmail, @DataHoraCad, @Ativo
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN	
+		UPDATE [SYNS].[dbo].[<#=tabela#>]
+			SET 
+				 [DATA_HORA_CADASTRO_ALTERACAO]	= @DataHoraCad
+				,[ATIVO] = @Ativo
+				,[ID_USUARIO_CADASTRO_ALTERACAO] = (SELECT max(ID_USUARIO) FROM [SYNS].DBO.USUARIO WHERE USUARIO.EMAIL = @UsuarioEmail)
+
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+			if (!string.IsNullOrWhiteSpace(prop.Mapeamento)) {
+#>
+				,[<#=prop.Coluna#>] = @<#=prop.Mapeamento#>
+<#
+            }
+			else {
+            
+#>
+			    ,[<#=prop.Coluna#>] = @<#=prop.Propriedade#>
+<#
+			}
+        }
+    }
+#>
+			WHERE ID_<#=tabela#> = @<#=entidade#>Id
+				
+
+		FETCH NEXT FROM tmp
+		INTO  @<#=entidade#>Id
+<#
+	foreach(var prop in propridades) {
+		if (prop.Propriedade != entidade+"Id") {
+#>
+			,@<#=prop.Propriedade#>
+<#
+        }
+    }
+#>
+			,@UsuarioEmail, @DataHoraCad, @Ativo		
+	END
+
+	CLOSE tmp
+	DEALLOCATE tmp
+END
+GO
+
+<#@ include file="_Metodos.cs.include.t4" #>

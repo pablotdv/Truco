@@ -1,0 +1,30 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output extension="cshtml" #>
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Data.Objects.DataClasses" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<# var viewDataType = (CodeType) Model.ViewDataType;
+   var modelType = (CodeType)Model.ModelType;
+   var modelName = modelType.Name;
+   var modelNamePlural = Model.ModelTypePluralized; 
+   var modelVariable = Char.ToLower(modelName[0]) + modelName.Substring(1); 
+   var fkName = Char.ToLower(Model.FkName[0]) + Model.FkName.Substring(1);
+#>
+@model <#= Model.ViewModelsNamespace #>.<#= modelName #>PartialViewModel
+
+@Ajax.ActionLink("Criar <#= Model.ControllerName #>", "Criar", new { <#=fkName#> = Model.<#=Model.FkName#> }, new AjaxOptions() { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "<#=modelVariable#>" })
+
+<div id="<#=modelVariable#>">
+    @Html.Partial("_Listar", Model.Pesquisa)
+</div>
+ <#@ include file="ModelMetadataFunctions.cs.include.t4" #>

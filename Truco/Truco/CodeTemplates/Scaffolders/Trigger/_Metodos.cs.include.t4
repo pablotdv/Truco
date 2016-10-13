@@ -1,0 +1,88 @@
+<#+
+
+class ModelProperty {    
+    public string Coluna { get; set; }
+	public string Propriedade { get; set; }
+	public string Remapeamento { get; set; }
+	public string Mapeamento { get; set; }
+}
+
+
+string GetModelTabel(EnvDTE.CodeType typeInfo) {
+	var typeInfoAttributes = typeInfo.Attributes.OfType<EnvDTE.CodeAttribute>();
+
+	if (typeInfoAttributes != null) {
+		var tabelaAttribute = typeInfoAttributes.FirstOrDefault(x => x.FullName == typeof (Syns.Lib.TabelaAttribute).FullName);
+
+		if (tabelaAttribute != null)
+		{
+			return tabelaAttribute.Value.Replace("\"","");
+		}
+    }
+
+	return "";
+}
+
+string GetCoalesce(string connectionString, string coluna, string entidade, string propriedade)
+{	
+	if (Syns.Scaffold.TriggersScaffoldExtensions.GetDataType(connectionString, "SynsWeb", entidade, propriedade).StartsWith("varchar"))
+    {
+		coluna = "coalesce("+coluna+",'')";
+    }
+	else if (Syns.Scaffold.TriggersScaffoldExtensions.GetDataType(connectionString, "SynsWeb", entidade, propriedade).StartsWith("decimal"))
+    {
+		coluna = "coalesce("+coluna+",0)";
+    }
+	else if (Syns.Scaffold.TriggersScaffoldExtensions.GetDataType(connectionString, "SynsWeb", entidade, propriedade).StartsWith("int"))
+    {
+		coluna = "coalesce("+coluna+",0)";
+    }
+	else if (Syns.Scaffold.TriggersScaffoldExtensions.GetDataType(connectionString, "SynsWeb", entidade, propriedade).StartsWith("char"))
+    {
+		coluna = "coalesce("+coluna+",'')";
+    }
+	return coluna;
+}
+
+List<ModelProperty> GetModelProperties(EnvDTE.CodeType typeInfo) {
+	List<ModelProperty> results = new List<ModelProperty>();
+	
+	if (typeInfo != null) {
+
+		foreach (var prop in typeInfo.VisibleMembers().OfType<EnvDTE.CodeProperty>()) {
+
+			if (prop.IsReadable() && !prop.HasIndexParameters()) {
+				
+				var propAttributes = prop.Attributes.OfType<EnvDTE.CodeAttribute>();
+
+				if (propAttributes != null) {
+					var columnAttribute = propAttributes.FirstOrDefault(x => x.FullName == typeof (Syns.Lib.ColunaAttribute).FullName);
+					var remapeamentoAttribute = propAttributes.FirstOrDefault(x => x.FullName == typeof (Syns.Lib.RemapeamentoAttribute).FullName);
+					var mapeamentoAttribute = propAttributes.FirstOrDefault(x => x.FullName == typeof (Syns.Lib.MapeamentoAttribute).FullName);
+
+					if (columnAttribute != null)
+					{
+						ModelProperty model = new ModelProperty {
+							Coluna =  columnAttribute.Value.Replace("\"",""),
+							Propriedade = prop.Name,							
+						};
+
+						if (remapeamentoAttribute != null)
+							model.Remapeamento = remapeamentoAttribute.Value.Replace("\"","");
+
+						if (mapeamentoAttribute != null)
+							model.Mapeamento = mapeamentoAttribute.Value.Replace("\"","");
+
+						results.Add(model);
+					}
+                }
+
+				
+			}
+		}
+	}
+
+    return results;
+}
+
+#>
