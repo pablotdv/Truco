@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 
-namespace IdentitySample.Models
+namespace Truco.Models
 {
     public class ApplicationRole : IdentityRole<Guid, ApplicationUserRole>
     {

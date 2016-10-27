@@ -1,4 +1,4 @@
-﻿using IdentitySample.Models;
+﻿using Truco.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using System.Collections.Generic;
 using System;
 
-namespace IdentitySample.Controllers
+namespace Truco.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class RolesAdminController : Controller
