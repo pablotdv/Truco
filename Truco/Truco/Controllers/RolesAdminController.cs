@@ -1,4 +1,4 @@
-﻿using IdentitySample.Models;
+﻿using Truco.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using System.Collections.Generic;
 using System;
 
-namespace IdentitySample.Controllers
+namespace Truco.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class RolesAdminController : Controller
@@ -69,7 +69,7 @@ namespace IdentitySample.Controllers
             }
             var role = await RoleManager.FindByIdAsync(id);
             // Get the list of Users in this Role
-            var users = new List<ApplicationUser>();
+            var users = new List<Usuario>();
 
             // Get the list of Users in this Role
             foreach (var user in UserManager.Users.ToList())
@@ -99,7 +99,7 @@ namespace IdentitySample.Controllers
         {
             if (ModelState.IsValid)
             {
-                var role = new ApplicationRole() { Name = roleViewModel.Name };
+                var role = new Grupo() { Name = roleViewModel.Name };
                 var roleresult = await RoleManager.CreateAsync(role);
                 if (!roleresult.Succeeded)
                 {

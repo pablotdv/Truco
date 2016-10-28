@@ -11,13 +11,13 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace IdentitySample.Models
+namespace Truco.Models
 {
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
 
-    public class ApplicationUserManager : UserManager<ApplicationUser, Guid>
+    public class ApplicationUserManager : UserManager<Usuario, Guid>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser, Guid> store)
+        public ApplicationUserManager(IUserStore<Usuario, Guid> store)
             : base(store)
         {
         }
@@ -25,9 +25,9 @@ namespace IdentitySample.Models
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options,
             IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser, ApplicationRole, Guid, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<Usuario, Grupo, Guid, UsuarioLogin, UsuarioGrupo, UsuarioIdentidade>(context.Get<TrucoDbContext>()));
             // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<ApplicationUser, Guid>(manager)
+            manager.UserValidator = new UserValidator<Usuario, Guid>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -47,11 +47,11 @@ namespace IdentitySample.Models
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug in here.
-            manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser, Guid>
+            manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<Usuario, Guid>
             {
                 MessageFormat = "Your security code is: {0}"
             });
-            manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser, Guid>
+            manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<Usuario, Guid>
             {
                 Subject = "SecurityCode",
                 BodyFormat = "Your security code is {0}"
@@ -62,23 +62,23 @@ namespace IdentitySample.Models
             if (dataProtectionProvider != null)
             {
                 manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationUser, Guid>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    new DataProtectorTokenProvider<Usuario, Guid>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }
     }
 
     // Configure the RoleManager used in the application. RoleManager is defined in the ASP.NET Identity core assembly
-    public class ApplicationRoleManager : RoleManager<ApplicationRole, Guid>
+    public class ApplicationRoleManager : RoleManager<Grupo, Guid>
     {
-        public ApplicationRoleManager(IRoleStore<ApplicationRole, Guid> roleStore)
+        public ApplicationRoleManager(IRoleStore<Grupo, Guid> roleStore)
             : base(roleStore)
         {
         }
 
         public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
         {
-            return new ApplicationRoleManager(new RoleStore<ApplicationRole, Guid, ApplicationUserRole>(context.Get<ApplicationDbContext>()));
+            return new ApplicationRoleManager(new RoleStore<Grupo, Guid, UsuarioGrupo>(context.Get<TrucoDbContext>()));
         }
     }
 
@@ -103,15 +103,15 @@ namespace IdentitySample.Models
     // This is useful if you do not want to tear down the database each time you run the application.
     // public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     // This example shows you how to create a new database if the Model changes
-    public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext> 
+    public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<TrucoDbContext> 
     {
-        protected override void Seed(ApplicationDbContext context) {
+        protected override void Seed(TrucoDbContext context) {
             InitializeIdentityForEF(context);
             base.Seed(context);
         }
 
         //Create User=Admin@Admin.com with password=Admin@123456 in the Admin role        
-        public static void InitializeIdentityForEF(ApplicationDbContext db) {
+        public static void InitializeIdentityForEF(TrucoDbContext db) {
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var roleManager = HttpContext.Current.GetOwinContext().Get<ApplicationRoleManager>();
             const string name = "admin@example.com";
@@ -121,13 +121,13 @@ namespace IdentitySample.Models
             //Create Role Admin if it does not exist
             var role = roleManager.FindByName(roleName);
             if (role == null) {
-                role = new ApplicationRole() { Name = roleName };
+                role = new Grupo() { Name = roleName };
                 var roleresult = roleManager.Create(role);
             }
 
             var user = userManager.FindByName(name);
             if (user == null) {
-                user = new ApplicationUser { UserName = name, Email = name };
+                user = new Usuario { UserName = name, Email = name };
                 var result = userManager.Create(user, password);
                 result = userManager.SetLockoutEnabled(user.Id, false);
             }
@@ -140,12 +140,12 @@ namespace IdentitySample.Models
         }
     }
 
-    public class ApplicationSignInManager : SignInManager<ApplicationUser, Guid>
+    public class ApplicationSignInManager : SignInManager<Usuario, Guid>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager) : 
             base(userManager, authenticationManager) { }
 
-        public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
+        public override Task<ClaimsIdentity> CreateUserIdentityAsync(Usuario user)
         {
             return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
         }
