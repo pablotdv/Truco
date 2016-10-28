@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Truco.Models
 {
-    public class Entity
+    public class Entity : IEntity
     {        
         public string UsuarioCad { get; set; }
 

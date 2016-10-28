@@ -18,10 +18,10 @@ namespace Truco.Migrations
 
         protected override void Seed(Truco.Models.TrucoDbContext context)
         {
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
+            //if (!System.Diagnostics.Debugger.IsAttached)
+            //{
+            //    System.Diagnostics.Debugger.Launch();
+            //}
 
             var roleManager = new ApplicationRoleManager(new RoleStore<Grupo, Guid, UsuarioGrupo>(context));
             var roleNames = new string[] { "Administradores" };

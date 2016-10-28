@@ -495,6 +495,7 @@
     <Compile Include="Models\Identity\ApplicationUserRole.cs" />
     <Compile Include="Models\Identity\Usuario.cs" />
     <Compile Include="Models\Identity\ManageViewModels.cs" />
+    <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Logradouro.cs" />
     <Compile Include="Models\Pais.cs" />
     <Compile Include="Models\Regiao.cs" />
