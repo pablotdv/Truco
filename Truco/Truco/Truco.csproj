@@ -47,6 +47,10 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -174,6 +178,7 @@
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -380,6 +385,11 @@
     <Content Include="CodeTemplates\Scaffolders\Trigger\_AssmbliesAndImports.cs.include.t4" />
     <Content Include="CodeTemplates\Scaffolders\Trigger\_Metodos.cs.include.t4" />
     <Content Include="CodeTemplates\Scaffolders\Trigger\_Variavies.cs.include.t4" />
+    <None Include="Resources\Bairros.csv" />
+    <None Include="Resources\Cidades.csv" />
+    <None Include="Resources\Estados.csv" />
+    <None Include="Resources\Logradouros.csv" />
+    <None Include="Resources\Pais.csv" />
     <None Include="scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="scripts\jquery-3.1.1.js" />
     <Content Include="scripts\jquery-3.1.1.min.js" />
@@ -463,20 +473,48 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\PostalMigrationUtils.cs" />
+    <Compile Include="Models\Bairro.cs" />
+    <Compile Include="Models\Cidade.cs" />
+    <Compile Include="Models\Competicao.cs" />
+    <Compile Include="Models\Endereco.cs" />
+    <Compile Include="Models\Entidade.cs" />
+    <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Enums\CompeticaoModalidade.cs" />
+    <Compile Include="Models\Enums\CompeticaoTipo.cs" />
+    <Compile Include="Models\Equipe.cs" />
+    <Compile Include="Models\EquipeAtleta.cs" />
+    <Compile Include="Models\Estado.cs" />
+    <Compile Include="Models\Etapa.cs" />
     <Compile Include="Models\Identity\AccountViewModels.cs" />
     <Compile Include="Models\Identity\AdminViewModel.cs" />
     <Compile Include="Models\Identity\ApplicationRole.cs" />
     <Compile Include="Models\Identity\ApplicationUserClaim.cs" />
     <Compile Include="Models\Identity\ApplicationUserLogin.cs" />
     <Compile Include="Models\Identity\ApplicationUserRole.cs" />
-    <Compile Include="Models\Identity\IdentityModels.cs" />
+    <Compile Include="Models\Identity\Usuario.cs" />
     <Compile Include="Models\Identity\ManageViewModels.cs" />
+    <Compile Include="Models\Logradouro.cs" />
+    <Compile Include="Models\Pais.cs" />
+    <Compile Include="Models\Regiao.cs" />
     <Compile Include="Models\TrucoDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Teste\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

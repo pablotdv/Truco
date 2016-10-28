@@ -3,9 +3,9 @@ using System;
 
 namespace Truco.Models
 {
-    public class ApplicationRole : IdentityRole<Guid, ApplicationUserRole>
+    public class Grupo : IdentityRole<Guid, UsuarioGrupo>
     {
-        public ApplicationRole()
+        public Grupo()
         {
             Id = Guid.NewGuid();
         }

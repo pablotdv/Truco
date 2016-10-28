@@ -3,7 +3,7 @@ using System;
 
 namespace Truco.Models
 {
-    public class ApplicationUserLogin : IdentityUserLogin<Guid>
+    public class UsuarioLogin : IdentityUserLogin<Guid>
     {
         
     }

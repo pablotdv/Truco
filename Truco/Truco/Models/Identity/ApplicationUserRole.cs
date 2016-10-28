@@ -3,7 +3,7 @@ using System;
 
 namespace Truco.Models
 {
-    public class ApplicationUserRole : IdentityUserRole<Guid>
+    public class UsuarioGrupo : IdentityUserRole<Guid>
     {
 
     }
