@@ -468,6 +468,10 @@
     <Compile Include="Models\ApplicationUserClaim.cs" />
     <Compile Include="Models\ApplicationUserLogin.cs" />
     <Compile Include="Models\ApplicationUserRole.cs" />
+    <Compile Include="Models\Competicao.cs" />
+    <Compile Include="Models\Competidores.cs" />
+    <Compile Include="Models\Equipes.cs" />
+    <Compile Include="Models\Etapa.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\teste.cs" />
