@@ -951,7 +951,7 @@ var Microsoft;
                                 "connectEnd": resource.connectEnd,
                                 "requestStart": resource.requestStart,
                                 "responseStart": resource.responseStart,
-                                "responseEnd": resource.responseEnd,
+                                "responseEnd": resource.responseEnd
                             };
                         }
                         this.appInsights.trackEvent("AI (Internal): PerfAnalyzer", properties, measurements);
@@ -1204,7 +1204,7 @@ var Microsoft;
                                 return (_this.sampleRate == 100) ? ApplicationInsights.FieldType.Hidden : ApplicationInsights.FieldType.Required;
                             },
                             tags: ApplicationInsights.FieldType.Required,
-                            data: ApplicationInsights.FieldType.Required,
+                            data: ApplicationInsights.FieldType.Required
                         };
                     }
                     return Envelope;
@@ -1586,8 +1586,10 @@ var Microsoft;
                         this.renew();
                     }
                     else {
-                        this.automaticSession.renewalDate = +new Date;
-                        this.setCookie(this.automaticSession.id, this.automaticSession.acquisitionDate, this.automaticSession.renewalDate);
+                        if (!this.cookieUpdatedTimestamp || now - this.cookieUpdatedTimestamp > _SessionManager.cookieUpdateInterval) {
+                            this.automaticSession.renewalDate = +new Date;
+                            this.setCookie(this.automaticSession.id, this.automaticSession.acquisitionDate, this.automaticSession.renewalDate);
+                        }
                     }
                 };
                 _SessionManager.prototype.backup = function () {
@@ -1656,12 +1658,14 @@ var Microsoft;
                     }
                     var cookieDomnain = this.config.cookieDomain ? this.config.cookieDomain() : null;
                     ApplicationInsights.Util.setCookie('ai_session', cookie.join('|') + ';expires=' + cookieExpiry.toUTCString(), cookieDomnain);
+                    this.cookieUpdatedTimestamp = +new Date;
                 };
                 _SessionManager.prototype.setStorage = function (guid, acq, renewal) {
                     ApplicationInsights.Util.setStorage('ai_session', [guid, acq, renewal].join('|'));
                 };
                 _SessionManager.acquisitionSpan = 86400000;
                 _SessionManager.renewalSpan = 1800000;
+                _SessionManager.cookieUpdateInterval = 60000;
                 return _SessionManager;
             })();
             Context._SessionManager = _SessionManager;
@@ -2200,6 +2204,13 @@ var Microsoft;
                 var xdr = new XDomainRequest();
                 xdr.onload = function () { return _this._xdrOnLoad(xdr, payload); };
                 xdr.onerror = function (event) { return _this._onError(payload, xdr.responseText || "", event); };
+                var hostingProtocol = window.location.protocol;
+                if (this._config.endpointUrl().lastIndexOf(hostingProtocol, 0) !== 0) {
+                    ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_TransmissionFailed, ". " +
+                        "Cannot send XDomain request. The endpoint URL protocol doesn't match the hosting page protocol."));
+                    this._buffer.clear();
+                    return;
+                }
                 var endpointUrl = this._config.endpointUrl().replace(/^(https?:)/, "");
                 xdr.open('POST', endpointUrl);
                 var batch = this._buffer.batchPayloads(payload);
@@ -2533,7 +2544,7 @@ var Microsoft;
                         ver: ApplicationInsights.FieldType.Required,
                         name: ApplicationInsights.FieldType.Required,
                         properties: ApplicationInsights.FieldType.Default,
-                        measurements: ApplicationInsights.FieldType.Default,
+                        measurements: ApplicationInsights.FieldType.Default
                     };
                     this.name = ApplicationInsights.Telemetry.Common.DataSanitizer.sanitizeString(name) || ApplicationInsights.Util.NotSpecified;
                     this.properties = ApplicationInsights.Telemetry.Common.DataSanitizer.sanitizeProperties(properties);
@@ -2609,7 +2620,7 @@ var Microsoft;
                         exceptions: ApplicationInsights.FieldType.Required,
                         severityLevel: ApplicationInsights.FieldType.Default,
                         properties: ApplicationInsights.FieldType.Default,
-                        measurements: ApplicationInsights.FieldType.Default,
+                        measurements: ApplicationInsights.FieldType.Default
                     };
                     this.properties = ApplicationInsights.Telemetry.Common.DataSanitizer.sanitizeProperties(properties);
                     this.measurements = ApplicationInsights.Telemetry.Common.DataSanitizer.sanitizeMeasurements(measurements);
@@ -2657,7 +2668,7 @@ var Microsoft;
                         message: ApplicationInsights.FieldType.Required,
                         hasFullStack: ApplicationInsights.FieldType.Default,
                         stack: ApplicationInsights.FieldType.Default,
-                        parsedStack: ApplicationInsights.FieldType.Array,
+                        parsedStack: ApplicationInsights.FieldType.Array
                     };
                     this.typeName = Telemetry.Common.DataSanitizer.sanitizeString(exception.name) || ApplicationInsights.Util.NotSpecified;
                     this.message = Telemetry.Common.DataSanitizer.sanitizeMessage(exception.message) || ApplicationInsights.Util.NotSpecified;
@@ -2718,7 +2729,7 @@ var Microsoft;
                         method: ApplicationInsights.FieldType.Required,
                         assembly: ApplicationInsights.FieldType.Default,
                         fileName: ApplicationInsights.FieldType.Default,
-                        line: ApplicationInsights.FieldType.Default,
+                        line: ApplicationInsights.FieldType.Default
                     };
                     this.level = level;
                     this.method = "<no_method>";
@@ -2830,7 +2841,7 @@ var Microsoft;
                     this.aiDataContract = {
                         ver: ApplicationInsights.FieldType.Required,
                         metrics: ApplicationInsights.FieldType.Required,
-                        properties: ApplicationInsights.FieldType.Default,
+                        properties: ApplicationInsights.FieldType.Default
                     };
                     var dataPoint = new Microsoft.ApplicationInsights.Telemetry.Common.DataPoint();
                     dataPoint.count = count > 0 ? count : undefined;
@@ -2885,7 +2896,7 @@ var Microsoft;
                         url: ApplicationInsights.FieldType.Default,
                         duration: ApplicationInsights.FieldType.Default,
                         properties: ApplicationInsights.FieldType.Default,
-                        measurements: ApplicationInsights.FieldType.Default,
+                        measurements: ApplicationInsights.FieldType.Default
                     };
                     this.url = Telemetry.Common.DataSanitizer.sanitizeUrl(url);
                     this.name = Telemetry.Common.DataSanitizer.sanitizeString(name) || ApplicationInsights.Util.NotSpecified;
@@ -3523,6 +3534,7 @@ var AI;
             this.success = true;
             this.dependencySource = AI.DependencySourceType.Apmc;
             this.properties = {};
+            this.measurements = {};
             _super.call(this);
         }
         return RemoteDependencyData;
@@ -3542,7 +3554,7 @@ var Microsoft;
             "use strict";
             var RemoteDependencyData = (function (_super) {
                 __extends(RemoteDependencyData, _super);
-                function RemoteDependencyData(id, absoluteUrl, commandName, value, success, resultCode, method) {
+                function RemoteDependencyData(id, absoluteUrl, commandName, value, success, resultCode, method, properties, measurements) {
                     _super.call(this);
                     this.aiDataContract = {
                         id: ApplicationInsights.FieldType.Required,
@@ -3561,7 +3573,8 @@ var Microsoft;
                         commandName: ApplicationInsights.FieldType.Default,
                         dependencyTypeName: ApplicationInsights.FieldType.Default,
                         properties: ApplicationInsights.FieldType.Default,
-                        resultCode: ApplicationInsights.FieldType.Default
+                        resultCode: ApplicationInsights.FieldType.Default,
+                        measurements: ApplicationInsights.FieldType.Default
                     };
                     this.id = id;
                     this.name = this.formatDependencyName(method, absoluteUrl);
@@ -3571,6 +3584,8 @@ var Microsoft;
                     this.resultCode = resultCode + "";
                     this.dependencyKind = AI.DependencyKind.Http;
                     this.dependencyTypeName = "Ajax";
+                    this.properties = ApplicationInsights.Telemetry.Common.DataSanitizer.sanitizeProperties(properties);
+                    this.measurements = ApplicationInsights.Telemetry.Common.DataSanitizer.sanitizeMeasurements(measurements);
                 }
                 RemoteDependencyData.prototype.formatDependencyName = function (method, absoluteUrl) {
                     if (method) {
@@ -3622,7 +3637,7 @@ var Microsoft;
     var ApplicationInsights;
     (function (ApplicationInsights) {
         "use strict";
-        ApplicationInsights.Version = "1.0.3";
+        ApplicationInsights.Version = "1.0.4";
         ApplicationInsights.SnippetVersion;
         var AppInsights = (function () {
             function AppInsights(config) {
@@ -3761,10 +3776,10 @@ var Microsoft;
                     ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_TrackEventFailed, "trackEvent failed, event will not be collected: " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
                 }
             };
-            AppInsights.prototype.trackDependency = function (id, method, absoluteUrl, pathName, totalTime, success, resultCode) {
+            AppInsights.prototype.trackDependency = function (id, method, absoluteUrl, pathName, totalTime, success, resultCode, properties, measurements) {
                 if (this.config.maxAjaxCallsPerView === -1 ||
                     this._trackAjaxAttempts < this.config.maxAjaxCallsPerView) {
-                    var dependency = new ApplicationInsights.Telemetry.RemoteDependencyData(id, absoluteUrl, pathName, totalTime, success, resultCode, method);
+                    var dependency = new ApplicationInsights.Telemetry.RemoteDependencyData(id, absoluteUrl, pathName, totalTime, success, resultCode, method, properties, measurements);
                     var dependencyData = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.RemoteDependencyData.dataType, dependency);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(dependencyData, ApplicationInsights.Telemetry.RemoteDependencyData.envelopeType);
                     this.context.track(envelope);
