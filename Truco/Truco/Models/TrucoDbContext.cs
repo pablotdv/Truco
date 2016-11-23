@@ -74,5 +74,9 @@ namespace Truco.Models
         public DbSet<Logradouro> Logradouros { get; set; }
 
         public DbSet<Endereco> Enderecos { get; set; }
+
+        public DbSet<Regiao> Regioes { get; set; }
+
+        public DbSet<RegiaoCidade> RegioesCidades { get; set; }
     }
 }
