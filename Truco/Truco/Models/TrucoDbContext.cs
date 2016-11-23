@@ -62,21 +62,20 @@ namespace Truco.Models
                 }
             }
         }
-
-        public DbSet<Pais> Paises { get; set; }
-
-        public DbSet<Estado> Estados { get; set; }
-
-        public DbSet<Cidade> Cidades { get; set; }
-
+        
+        public DbSet<Atleta> Atletas { get; set; }
         public DbSet<Bairro> Bairros { get; set; }
-
-        public DbSet<Logradouro> Logradouros { get; set; }
-
+        public DbSet<Cidade> Cidades { get; set; }
+        public DbSet<Competicao> Competicoes { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
-
+        public DbSet<Entidade> Entidades { get; set; }
+        public DbSet<Equipe> Equipes { get; set; }
+        public DbSet<EquipeAtleta> EquipesAtletas { get; set; }
+        public DbSet<Estado> Estados { get; set; }
+        public DbSet<Etapa> Estapas { get; set; }
+        public DbSet<Logradouro> Logradouros { get; set; }        
+        public DbSet<Pais> Paises { get; set; }
         public DbSet<Regiao> Regioes { get; set; }
-
         public DbSet<RegiaoCidade> RegioesCidades { get; set; }
     }
 }

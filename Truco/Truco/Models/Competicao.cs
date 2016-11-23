@@ -18,8 +18,6 @@ namespace Truco.Models
 
         public CompeticaoModalidade Modalidade { get; set; }
 
-        public ICollection<Etapa> Etapas { get; set; }
-
-        public ICollection<Equipe>  Equipes { get; set; }
+        public ICollection<Etapa> Etapas { get; set; }        
     }
 }

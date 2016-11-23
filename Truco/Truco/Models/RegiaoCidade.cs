@@ -16,6 +16,7 @@ namespace Truco.Models
 
         [Key]
         [Column(Order = 1)]
+        [Index(IsUnique = true)]
         public Guid CidadeId { get; set; }
 
         public virtual Regiao Regiao { get; set; }
