@@ -1,0 +1,58 @@
+﻿@model Truco.Models.Competicao
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Competicao</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tipo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tipo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Modalidade)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Modalidade)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UsuarioCad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UsuarioCad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataHoraCad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataHoraCad)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CompeticaoId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
