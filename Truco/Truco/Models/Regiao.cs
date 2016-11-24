@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Truco.Models
 {
     [Table("Regioes")]
+    [DisplayColumn("Numero")]
     public class Regiao
     {
         [Key]

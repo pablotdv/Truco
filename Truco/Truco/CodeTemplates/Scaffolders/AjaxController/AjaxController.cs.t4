@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using PagedList.EntityFramework;
 using Newtonsoft.Json;
 using System.Net;
-using <#= Model.DefaultNamespace #>.Helpers;
+using <#= Model.DefaultNamespace #>.Infraestrutura.Helpers;
 using <#= Model.ViewModelsNamespace #>;
 <# if(!string.IsNullOrEmpty(Model.ModelTypeNamespace)) { #>
 using <#= Model.ModelTypeNamespace #>;
@@ -57,12 +57,12 @@ namespace <#= Model.ControllerNamespace #>
     {		        
         //
         // GET: /<#= routingName #>/
-        public async Task<ActionResult> Indice(<#= modelName#>PartialViewModel viewModel)
+        public async Task<ActionResult> Indice(<#= Model.Name#>PartialViewModel viewModel)
         {
 			if (viewModel.Pesquisa == null)
-                viewModel.Pesquisa = new <#= modelName#>ViewModel() { <#=Model.FkName#> = viewModel.<#=Model.FkName#> };
+                viewModel.Pesquisa = new <#= Model.Name#>ViewModel() { <#=Model.FkName#> = viewModel.<#=Model.FkName#> };
 
-            var query = context.<#= modelNamePlural #>.Where(a => a.<#=Model.FkName#> == viewModel.<#=Model.FkName#>);
+            var query = db.<#= modelNamePlural #>.Where(a => a.<#=Model.FkName#> == viewModel.<#=Model.FkName#>);
 
             viewModel.Pesquisa.Resultados = await query.OrderBy(a => a.<#=displayColumn#>).ToPagedListAsync(viewModel.Pesquisa.Pagina, viewModel.Pesquisa.TamanhoPagina);
 
@@ -71,11 +71,11 @@ namespace <#= Model.ControllerNamespace #>
 
 		//
         // GET: /<#= routingName #>/Pesquisa
-		public async Task<ActionResult> Pesquisar(<#= modelName#>ViewModel viewModel)
+		public async Task<ActionResult> Pesquisar(<#= Model.Name#>ViewModel viewModel)
         {
             await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-            var query = context.<#= modelNamePlural #>.Where(a => a.<#=Model.FkName#> == viewModel.<#=Model.FkName#>);
+            var query = db.<#= modelNamePlural #>.Where(a => a.<#=Model.FkName#> == viewModel.<#=Model.FkName#>);
 
             if (!String.IsNullOrWhiteSpace(viewModel.<#=displayColumn#>))
             {
@@ -107,7 +107,7 @@ namespace <#= Model.ControllerNamespace #>
         public async Task<ActionResult> Criar(<#= modelName #> <#= modelVariable #>)
         {
 			//TODO: Validação de campo Unique
-			if (await context.<#= modelNamePlural #>.AnyAsync(a => a.<#=Model.FkName#> == <#= modelVariable #>.<#=Model.FkName#> && a.<#=displayColumn#>.Equals(<#= modelVariable #>.<#=displayColumn#>)))
+			if (await db.<#= modelNamePlural #>.AnyAsync(a => a.<#=Model.FkName#> == <#= modelVariable #>.<#=Model.FkName#> && a.<#=displayColumn#>.Equals(<#= modelVariable #>.<#=displayColumn#>)))
             {
                 ModelState.AddModelError("", $"A descrição {<#= modelVariable #>.<#=displayColumn#>} já está cadastrado");
             }
@@ -117,11 +117,11 @@ namespace <#= Model.ControllerNamespace #>
                 <#= modelVariable #>.<#= primaryKeyProperty.Name #> = Guid.NewGuid();
 <# } #>
 <# if(isObjectContext) { #>
-                context.<#= modelNamePlural #>.AddObject(<#= modelVariable #>);
+                db.<#= modelNamePlural #>.AddObject(<#= modelVariable #>);
 <# } else { #>
-                context.<#= modelNamePlural #>.Add(<#= modelVariable #>);
+                db.<#= modelNamePlural #>.Add(<#= modelVariable #>);
 <# } #>
-                await context.SaveChangesAsync();
+                await db.SaveChangesAsync();
                 
 				var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
                 return await Pesquisar(viewModel);
@@ -141,7 +141,7 @@ namespace <#= Model.ControllerNamespace #>
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
             if (<#= modelVariable #> == null)
             {
                 return HttpNotFound();
@@ -158,7 +158,7 @@ namespace <#= Model.ControllerNamespace #>
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> Editar(<#= modelName #> <#= modelVariable #>)
         {
-			if (await context.<#= modelNamePlural #>.AnyAsync(a => a.<#=Model.FkName#> == <#= modelVariable #>.<#=Model.FkName#> && a.<#= modelName #>Id != <#= modelVariable #>.<#= modelName #>Id && a.<#=displayColumn#>.Equals(<#= modelVariable #>.<#=displayColumn#>)))
+			if (await db.<#= modelNamePlural #>.AnyAsync(a => a.<#=Model.FkName#> == <#= modelVariable #>.<#=Model.FkName#> && a.<#= modelName #>Id != <#= modelVariable #>.<#= modelName #>Id && a.<#=displayColumn#>.Equals(<#= modelVariable #>.<#=displayColumn#>)))
             {
                 ModelState.AddModelError("", $"A descrição {<#= modelVariable #>.<#=displayColumn#>} já está cadastrado");
             }
@@ -166,12 +166,12 @@ namespace <#= Model.ControllerNamespace #>
             if (ModelState.IsValid)
             {
 <# if(isObjectContext) { #>
-                context.<#= modelNamePlural #>.Attach(<#= modelVariable #>);
-                context.ObjectStateManager.ChangeObjectState(<#= modelVariable #>, EntityState.Modified);
+                db.<#= modelNamePlural #>.Attach(<#= modelVariable #>);
+                db.ObjectStateManager.ChangeObjectState(<#= modelVariable #>, EntityState.Modified);
 <# } else { #>
-                context.Entry(<#= modelVariable #>).State = EntityState.Modified;
+                db.Entry(<#= modelVariable #>).State = EntityState.Modified;
 <# } #>
-                await context.SaveChangesAsync();
+                await db.SaveChangesAsync();
                 
 				var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
                 return await Pesquisar(viewModel);
@@ -191,7 +191,7 @@ namespace <#= Model.ControllerNamespace #>
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
             if (<#= modelVariable #> == null)
             {
                 return HttpNotFound();
@@ -210,13 +210,13 @@ namespace <#= Model.ControllerNamespace #>
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(<#= primaryKeyProperty.Type.AsString #> id)
         {
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
 <# if(isObjectContext) { #>
-            context.<#= modelNamePlural #>.DeleteObject(<#= modelVariable #>);
+            db.<#= modelNamePlural #>.DeleteObject(<#= modelVariable #>);
 <# } else { #>
-            context.<#= modelNamePlural #>.Remove(<#= modelVariable #>);
+            db.<#= modelNamePlural #>.Remove(<#= modelVariable #>);
 <# } #>
-            await context.SaveChangesAsync();
+            await db.SaveChangesAsync();
             var viewModel = JsonConvert.DeserializeObject<<#= modelName #>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
             return await Pesquisar(viewModel);
         }
@@ -226,7 +226,7 @@ namespace <#= Model.ControllerNamespace #>
 <# foreach(var relatedEntity in relatedEntities) {
 	   var displayRelated = GetDisplayColumn(relatedEntity.RelatedEntityType);
  #>
-            ViewBag.<#= relatedEntity.RelationNamePlural #> = new SelectList(await context.<#= relatedEntity.RelatedEntityTypeNamePlural #>.ToListAsync(), "<#= relatedEntity.RelatedEntityPrimaryKeyName #>", "<#=displayRelated#>");
+            ViewBag.<#= relatedEntity.RelationNamePlural #> = new SelectList(await db.<#= relatedEntity.RelatedEntityTypeNamePlural #>.ToListAsync(), "<#= relatedEntity.RelatedEntityPrimaryKeyName #>", "<#=displayRelated#>");
 <# } #>    
 		}
 <# 
@@ -239,7 +239,7 @@ foreach(var relatedEntity in relatedEntities) {
         public async Task<JsonResult> Pesquisar<#= relatedEntity.RelationNamePlural#>(string <#=displayRelatedLower#>)
         {
 			var <#=displayRelatedLower#>s = String.IsNullOrEmpty(<#=displayRelatedLower#>) ? new string[0] : <#=displayRelatedLower#>.Split(' ');
-            var dados = await context.<#= relatedEntity.RelationNamePlural#>
+            var dados = await db.<#= relatedEntity.RelationNamePlural#>
 			    .Where(b => <#=displayRelatedLower#>s.All(c => b.<#=displayRelated#>.Contains(c)))
 				.OrderBy(a => a.<#=displayRelated#>)
 				.Take(15)
@@ -259,7 +259,7 @@ foreach(var relatedEntity in relatedEntities) {
         protected override void Dispose(bool disposing)
         {
             if (disposing) {
-                context.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -8,6 +8,7 @@ using System.Web;
 namespace Truco.Models
 {
     [Table("PesquisasModels")]
+    [DisplayColumn("Key")]
     public class PesquisaModel
     {
         [Key]

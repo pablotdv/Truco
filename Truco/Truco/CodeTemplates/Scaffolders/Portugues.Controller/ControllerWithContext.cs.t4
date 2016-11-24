@@ -32,10 +32,11 @@ namespace <#= Model.ControllerNamespace #>
    
     var modelType = (CodeType)Model.ModelType; 	
 	var displayColumn = GetDisplayColumn(modelType);
+	
 	if (string.IsNullOrWhiteSpace(displayColumn))
 		throw new Exception("DisplayColumn não informado na entidade!");
 	var displayColumnName = Char.ToLower(displayColumn[0]) + displayColumn.Substring(1);
-
+	
     var modelName = modelType.Name; 
     var modelNamePlural = Model.ModelTypePluralized; 
     var modelVariable = Char.ToLower(modelName[0]) + modelName.Substring(1); 
@@ -50,7 +51,6 @@ namespace <#= Model.ControllerNamespace #>
     var primaryKeyType = primaryKeyProperty.Type.AsFullName;
 	
 	var primaryKeyNullableTypeName = GetNullableTypeName(primaryKeyType, primaryKeyShortTypeName);
-	
 #>
 
     public class <#= Model.ControllerName #> : Controller

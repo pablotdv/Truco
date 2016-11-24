@@ -11,8 +11,8 @@ param(
 	[switch]$Force = $false
 )
 
-Scaffold AjaxPartialViewModel $ControllerName $FkName -ModelType $ModelType -Force:$Force -Area:$Area
+Scaffold AjaxPartialViewModel $ControllerName $FkName -ModelType $ModelType -Force:$Force -Area:$Area 
 
-Scaffold AjaxController $ControllerName $FkName -ModelType $ModelType -Force:$Force -Area:$Area
+Scaffold AjaxController $ControllerName $FkName -ModelType $ModelType -Force:$Force -Area:$Area -DbContextType:$DbContextType
 
-Scaffold AjaxRazorViews $ControllerName $FkName -ModelType $ModelType -Force:$Force -Area:$Area
+Scaffold AjaxRazorViews $ControllerName $FkName -ModelType $ModelType -Force:$Force -Area:$Area 

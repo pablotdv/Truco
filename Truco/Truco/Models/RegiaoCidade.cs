@@ -8,6 +8,7 @@ using System.Web;
 namespace Truco.Models
 {
     [Table("RegioesCidades")]
+    [DisplayColumn("Cidade")]
     public class RegiaoCidade
     {
         [Key]

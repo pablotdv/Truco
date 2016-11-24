@@ -1,0 +1,10 @@
+@model Truco.Models.Atleta
+<div class="row form-group">
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+    </div>
+
+</div> <!-- ./row -->
+

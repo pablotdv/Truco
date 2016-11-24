@@ -1,0 +1,24 @@
+<script>
+	
+	var engineRegiaos = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarRegiaos", "Equipes")?numero=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('numero'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engineRegiaos.initialize();
+
+    $('#RegiaoNumero').typeahead(null, {
+        source: engineRegiaos.ttAdapter(),
+		limit: 15,
+        displayKey: "Numero",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data.Numero + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#RegiaoId").val(suggestion.RegiaoId);
+    });
+</script>
+

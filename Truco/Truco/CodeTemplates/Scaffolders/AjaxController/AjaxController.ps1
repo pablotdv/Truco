@@ -18,7 +18,7 @@ param(
 	[switch]$Force = $false,
 	[string]$ForceMode
 )
-
+$name = $ControllerName
 # Interpret the "Force" and "ForceMode" options
 $overwriteController = $Force -and ((!$ForceMode) -or ($ForceMode -eq "ControllerOnly"))
 $overwriteFilesExceptController = $Force -and ((!$ForceMode) -or ($ForceMode -eq "PreserveController"))
@@ -98,6 +98,7 @@ if (!$relatedEntities) { $relatedEntities = @() }
 
 Add-ProjectItemViaTemplate $outputPath -Template AjaxController -Model @{
 	ControllerName = $ControllerName;
+	Name = $name;
 	ModelType = [MarshalByRefObject]$foundModelType; 
 	PrimaryKey = [string]$primaryKey; 
 	DefaultNamespace = $defaultNamespace; 

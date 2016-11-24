@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Truco.Models
 {
     [Table("Atletas")]
+    [DisplayColumn("Nome")]
     public class Atleta
     {
         [Key]

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Truco.Models
 {
     [Table("Logradouros")]
+    [DisplayColumn("Descricao")]
     public class Logradouro : Entity
     {
         [Key]

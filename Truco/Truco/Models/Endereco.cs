@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Truco.Models
 {
     [Table("Enderecos")]
+    [DisplayColumn("Numero")]
     public class Endereco : Entity
     {
         [Key]

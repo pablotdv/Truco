@@ -5,13 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Truco.Models
 {
     [Table("EquipesAtletas")]
+    [DisplayColumn("Atleta")]
     public class EquipeAtleta
     {
         [Key]
-        [Column(Order = 1)]
+        public Guid EquipeAtletaId { get; set; }
         public Guid EquipeId { get; set; }
-        [Key]
-        [Column(Order = 2)]
         public Guid AtletaId { get; set; }
         public virtual Equipe Equipe { get; set; }
         public virtual Atleta Atleta { get; set; }

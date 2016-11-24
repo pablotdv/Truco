@@ -12,14 +12,18 @@ namespace Truco.Models
     [DisplayColumn("Nome")]
     public class Competicao : Entity
     {
+        [Key]
         public Guid CompeticaoId { get; set; }
 
+        [Required]
         public string Nome { get; set; }
 
+        [Required]
         public CompeticaoTipo Tipo { get; set; }
 
+        [Required]
         public CompeticaoModalidade Modalidade { get; set; }
 
-        public ICollection<Etapa> Etapas { get; set; }        
+        public ICollection<CompeticaoEquipe> Equipes { get; set; }
     }
 }

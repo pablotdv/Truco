@@ -394,6 +394,8 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
+    <None Include="Properties\PublishProfiles\Truco.pubxml" />
     <None Include="Resources\Bairros.csv" />
     <None Include="Resources\Cidades.csv" />
     <None Include="Resources\Estados.csv" />
@@ -439,6 +441,42 @@
     <Content Include="Views\Grupos\Editar.cshtml" />
     <Content Include="Views\Grupos\Excluir.cshtml" />
     <Content Include="Views\Grupos\Indice.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\Indice.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\_Pesquisa.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\_CriarOuEditar.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\Criar.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\Editar.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\Detalhes.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\Excluir.cshtml" />
+    <Content Include="Views\CompeticoesEquipes\_Scripts.cshtml" />
+    <Content Include="Views\Equipes\Indice.cshtml" />
+    <Content Include="Views\Equipes\_Pesquisa.cshtml" />
+    <Content Include="Views\Equipes\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\Equipes\_CriarOuEditar.cshtml" />
+    <Content Include="Views\Equipes\Criar.cshtml" />
+    <Content Include="Views\Equipes\Editar.cshtml" />
+    <Content Include="Views\Equipes\Detalhes.cshtml" />
+    <Content Include="Views\Equipes\Excluir.cshtml" />
+    <Content Include="Views\Equipes\_Scripts.cshtml" />
+    <Content Include="Views\Atletas\Indice.cshtml" />
+    <Content Include="Views\Atletas\_Pesquisa.cshtml" />
+    <Content Include="Views\Atletas\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\Atletas\_CriarOuEditar.cshtml" />
+    <Content Include="Views\Atletas\Criar.cshtml" />
+    <Content Include="Views\Atletas\Editar.cshtml" />
+    <Content Include="Views\Atletas\Detalhes.cshtml" />
+    <Content Include="Views\Atletas\Excluir.cshtml" />
+    <Content Include="Views\Atletas\_Scripts.cshtml" />
+    <Content Include="Views\EquipesAtletas\Indice.cshtml" />
+    <Content Include="Views\EquipesAtletas\_Pesquisa.cshtml" />
+    <Content Include="Views\EquipesAtletas\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\EquipesAtletas\_CriarOuEditar.cshtml" />
+    <Content Include="Views\EquipesAtletas\Criar.cshtml" />
+    <Content Include="Views\EquipesAtletas\Editar.cshtml" />
+    <Content Include="Views\EquipesAtletas\Detalhes.cshtml" />
+    <Content Include="Views\EquipesAtletas\Excluir.cshtml" />
+    <Content Include="Views\EquipesAtletas\_Scripts.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -488,9 +526,13 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AtletasController.cs" />
     <Compile Include="Controllers\CompeticoesController.cs" />
+    <Compile Include="Controllers\CompeticoesEquipesController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\EquipesAtletasController.cs" />
+    <Compile Include="Controllers\EquipesController.cs" />
     <Compile Include="Controllers\GerenciamentoController.cs" />
     <Compile Include="Controllers\GruposController.cs" />
     <Compile Include="Controllers\InicialController.cs" />
@@ -506,7 +548,7 @@
     <Compile Include="Models\Bairro.cs" />
     <Compile Include="Models\Cidade.cs" />
     <Compile Include="Models\Competicao.cs" />
-    <Compile Include="Models\EtapaEquipe.cs" />
+    <Compile Include="Models\CompeticaoEquipe.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Entidade.cs" />
     <Compile Include="Models\Entity.cs" />
@@ -515,7 +557,6 @@
     <Compile Include="Models\Equipe.cs" />
     <Compile Include="Models\EquipeAtleta.cs" />
     <Compile Include="Models\Estado.cs" />
-    <Compile Include="Models\Etapa.cs" />
     <Compile Include="Models\Identity\ApplicationRole.cs" />
     <Compile Include="Models\Identity\ApplicationUserClaim.cs" />
     <Compile Include="Models\Identity\ApplicationUserLogin.cs" />
@@ -535,7 +576,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AtletasViewModel.cs" />
+    <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />
+    <Compile Include="ViewModels\EquipesAtletasViewModel.cs" />
+    <Compile Include="ViewModels\EquipesViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoGrupos\GrupoViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoUsuarios\EditarUsuarioViewModel.cs" />
     <Compile Include="ViewModels\Identity\Conta\AutenticacaoExternaConfirmacaoViewModel.cs" />
