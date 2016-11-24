@@ -16,24 +16,24 @@ using Truco.Models;
 namespace Truco.Controllers
 {   
 
-    public class CompeticoesController : Controller
+    public class BairrosController : Controller
     {	        
         //
-        // GET: /Competicoes/
+        // GET: /Bairros/
         public async Task<ActionResult> Indice()
         {
-			var viewModel = JsonConvert.DeserializeObject<CompeticoesViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+			var viewModel = JsonConvert.DeserializeObject<BairrosViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
 
-            return await Pesquisa(viewModel ?? new CompeticoesViewModel());
+            return await Pesquisa(viewModel ?? new BairrosViewModel());
         }
 
 		//
-        // GET: /Competicoes/Pesquisa
-		public async Task<ActionResult> Pesquisa(CompeticoesViewModel viewModel)
+        // GET: /Bairros/Pesquisa
+		public async Task<ActionResult> Pesquisa(BairrosViewModel viewModel)
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Competicaos.AsQueryable();
+			var query = db.Bairroes.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
@@ -51,108 +51,125 @@ namespace Truco.Controllers
 		}
 
         //
-        // GET: /Competicoes/Detalhes/5
+        // GET: /Bairros/Detalhes/5
         public async Task<ActionResult> Detalhes(System.Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicaos.FindAsync(id);
-            if (competicao == null)
+            Bairro bairro = await db.Bairroes.FindAsync(id);
+            if (bairro == null)
             {
                 return HttpNotFound();
             }  
-            return View(competicao);
+          
+			await ViewBags();
+            return View(bairro);
         }
 
         //
-        // GET: /Competicoes/Criar        
-		public ActionResult Criar()
+        // GET: /Bairros/Criar        
+          
+		public async Task<ActionResult> Criar()
         {
+			await ViewBags();
             return View();
         } 
 
         //
-        // POST: /Competicoes/Criar
+        // POST: /Bairros/Criar
         [HttpPost]
 		[ValidateAntiForgeryToken]
-        public async Task<ActionResult> Criar(Competicao competicao)
+        public async Task<ActionResult> Criar(Bairro bairro)
         {
             if (ModelState.IsValid)
             {
-                competicao.CompeticaoId = Guid.NewGuid();
-                db.Competicaos.Add(competicao);
+                bairro.BairroId = Guid.NewGuid();
+                db.Bairroes.Add(bairro);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
             }
 
-            return View(competicao);
+          
+			await ViewBags();
+            return View(bairro);
         }
         
         //
-        // GET: /Competicoes/Editar/5 
+        // GET: /Bairros/Editar/5 
         public async Task<ActionResult> Editar(System.Guid? id)
         {
 			if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicaos.FindAsync(id);
-            if (competicao == null)
+            Bairro bairro = await db.Bairroes.FindAsync(id);
+            if (bairro == null)
             {
                 return HttpNotFound();
             }            
-            return View(competicao);
+          
+			await ViewBags();
+            return View(bairro);
         }
 
         //
-        // POST: /Competicoes/Editar/5
+        // POST: /Bairros/Editar/5
         [HttpPost]
 		[ValidateAntiForgeryToken]
-        public async Task<ActionResult> Editar(Competicao competicao)
+        public async Task<ActionResult> Editar(Bairro bairro)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(competicao).State = EntityState.Modified;
+                db.Entry(bairro).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Alteração realizada com sucesso!";
                 return RedirectToAction("Indice");
             }
 
-            return View(competicao);
+          
+			await ViewBags();
+            return View(bairro);
         }
 
         //
-        // GET: /Competicoes/Excluir/5 
+        // GET: /Bairros/Excluir/5 
         public async Task<ActionResult> Excluir(System.Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicaos.FindAsync(id);
-            if (competicao == null)
+            Bairro bairro = await db.Bairroes.FindAsync(id);
+            if (bairro == null)
             {
                 return HttpNotFound();
             }   
 
+          
+			await ViewBags();
   
-            return View(competicao);
+            return View(bairro);
         }
 
         //
-        // POST: /Competicoes/Excluir/5
+        // POST: /Bairros/Excluir/5
         [HttpPost, ActionName("Excluir")]
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Competicao competicao = await db.Competicaos.FindAsync(id);
-            db.Competicaos.Remove(competicao);
+            Bairro bairro = await db.Bairroes.FindAsync(id);
+            db.Bairroes.Remove(bairro);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
+		private async Task ViewBags()
+		{
+            ViewBag.Cidades = new SelectList(await db.Cidades.ToListAsync(), "CidadeId", "Nome");
+    
+		}
 
         protected override void Dispose(bool disposing)
         {

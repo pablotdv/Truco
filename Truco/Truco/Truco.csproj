@@ -479,6 +479,24 @@
     <Content Include="Views\EquipesAtletas\Detalhes.cshtml" />
     <Content Include="Views\EquipesAtletas\Excluir.cshtml" />
     <Content Include="Views\EquipesAtletas\_Scripts.cshtml" />
+    <Content Include="Views\Bairros\Indice.cshtml" />
+    <Content Include="Views\Bairros\_Pesquisa.cshtml" />
+    <Content Include="Views\Bairros\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\Bairros\_CriarOuEditar.cshtml" />
+    <Content Include="Views\Bairros\Criar.cshtml" />
+    <Content Include="Views\Bairros\Editar.cshtml" />
+    <Content Include="Views\Bairros\Detalhes.cshtml" />
+    <Content Include="Views\Bairros\Excluir.cshtml" />
+    <Content Include="Views\Bairros\_Scripts.cshtml" />
+    <Content Include="Views\Cidades\Indice.cshtml" />
+    <Content Include="Views\Cidades\_Pesquisa.cshtml" />
+    <Content Include="Views\Cidades\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\Cidades\_CriarOuEditar.cshtml" />
+    <Content Include="Views\Cidades\Criar.cshtml" />
+    <Content Include="Views\Cidades\Editar.cshtml" />
+    <Content Include="Views\Cidades\Detalhes.cshtml" />
+    <Content Include="Views\Cidades\Excluir.cshtml" />
+    <Content Include="Views\Cidades\_Scripts.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -529,6 +547,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AtletasController.cs" />
+    <Compile Include="Controllers\BairrosController.cs" />
+    <Compile Include="Controllers\CidadesController.cs" />
     <Compile Include="Controllers\CompeticoesController.cs" />
     <Compile Include="Controllers\CompeticoesEquipesController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
@@ -571,7 +591,6 @@
     <Compile Include="Models\Regiao.cs" />
     <Compile Include="Models\RegiaoCidade.cs" />
     <Compile Include="Models\TrucoDbContext.cs" />
-    <Compile Include="Model\TrucoDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -580,6 +599,8 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AtletasViewModel.cs" />
+    <Compile Include="ViewModels\BairrosViewModel.cs" />
+    <Compile Include="ViewModels\CidadesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />
     <Compile Include="ViewModels\EquipesAtletasViewModel.cs" />

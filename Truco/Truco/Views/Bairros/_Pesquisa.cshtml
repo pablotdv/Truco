@@ -1,0 +1,86 @@
+@using Truco.ViewModels
+@model BairrosViewModel
+<div id="no-more-tables">
+	<table class="table-bordered table-striped table-condensed cf table-hover col-md-12">
+		<thead class="cf">
+			<tr>
+                <th class="col-lg-2 col-md-3 col-xs-12"></th>
+				<th>
+					Nome
+				</th>
+				<th>
+					NomeAbreviado
+				</th>
+				<th>
+					NomeFonetizado
+				</th>
+				<th>
+					DataUltimaModificacao
+				</th>
+				<th>
+					DataCriacao
+				</th>
+				<th>
+					UsuarioCriacao
+				</th>
+				<th>
+					UsuarioUltimaModificacao
+				</th>
+                                
+            </tr>
+        </thead>
+
+        <tbody>
+			@foreach (var item in Model.Resultados) 
+			{
+				<tr>
+					<td data-title="">
+						<div class="btn-group">							
+							<a class="btn btn-default" id="editar" title="Editar" href="@Url.Action("Editar", new { id=item.BairroId})"><i class="fa fa-edit fa-align-left"></i></a>							
+							<a class="btn btn-default" id="detalhes" title="Detalhes" href="@Url.Action("Detalhes", new {id=item.BairroId})"><i class="fa fa-eye fa-align-right"></i></a>							
+							<a class="btn btn-default" id="Deletar" title="Excluir" href="@Url.Action("Excluir", new { id=item.BairroId })"><i class="fa fa-trash fa-align-right"></i></a>							
+						</div>									
+					</td>
+					<td data-title="Nome">
+						@item.Nome
+					</td>
+					<td data-title="NomeAbreviado">
+						@item.NomeAbreviado
+					</td>
+					<td data-title="NomeFonetizado">
+						@item.NomeFonetizado
+					</td>
+					<td data-title="DataUltimaModificacao">
+						@String.Format("{0:g}", item.DataUltimaModificacao)
+					</td>
+					<td data-title="DataCriacao">
+						@String.Format("{0:g}", item.DataCriacao)
+					</td>
+					<td data-title="UsuarioCriacao">
+						@item.UsuarioCriacao
+					</td>
+					<td data-title="UsuarioUltimaModificacao">
+						@item.UsuarioUltimaModificacao
+					</td>
+				</tr>
+			}                            
+        </tbody>
+    </table>
+</div>
+
+@Html.PagedListPager(Model.Resultados, page => Url.Action("Pesquisa", 
+	new BairrosViewModel()
+    {
+        Pagina = page,
+        Nome = Model.Nome
+    }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+                    new PagedListRenderOptions()
+                    {
+                        DisplayItemSliceAndTotal = false
+                    },
+                    new AjaxOptions()
+                    {
+                        HttpMethod = "GET",
+                        UpdateTargetId = "pesquisa"
+                    }))
+

@@ -1,0 +1,24 @@
+<script>
+	
+	var engineEstadoes = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarEstadoes", "Cidades")?nome=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nome'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engineEstadoes.initialize();
+
+    $('#EstadoNome').typeahead(null, {
+        source: engineEstadoes.ttAdapter(),
+		limit: 15,
+        displayKey: "Nome",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data.Nome + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#EstadoId").val(suggestion.EstadoId);
+    });
+</script>
+
