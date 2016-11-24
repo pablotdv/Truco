@@ -235,25 +235,6 @@ namespace <#= Model.ControllerNamespace #>
             ViewBag.<#= relatedEntity.RelationNamePlural #> = new SelectList(await db.<#= relatedEntity.RelatedEntityTypeNamePlural #>.ToListAsync(), "<#= relatedEntity.RelatedEntityPrimaryKeyName #>", "<#=displayRelated#>");
 <# } #>    
 		}
-<# 
-foreach(var relatedEntity in relatedEntities) { 
-	var displayRelated = GetDisplayColumn(relatedEntity.RelatedEntityType);
-	var displayRelatedLower = Char.ToLower(displayRelated[0]) + displayRelated.Substring(1);
-#>
-
-		[OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
-        public async Task<JsonResult> Pesquisar<#= relatedEntity.RelationNamePlural#>(string <#=displayRelatedLower#>)
-        {
-			var <#=displayRelatedLower#>s = String.IsNullOrEmpty(<#=displayRelatedLower#>) ? new string[0] : <#=displayRelatedLower#>.Split(' ');
-            var dados = await db.<#= relatedEntity.RelationNamePlural#>
-			    .Where(b => <#=displayRelatedLower#>s.All(c => b.<#=displayRelated#>.Contains(c)))
-				.OrderBy(a => a.<#=displayRelated#>)
-				.Take(15)
-                .ToListAsync();
-
-            return Json(dados, JsonRequestBehavior.AllowGet);
-        }
-<# } #> 
 <#}#>
 
         protected override void Dispose(bool disposing)
