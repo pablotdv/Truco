@@ -234,9 +234,13 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\site.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
@@ -385,6 +389,11 @@
     <Content Include="CodeTemplates\Scaffolders\Trigger\_AssmbliesAndImports.cs.include.t4" />
     <Content Include="CodeTemplates\Scaffolders\Trigger\_Metodos.cs.include.t4" />
     <Content Include="CodeTemplates\Scaffolders\Trigger\_Variavies.cs.include.t4" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Resources\Bairros.csv" />
     <None Include="Resources\Cidades.csv" />
     <None Include="Resources\Estados.csv" />
@@ -397,11 +406,39 @@
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\Competicoes\Criar.cshtml" />
-    <Content Include="Views\Competicoes\Excluir.cshtml" />
-    <Content Include="Views\Competicoes\Detalhes.cshtml" />
-    <Content Include="Views\Competicoes\Editar.cshtml" />
     <Content Include="Views\Competicoes\Indice.cshtml" />
+    <Content Include="Views\Competicoes\_Pesquisa.cshtml" />
+    <Content Include="Views\Competicoes\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\Competicoes\_CriarOuEditar.cshtml" />
+    <Content Include="Views\Competicoes\Criar.cshtml" />
+    <Content Include="Views\Competicoes\Editar.cshtml" />
+    <Content Include="Views\Competicoes\Detalhes.cshtml" />
+    <Content Include="Views\Competicoes\Excluir.cshtml" />
+    <Content Include="Views\Competicoes\_Scripts.cshtml" />
+    <Content Include="Views\Conta\AutenticacaoExternaConfirmacao.cshtml" />
+    <Content Include="Views\Conta\AutenticacaoExternaFalha.cshtml" />
+    <Content Include="Views\Conta\ConfirmarEmail.cshtml" />
+    <Content Include="Views\Conta\Entrar.cshtml" />
+    <Content Include="Views\Conta\EnviarCodigo.cshtml" />
+    <Content Include="Views\Conta\ExibirEmail.cshtml" />
+    <Content Include="Views\Conta\RecuperarSenha.cshtml" />
+    <Content Include="Views\Conta\RecuperarSenhaConfirmacao.cshtml" />
+    <Content Include="Views\Conta\RedefinirSenha.cshtml" />
+    <Content Include="Views\Conta\RedefinirSenhaConfirmacao.cshtml" />
+    <Content Include="Views\Conta\Registrar.cshtml" />
+    <Content Include="Views\Conta\VerificarCodigo.cshtml" />
+    <Content Include="Views\Conta\_AutenticacoesExternasListaPartial.cshtml" />
+    <Content Include="Views\Gerenciamento\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Gerenciamento\ChangePassword.cshtml" />
+    <Content Include="Views\Gerenciamento\Index.cshtml" />
+    <Content Include="Views\Gerenciamento\ManageLogins.cshtml" />
+    <Content Include="Views\Gerenciamento\SetPassword.cshtml" />
+    <Content Include="Views\Gerenciamento\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Grupos\Criar.cshtml" />
+    <Content Include="Views\Grupos\Detalhes.cshtml" />
+    <Content Include="Views\Grupos\Editar.cshtml" />
+    <Content Include="Views\Grupos\Excluir.cshtml" />
+    <Content Include="Views\Grupos\Indice.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -435,11 +472,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\RolesAdmin\Index.cshtml" />
-    <Content Include="Views\RolesAdmin\Edit.cshtml" />
-    <Content Include="Views\RolesAdmin\Details.cshtml" />
-    <Content Include="Views\RolesAdmin\Delete.cshtml" />
-    <Content Include="Views\RolesAdmin\Create.cshtml" />
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Manage\ManageLogins.cshtml" />
@@ -449,19 +481,6 @@
     <Content Include="Views\Inicial\Indice.cshtml" />
     <Content Include="Views\Inicial\Contato.cshtml" />
     <Content Include="Views\Inicial\Sobre.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\DisplayEmail.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -469,17 +488,18 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CompeticoesController.cs" />
+    <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\GerenciamentoController.cs" />
+    <Compile Include="Controllers\GruposController.cs" />
     <Compile Include="Controllers\InicialController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\RolesAdminController.cs" />
     <Compile Include="Controllers\TesteController.cs" />
     <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infraestrutura\Helpers\PesquisaModelStore.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\PostalMigrationUtils.cs" />
     <Compile Include="Models\Atleta.cs" />
@@ -496,17 +516,15 @@
     <Compile Include="Models\EquipeAtleta.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\Etapa.cs" />
-    <Compile Include="Models\Identity\AccountViewModels.cs" />
-    <Compile Include="Models\Identity\AdminViewModel.cs" />
     <Compile Include="Models\Identity\ApplicationRole.cs" />
     <Compile Include="Models\Identity\ApplicationUserClaim.cs" />
     <Compile Include="Models\Identity\ApplicationUserLogin.cs" />
     <Compile Include="Models\Identity\ApplicationUserRole.cs" />
     <Compile Include="Models\Identity\Usuario.cs" />
-    <Compile Include="Models\Identity\ManageViewModels.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Logradouro.cs" />
     <Compile Include="Models\Pais.cs" />
+    <Compile Include="Models\PesquisaModel.cs" />
     <Compile Include="Models\Regiao.cs" />
     <Compile Include="Models\RegiaoCidade.cs" />
     <Compile Include="Models\TrucoDbContext.cs" />
@@ -517,6 +535,28 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\CompeticoesViewModel.cs" />
+    <Compile Include="ViewModels\Identity\AdministracaoGrupos\GrupoViewModel.cs" />
+    <Compile Include="ViewModels\Identity\AdministracaoUsuarios\EditarUsuarioViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Conta\AutenticacaoExternaConfirmacaoViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Conta\AutenticacaoExternaListaViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Conta\EntrarViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Conta\RegistrarViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Conta\VerificarCodigoViewModel.cs" />
+    <Compile Include="ViewModels\Identity\FactorViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Gerenciamento\AdicionarNumeroTelefoneViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Gerenciamento\AlterarSenhaViewModel.cs" />
+    <Compile Include="ViewModels\Identity\Gerenciamento\ConfigurarAutenticacaoDuasEtapasViewModel.cs" />
+    <Compile Include="ViewModels\Identity\IndexViewModel.cs" />
+    <Compile Include="ViewModels\Identity\ManageLoginsViewModel.cs" />
+    <Compile Include="ViewModels\Identity\RecuperarSenhaViewModel.cs" />
+    <Compile Include="ViewModels\Identity\RecuperarViewModel.cs" />
+    <Compile Include="ViewModels\Identity\RedefinirSenhaViewModel.cs" />
+    <Compile Include="ViewModels\Identity\SendCodeViewModel.cs" />
+    <Compile Include="ViewModels\Identity\SetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Identity\VerifyPhoneNumberViewModel.cs" />
+    <Compile Include="ViewModels\IPagedListViewModel.cs" />
+    <Compile Include="ViewModels\PagedListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Teste\" />

@@ -1,57 +1,30 @@
-﻿@model IEnumerable<Truco.Models.Competicao>
-
+@using Truco.ViewModels
+@model CompeticoesViewModel
 @{
-    ViewBag.Title = "Index";
+	ViewBag.Title = "Competicoes";
 }
-
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nome)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tipo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modalidade)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UsuarioCad)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DataHoraCad)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tipo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Modalidade)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UsuarioCad)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataHoraCad)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.CompeticaoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.CompeticaoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.CompeticaoId })
-        </td>
-    </tr>
-}
-
-</table>
+<hgroup>
+    <h2>@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Pesquisa - @ViewBag.Title
+        </div>
+        <div class="panel-body">
+            <div class="row form-group">
+                <div class="col-lg-12">
+                    @Html.Partial("_ParametrosPesquisa", Model)
+                </div> @*-- Fim row _ParametrosPesquisa*@
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="pesquisa">
+                        @Html.Partial("_Pesquisa", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

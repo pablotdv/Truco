@@ -21,7 +21,7 @@
     var modelName = modelType.Name; 	
 #>
 @using <#= Model.ViewModelsNamespace #>
-@model <#= modelName #>ViewModel
+@model <#= Model.ControllerName #>ViewModel
 @using (Ajax.BeginForm("Pesquisa", "<#= Model.ControllerName #>", new AjaxOptions()
 {
     HttpMethod = "GET",

@@ -1,74 +1,37 @@
-﻿@model Truco.Models.Competicao
-
+@model Truco.Models.Competicao
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Competicoes";
 }
-
-<h2>Create</h2>
-
-
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Competicao</h4>
-        <hr />
-        @Html.ValidationSummary(true)
-
-        <div class="form-group">
-        <div class="form-group">
-            @Html.LabelFor(model => model.Nome, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Nome)
-                @Html.ValidationMessageFor(model => model.Nome)
+<hgroup>
+    <h2>@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">                
+                <label>Cadastro - @ViewBag.Title</label>                
             </div>
-        </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Tipo, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Tipo)
-                @Html.ValidationMessageFor(model => model.Tipo)
-            </div>
-        </div>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Modalidade, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Modalidade)
-                @Html.ValidationMessageFor(model => model.Modalidade)
-            </div>
-        </div>
+                    @Html.Partial("_CriarOuEditar")
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UsuarioCad, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UsuarioCad)
-                @Html.ValidationMessageFor(model => model.UsuarioCad)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataHoraCad, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DataHoraCad)
-                @Html.ValidationMessageFor(model => model.DataHoraCad)
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <a href="@Url.Action("Indice")" class="btn btn-default"><i class="fa fa-arrow-left fa-fw"></i> Voltar</a>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Salvar</button>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
-
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+	@Html.Partial("_Scripts")    
 }

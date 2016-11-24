@@ -10,6 +10,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Truco.ViewModels;
 
 namespace Truco.Controllers
 {
@@ -86,12 +87,12 @@ namespace Truco.Controllers
         //
         // POST: /Users/Create
         [HttpPost]
-        public async Task<ActionResult> Create(RegisterViewModel userViewModel, params string[] selectedRoles)
+        public async Task<ActionResult> Create(RegistrarViewModel userViewModel, params string[] selectedRoles)
         {
             if (ModelState.IsValid)
             {
                 var user = new Usuario { UserName = userViewModel.Email, Email = userViewModel.Email };
-                var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
+                var adminresult = await UserManager.CreateAsync(user, userViewModel.Senha);
 
                 //Add User to the selected Roles 
                 if (adminresult.Succeeded)
@@ -136,7 +137,7 @@ namespace Truco.Controllers
 
             var userRoles = await UserManager.GetRolesAsync(user.Id);
 
-            return View(new EditUserViewModel()
+            return View(new EditarUsuarioViewModel()
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -153,7 +154,7 @@ namespace Truco.Controllers
         // POST: /Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Email,Id")] EditUserViewModel editUser, params string[] selectedRole)
+        public async Task<ActionResult> Edit([Bind(Include = "Email,Id")] EditarUsuarioViewModel editUser, params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {

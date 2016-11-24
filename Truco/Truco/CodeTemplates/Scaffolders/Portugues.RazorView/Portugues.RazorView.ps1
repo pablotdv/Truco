@@ -15,6 +15,8 @@ param(
 	[switch]$Force = $false
 )
 
+$name = $Controller
+
 # Ensure we have a controller name, plus a model type if specified
 if ($ModelType) {
 	$foundModelType = Get-ProjectType $ModelType -Project $Project
@@ -49,6 +51,7 @@ $outputPath = Join-Path $outputFolderName $ViewName
 Add-ProjectItemViaTemplate $outputPath -Template $Template -Model @{
 	IsContentPage = [bool]$Layout;
 	Layout = $Layout;
+	Name = $name;
 	SectionNames = $SectionNames;
 	PrimarySectionName = $PrimarySectionName;
 	ReferenceScriptLibraries = $ReferenceScriptLibraries.ToBool();

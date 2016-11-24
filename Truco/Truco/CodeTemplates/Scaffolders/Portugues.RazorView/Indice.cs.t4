@@ -18,7 +18,7 @@
    var modelName = modelType.Name;
 #>
 @using <#= Model.ViewModelsNamespace #>
-@model <#= modelName #>ViewModel
+@model <#= Model.ControllerName #>ViewModel
 @{
 	ViewBag.Title = "<#= Model.ControllerName #>";
 }

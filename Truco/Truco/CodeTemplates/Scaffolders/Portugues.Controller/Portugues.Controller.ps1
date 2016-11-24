@@ -1,7 +1,7 @@
 ﻿[T4Scaffolding.ControllerScaffolder("Controller with read/write action and views, using EF data access code", Description = "Adds an ASP.NET MVC controller with views and data access code", SupportsModelType = $true, SupportsDataContextType = $true, SupportsViewScaffolder = $true)][CmdletBinding()]
 param(     
 	[parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$ControllerName,   
-	[string]$ModelType,
+	[string]$ModelType,	
     [string]$Project,
     [string]$CodeLanguage,
 	[string]$DbContextType,
@@ -18,6 +18,7 @@ param(
 	[string]$ForceMode
 )
 
+$name = $ControllerName
 # Interpret the "Force" and "ForceMode" options
 $overwriteController = $Force -and ((!$ForceMode) -or ($ForceMode -eq "ControllerOnly"))
 $overwriteFilesExceptController = $Force -and ((!$ForceMode) -or ($ForceMode -eq "PreserveController"))
@@ -97,6 +98,7 @@ if (!$relatedEntities) { $relatedEntities = @() }
 $templateName = if($Repository) { "ControllerWithRepository" } else { "ControllerWithContext" }
 Add-ProjectItemViaTemplate $outputPath -Template $templateName -Model @{
 	ControllerName = $ControllerName;
+	Name = $Name;
 	ModelType = [MarshalByRefObject]$foundModelType; 
 	PrimaryKey = [string]$primaryKey; 
 	DefaultNamespace = $defaultNamespace; 

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using PagedList.EntityFramework;
 using Newtonsoft.Json;
 using System.Net;
-using <#= Model.DefaultNamespace #>.Helpers;
+using <#= Model.DefaultNamespace #>.Infraestrutura.Helpers;
 using <#= Model.DefaultNamespace #>.ViewModels;
 <# if(!string.IsNullOrEmpty(Model.ModelTypeNamespace)) { #>
 using <#= Model.ModelTypeNamespace #>;
@@ -32,6 +32,8 @@ namespace <#= Model.ControllerNamespace #>
    
     var modelType = (CodeType)Model.ModelType; 	
 	var displayColumn = GetDisplayColumn(modelType);
+	if (string.IsNullOrWhiteSpace(displayColumn))
+		throw new Exception("DisplayColumn não informado na entidade!");
 	var displayColumnName = Char.ToLower(displayColumn[0]) + displayColumn.Substring(1);
 
     var modelName = modelType.Name; 
@@ -52,25 +54,23 @@ namespace <#= Model.ControllerNamespace #>
 #>
 
     public class <#= Model.ControllerName #> : Controller
-    {
-		private const string _PESQUISA_KEY = "<#=Guid.NewGuid()#>"; 
-		        
+    {	        
         //
         // GET: /<#= routingName #>/
         public async Task<ActionResult> Indice()
         {
-			var viewModel = JsonConvert.DeserializeObject<<#= modelName#>ViewModel>(await PesquisaModelStore.GetAsync(Guid.Parse(_PESQUISA_KEY)));
+			var viewModel = JsonConvert.DeserializeObject<<#= Model.Name#>ViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
 
-            return await Pesquisa(viewModel ?? new <#= modelName#>ViewModel());
+            return await Pesquisa(viewModel ?? new <#= Model.Name#>ViewModel());
         }
 
 		//
         // GET: /<#= routingName #>/Pesquisa
-		public async Task<ActionResult> Pesquisa(<#= modelName#>ViewModel viewModel)
+		public async Task<ActionResult> Pesquisa(<#= Model.Name#>ViewModel viewModel)
 		{
-			await PesquisaModelStore.AddAsync(Guid.Parse(_PESQUISA_KEY), viewModel);
+			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = context.<#= modelNamePlural #>.AsQueryable();
+			var query = db.<#= modelNamePlural #>.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.<#=displayColumn#>))
@@ -95,7 +95,7 @@ namespace <#= Model.ControllerNamespace #>
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
             if (<#= modelVariable #> == null)
             {
                 return HttpNotFound();
@@ -131,11 +131,11 @@ namespace <#= Model.ControllerNamespace #>
                 <#= modelVariable #>.<#= primaryKeyProperty.Name #> = Guid.NewGuid();
 <# } #>
 <# if(isObjectContext) { #>
-                context.<#= modelNamePlural #>.AddObject(<#= modelVariable #>);
+                db.<#= modelNamePlural #>.AddObject(<#= modelVariable #>);
 <# } else { #>
-                context.<#= modelNamePlural #>.Add(<#= modelVariable #>);
+                db.<#= modelNamePlural #>.Add(<#= modelVariable #>);
 <# } #>
-                await context.SaveChangesAsync();
+                await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
             }
@@ -154,7 +154,7 @@ namespace <#= Model.ControllerNamespace #>
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
             if (<#= modelVariable #> == null)
             {
                 return HttpNotFound();
@@ -174,12 +174,12 @@ namespace <#= Model.ControllerNamespace #>
             if (ModelState.IsValid)
             {
 <# if(isObjectContext) { #>
-                context.<#= modelNamePlural #>.Attach(<#= modelVariable #>);
-                context.ObjectStateManager.ChangeObjectState(<#= modelVariable #>, EntityState.Modified);
+                db.<#= modelNamePlural #>.Attach(<#= modelVariable #>);
+                db.ObjectStateManager.ChangeObjectState(<#= modelVariable #>, EntityState.Modified);
 <# } else { #>
-                context.Entry(<#= modelVariable #>).State = EntityState.Modified;
+                db.Entry(<#= modelVariable #>).State = EntityState.Modified;
 <# } #>
-                await context.SaveChangesAsync();
+                await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Alteração realizada com sucesso!";
                 return RedirectToAction("Indice");
             }
@@ -198,7 +198,7 @@ namespace <#= Model.ControllerNamespace #>
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
             if (<#= modelVariable #> == null)
             {
                 return HttpNotFound();
@@ -217,13 +217,13 @@ namespace <#= Model.ControllerNamespace #>
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(<#= primaryKeyProperty.Type.AsString #> id)
         {
-            <#= modelName #> <#= modelVariable #> = await context.<#= modelNamePlural #>.FindAsync(id);
+            <#= modelName #> <#= modelVariable #> = await db.<#= modelNamePlural #>.FindAsync(id);
 <# if(isObjectContext) { #>
-            context.<#= modelNamePlural #>.DeleteObject(<#= modelVariable #>);
+            db.<#= modelNamePlural #>.DeleteObject(<#= modelVariable #>);
 <# } else { #>
-            context.<#= modelNamePlural #>.Remove(<#= modelVariable #>);
+            db.<#= modelNamePlural #>.Remove(<#= modelVariable #>);
 <# } #>
-            await context.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
 <#if (relatedEntities.Count() > 0) {#>
@@ -232,7 +232,7 @@ namespace <#= Model.ControllerNamespace #>
 <# foreach(var relatedEntity in relatedEntities) {
 	   var displayRelated = GetDisplayColumn(relatedEntity.RelatedEntityType);
  #>
-            ViewBag.<#= relatedEntity.RelationNamePlural #> = new SelectList(await context.<#= relatedEntity.RelatedEntityTypeNamePlural #>.ToListAsync(), "<#= relatedEntity.RelatedEntityPrimaryKeyName #>", "<#=displayRelated#>");
+            ViewBag.<#= relatedEntity.RelationNamePlural #> = new SelectList(await db.<#= relatedEntity.RelatedEntityTypeNamePlural #>.ToListAsync(), "<#= relatedEntity.RelatedEntityPrimaryKeyName #>", "<#=displayRelated#>");
 <# } #>    
 		}
 <# 
@@ -245,7 +245,7 @@ foreach(var relatedEntity in relatedEntities) {
         public async Task<JsonResult> Pesquisar<#= relatedEntity.RelationNamePlural#>(string <#=displayRelatedLower#>)
         {
 			var <#=displayRelatedLower#>s = String.IsNullOrEmpty(<#=displayRelatedLower#>) ? new string[0] : <#=displayRelatedLower#>.Split(' ');
-            var dados = await context.<#= relatedEntity.RelationNamePlural#>
+            var dados = await db.<#= relatedEntity.RelationNamePlural#>
 			    .Where(b => <#=displayRelatedLower#>s.All(c => b.<#=displayRelated#>.Contains(c)))
 				.OrderBy(a => a.<#=displayRelated#>)
 				.Take(15)
@@ -259,7 +259,7 @@ foreach(var relatedEntity in relatedEntities) {
         protected override void Dispose(bool disposing)
         {
             if (disposing) {
-                context.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

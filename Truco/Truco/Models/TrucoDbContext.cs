@@ -77,5 +77,7 @@ namespace Truco.Models
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Regiao> Regioes { get; set; }
         public DbSet<RegiaoCidade> RegioesCidades { get; set; }
+        public DbSet<PesquisaModel> PesquisasModels { get; set; }
+        
     }
 }
