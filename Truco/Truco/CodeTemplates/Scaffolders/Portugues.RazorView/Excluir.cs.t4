@@ -19,7 +19,10 @@
 @{
     ViewBag.Title = "<#= Model.ControllerName #>";
 }
-
+<hgroup>
+    <h2>@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
