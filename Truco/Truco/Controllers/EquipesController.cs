@@ -167,9 +167,9 @@ namespace Truco.Controllers
         }
 		private async Task ViewBags()
 		{
-            ViewBag.Regiaos = new SelectList(await db.Regioes.ToListAsync(), "RegiaoId", "Numero");
+            ViewBag.Regiaos = new SelectList(await db.Regiaos.ToListAsync(), "RegiaoId", "Numero");
     
-		}       
+		}
 
         protected override void Dispose(bool disposing)
         {

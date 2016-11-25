@@ -12,12 +12,8 @@ namespace Truco.Models
     public class RegiaoCidade
     {
         [Key]
-        [Column(Order = 0)]
+        public Guid RegiaoCidadeId { get; set; }
         public Guid RegiaoId { get; set; }
-
-        [Key]
-        [Column(Order = 1)]
-        [Index(IsUnique = true)]
         public Guid CidadeId { get; set; }
 
         public virtual Regiao Regiao { get; set; }

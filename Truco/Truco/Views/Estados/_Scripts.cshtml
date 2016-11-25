@@ -1,0 +1,24 @@
+<script>
+	
+	var enginePais = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarPais", "Estados")?nome=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nome'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    enginePais.initialize();
+
+    $('#PaisNome').typeahead(null, {
+        source: enginePais.ttAdapter(),
+		limit: 15,
+        displayKey: "Nome",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data.Nome + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#PaisId").val(suggestion.PaisId);
+    });
+</script>
+

@@ -1,0 +1,21 @@
+@model Truco.Models.RegiaoCidade
+<div class="row form-group">
+
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.RegiaoId, htmlAttributes: new { @class = "control-label" })
+		@Html.DropDownListFor(model => model.RegiaoId, 
+			(SelectList)ViewBag.Regiaos, 
+			"Selecione um Regiao...",
+			new { @class = "form-control selectpicker" })        
+		@Html.ValidationMessageFor(model => model.RegiaoId, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.CidadeId, htmlAttributes: new { @class = "control-label" })
+		@Html.DropDownListFor(model => model.CidadeId, 
+			(SelectList)ViewBag.Cidades, 
+			"Selecione um Cidade...",
+			new { @class = "form-control selectpicker" })        
+		@Html.ValidationMessageFor(model => model.CidadeId, "", new { @class = "text-danger" })
+    </div>
+</div> <!-- ./row -->
+

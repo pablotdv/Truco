@@ -82,5 +82,21 @@ namespace Truco.Models
         public DbSet<Truco.Models.Bairro> Bairroes { get; set; }
 
         public DbSet<Truco.Models.Competicao> Competicaos { get; set; }
+
+        public DbSet<Truco.Models.CompeticaoEquipe> CompeticaoEquipes { get; set; }
+
+        public DbSet<Truco.Models.Endereco> Enderecoes { get; set; }
+
+        public DbSet<Truco.Models.EquipeAtleta> EquipeAtletas { get; set; }
+
+        public DbSet<Truco.Models.Estado> Estadoes { get; set; }
+
+        public DbSet<Truco.Models.Logradouro> Logradouroes { get; set; }
+
+        public DbSet<Truco.Models.Pais> Pais { get; set; }
+
+        public DbSet<Truco.Models.Regiao> Regiaos { get; set; }
+
+        public DbSet<Truco.Models.RegiaoCidade> RegiaoCidades { get; set; }
     }
 }

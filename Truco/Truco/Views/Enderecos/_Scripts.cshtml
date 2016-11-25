@@ -1,0 +1,45 @@
+<script>
+	
+	var engineUsuarios = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarUsuarios", "Enderecos")?=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace(''),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engineUsuarios.initialize();
+
+    $('#Usuario').typeahead(null, {
+        source: engineUsuarios.ttAdapter(),
+		limit: 15,
+        displayKey: "",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data. + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#UsuarioId").val(suggestion.UsuarioId);
+    });
+	
+	var engineLogradouroes = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarLogradouroes", "Enderecos")?descricao=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('descricao'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engineLogradouroes.initialize();
+
+    $('#LogradouroDescricao').typeahead(null, {
+        source: engineLogradouroes.ttAdapter(),
+		limit: 15,
+        displayKey: "Descricao",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data.Descricao + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#LogradouroId").val(suggestion.LogradouroId);
+    });
+</script>
+

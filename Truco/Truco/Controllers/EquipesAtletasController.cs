@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.EquipesAtletas.AsQueryable();
+			var query = db.EquipeAtletas.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Atleta))
@@ -42,7 +42,7 @@ namespace Truco.Controllers
                 query = query.Where(a => atletas.All(atleta => a.Atleta.Nome.Contains(atleta)));
             }
 
-            viewModel.Resultados = await query.OrderBy(a => a.Atleta).ToPagedListAsync(viewModel.Pagina, viewModel.TamanhoPagina);
+            viewModel.Resultados = await query.OrderBy(a => a.Atleta.Nome).ToPagedListAsync(viewModel.Pagina, viewModel.TamanhoPagina);
 
             if (Request.IsAjaxRequest())
                 return PartialView("_Pesquisa", viewModel);
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
+            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
             if (equipeAtleta == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 equipeAtleta.EquipeAtletaId = Guid.NewGuid();
-                db.EquipesAtletas.Add(equipeAtleta);
+                db.EquipeAtletas.Add(equipeAtleta);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
+            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
             if (equipeAtleta == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
+            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
             if (equipeAtleta == null)
             {
                 return HttpNotFound();
@@ -160,8 +160,8 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
-            db.EquipesAtletas.Remove(equipeAtleta);
+            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
+            db.EquipeAtletas.Remove(equipeAtleta);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
@@ -171,7 +171,7 @@ namespace Truco.Controllers
             ViewBag.Atletas = new SelectList(await db.Atletas.ToListAsync(), "AtletaId", "Nome");
     
 		}
-        		
+
         protected override void Dispose(bool disposing)
         {
             if (disposing) {

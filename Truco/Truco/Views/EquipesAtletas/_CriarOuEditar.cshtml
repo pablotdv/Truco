@@ -1,11 +1,12 @@
 @model Truco.Models.EquipeAtleta
 <div class="row form-group">
+
 	<div class="col-md-4 col-xs-6">
         @Html.LabelFor(model => model.EquipeId, htmlAttributes: new { @class = "control-label" })
-        @Html.DropDownListFor(model => model.EquipeId, 
+		@Html.DropDownListFor(model => model.EquipeId, 
 			(SelectList)ViewBag.Equipes, 
 			"Selecione um Equipe...",
-			new { @class = "form-control selectpicker" })        		
+			new { @class = "form-control selectpicker" })        
 		@Html.ValidationMessageFor(model => model.EquipeId, "", new { @class = "text-danger" })
     </div>
 	<div class="col-md-4 col-xs-6">

@@ -1,0 +1,32 @@
+@using Truco.ViewModels
+@model EntidadesViewModel
+@{
+	ViewBag.Title = "Entidades";
+}
+<hgroup>
+    <h2>@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Pesquisa - @ViewBag.Title
+		</div>
+			<div class="panel-body">
+			<div class="row form-group">
+				<div class="col-lg-12">                
+					@Html.Partial("_ParametrosPesquisa", Model)                            
+				</div> @*-- Fim row _ParametrosPesquisa*@
+			</div>	       
+			<div class="row">
+				<div class="col-lg-12">
+					<div id="pesquisa">
+						@Html.Partial("_Pesquisa", Model)
+					</div>          
+				</div>
+			</div>
+		</div>
+	</div>		       
+</div>
+    
+ 

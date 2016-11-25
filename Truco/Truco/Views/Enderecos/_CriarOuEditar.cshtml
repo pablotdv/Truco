@@ -1,0 +1,61 @@
+@model Truco.Models.Endereco
+<div class="row form-group">
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.PontoReferencia, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.PontoReferencia, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PontoReferencia, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.IsEntrega, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.IsEntrega, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.IsEntrega, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.IsCobranca, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.IsCobranca, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.IsCobranca, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.DataUltimaModificacao, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.DataUltimaModificacao, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.DataUltimaModificacao, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.DataCriacao, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.DataCriacao, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.DataCriacao, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.UsuarioCriacao, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.UsuarioCriacao, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.UsuarioCriacao, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.UsuarioUltimaModificacao, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.UsuarioUltimaModificacao, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.UsuarioUltimaModificacao, "", new { @class = "text-danger" })
+    </div>
+
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.UsuarioId, htmlAttributes: new { @class = "control-label" })
+		@Html.DropDownListFor(model => model.UsuarioId, 
+			(SelectList)ViewBag.Usuarios, 
+			"Selecione um Usuario...",
+			new { @class = "form-control selectpicker" })        
+		@Html.ValidationMessageFor(model => model.UsuarioId, "", new { @class = "text-danger" })
+    </div>
+	<div class="col-md-4 col-xs-6">
+        @Html.LabelFor(model => model.LogradouroId, htmlAttributes: new { @class = "control-label" })
+		@Html.DropDownListFor(model => model.LogradouroId, 
+			(SelectList)ViewBag.Logradouroes, 
+			"Selecione um Logradouro...",
+			new { @class = "form-control selectpicker" })        
+		@Html.ValidationMessageFor(model => model.LogradouroId, "", new { @class = "text-danger" })
+    </div>
+</div> <!-- ./row -->
+
