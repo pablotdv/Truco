@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Regiaos.AsQueryable();
+			var query = db.Regioes.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Numero))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Regiao regiao = await db.Regiaos.FindAsync(id);
+            Regiao regiao = await db.Regioes.FindAsync(id);
             if (regiao == null)
             {
                 return HttpNotFound();
@@ -82,7 +82,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 regiao.RegiaoId = Guid.NewGuid();
-                db.Regiaos.Add(regiao);
+                db.Regioes.Add(regiao);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -99,7 +99,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Regiao regiao = await db.Regiaos.FindAsync(id);
+            Regiao regiao = await db.Regioes.FindAsync(id);
             if (regiao == null)
             {
                 return HttpNotFound();
@@ -132,7 +132,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Regiao regiao = await db.Regiaos.FindAsync(id);
+            Regiao regiao = await db.Regioes.FindAsync(id);
             if (regiao == null)
             {
                 return HttpNotFound();
@@ -148,8 +148,8 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Regiao regiao = await db.Regiaos.FindAsync(id);
-            db.Regiaos.Remove(regiao);
+            Regiao regiao = await db.Regioes.FindAsync(id);
+            db.Regioes.Remove(regiao);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }

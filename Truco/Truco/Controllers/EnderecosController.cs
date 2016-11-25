@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Enderecoes.AsQueryable();
+			var query = db.Enderecos.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Numero))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Endereco endereco = await db.Enderecoes.FindAsync(id);
+            Endereco endereco = await db.Enderecos.FindAsync(id);
             if (endereco == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 endereco.EnderecoId = Guid.NewGuid();
-                db.Enderecoes.Add(endereco);
+                db.Enderecos.Add(endereco);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Endereco endereco = await db.Enderecoes.FindAsync(id);
+            Endereco endereco = await db.Enderecos.FindAsync(id);
             if (endereco == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Endereco endereco = await db.Enderecoes.FindAsync(id);
+            Endereco endereco = await db.Enderecos.FindAsync(id);
             if (endereco == null)
             {
                 return HttpNotFound();
@@ -160,15 +160,15 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Endereco endereco = await db.Enderecoes.FindAsync(id);
-            db.Enderecoes.Remove(endereco);
+            Endereco endereco = await db.Enderecos.FindAsync(id);
+            db.Enderecos.Remove(endereco);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
 		private async Task ViewBags()
 		{
             ViewBag.Usuarios = new SelectList(await db.Users.ToListAsync(), "Id", "");
-            ViewBag.Logradouroes = new SelectList(await db.Logradouroes.ToListAsync(), "LogradouroId", "Descricao");
+            ViewBag.Logradouroes = new SelectList(await db.Logradouros.ToListAsync(), "LogradouroId", "Descricao");
     
 		}
 

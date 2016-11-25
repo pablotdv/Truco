@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.EquipeAtletas.AsQueryable();
+			var query = db.EquipesAtletas.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Atleta))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
+            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
             if (equipeAtleta == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 equipeAtleta.EquipeAtletaId = Guid.NewGuid();
-                db.EquipeAtletas.Add(equipeAtleta);
+                db.EquipesAtletas.Add(equipeAtleta);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
+            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
             if (equipeAtleta == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
+            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
             if (equipeAtleta == null)
             {
                 return HttpNotFound();
@@ -160,8 +160,8 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            EquipeAtleta equipeAtleta = await db.EquipeAtletas.FindAsync(id);
-            db.EquipeAtletas.Remove(equipeAtleta);
+            EquipeAtleta equipeAtleta = await db.EquipesAtletas.FindAsync(id);
+            db.EquipesAtletas.Remove(equipeAtleta);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }

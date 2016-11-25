@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Pais.AsQueryable();
+			var query = db.Paises.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Pais pais = await db.Pais.FindAsync(id);
+            Pais pais = await db.Paises.FindAsync(id);
             if (pais == null)
             {
                 return HttpNotFound();
@@ -82,7 +82,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 pais.PaisId = Guid.NewGuid();
-                db.Pais.Add(pais);
+                db.Paises.Add(pais);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -99,7 +99,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Pais pais = await db.Pais.FindAsync(id);
+            Pais pais = await db.Paises.FindAsync(id);
             if (pais == null)
             {
                 return HttpNotFound();
@@ -132,7 +132,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Pais pais = await db.Pais.FindAsync(id);
+            Pais pais = await db.Paises.FindAsync(id);
             if (pais == null)
             {
                 return HttpNotFound();
@@ -148,8 +148,8 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Pais pais = await db.Pais.FindAsync(id);
-            db.Pais.Remove(pais);
+            Pais pais = await db.Paises.FindAsync(id);
+            db.Paises.Remove(pais);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }

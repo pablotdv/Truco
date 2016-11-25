@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Logradouroes.AsQueryable();
+			var query = db.Logradouros.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Descricao))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Logradouro logradouro = await db.Logradouroes.FindAsync(id);
+            Logradouro logradouro = await db.Logradouros.FindAsync(id);
             if (logradouro == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 logradouro.LogradouroId = Guid.NewGuid();
-                db.Logradouroes.Add(logradouro);
+                db.Logradouros.Add(logradouro);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Logradouro logradouro = await db.Logradouroes.FindAsync(id);
+            Logradouro logradouro = await db.Logradouros.FindAsync(id);
             if (logradouro == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Logradouro logradouro = await db.Logradouroes.FindAsync(id);
+            Logradouro logradouro = await db.Logradouros.FindAsync(id);
             if (logradouro == null)
             {
                 return HttpNotFound();
@@ -160,14 +160,14 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Logradouro logradouro = await db.Logradouroes.FindAsync(id);
-            db.Logradouroes.Remove(logradouro);
+            Logradouro logradouro = await db.Logradouros.FindAsync(id);
+            db.Logradouros.Remove(logradouro);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
 		private async Task ViewBags()
 		{
-            ViewBag.Bairroes = new SelectList(await db.Bairroes.ToListAsync(), "BairroId", "Nome");
+            ViewBag.Bairroes = new SelectList(await db.Bairros.ToListAsync(), "BairroId", "Nome");
     
 		}
 

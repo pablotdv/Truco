@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Estadoes.AsQueryable();
+			var query = db.Estados.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Estado estado = await db.Estadoes.FindAsync(id);
+            Estado estado = await db.Estados.FindAsync(id);
             if (estado == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 estado.EstadoId = Guid.NewGuid();
-                db.Estadoes.Add(estado);
+                db.Estados.Add(estado);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Estado estado = await db.Estadoes.FindAsync(id);
+            Estado estado = await db.Estados.FindAsync(id);
             if (estado == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Estado estado = await db.Estadoes.FindAsync(id);
+            Estado estado = await db.Estados.FindAsync(id);
             if (estado == null)
             {
                 return HttpNotFound();
@@ -160,14 +160,14 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Estado estado = await db.Estadoes.FindAsync(id);
-            db.Estadoes.Remove(estado);
+            Estado estado = await db.Estados.FindAsync(id);
+            db.Estados.Remove(estado);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
 		private async Task ViewBags()
 		{
-            ViewBag.Pais = new SelectList(await db.Pais.ToListAsync(), "PaisId", "Nome");
+            ViewBag.Pais = new SelectList(await db.Paises.ToListAsync(), "PaisId", "Nome");
     
 		}
 

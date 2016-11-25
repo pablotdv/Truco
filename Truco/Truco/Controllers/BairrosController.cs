@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Bairroes.AsQueryable();
+			var query = db.Bairros.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Bairro bairro = await db.Bairroes.FindAsync(id);
+            Bairro bairro = await db.Bairros.FindAsync(id);
             if (bairro == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 bairro.BairroId = Guid.NewGuid();
-                db.Bairroes.Add(bairro);
+                db.Bairros.Add(bairro);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Bairro bairro = await db.Bairroes.FindAsync(id);
+            Bairro bairro = await db.Bairros.FindAsync(id);
             if (bairro == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Bairro bairro = await db.Bairroes.FindAsync(id);
+            Bairro bairro = await db.Bairros.FindAsync(id);
             if (bairro == null)
             {
                 return HttpNotFound();
@@ -160,8 +160,8 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Bairro bairro = await db.Bairroes.FindAsync(id);
-            db.Bairroes.Remove(bairro);
+            Bairro bairro = await db.Bairros.FindAsync(id);
+            db.Bairros.Remove(bairro);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }

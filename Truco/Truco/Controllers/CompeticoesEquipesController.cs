@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.CompeticaoEquipes.AsQueryable();
+			var query = db.CompeticoesEquipes.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Equipe))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompeticaoEquipe competicaoEquipe = await db.CompeticaoEquipes.FindAsync(id);
+            CompeticaoEquipe competicaoEquipe = await db.CompeticoesEquipes.FindAsync(id);
             if (competicaoEquipe == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 competicaoEquipe.CompeticaoEquipeId = Guid.NewGuid();
-                db.CompeticaoEquipes.Add(competicaoEquipe);
+                db.CompeticoesEquipes.Add(competicaoEquipe);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompeticaoEquipe competicaoEquipe = await db.CompeticaoEquipes.FindAsync(id);
+            CompeticaoEquipe competicaoEquipe = await db.CompeticoesEquipes.FindAsync(id);
             if (competicaoEquipe == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompeticaoEquipe competicaoEquipe = await db.CompeticaoEquipes.FindAsync(id);
+            CompeticaoEquipe competicaoEquipe = await db.CompeticoesEquipes.FindAsync(id);
             if (competicaoEquipe == null)
             {
                 return HttpNotFound();
@@ -160,14 +160,14 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            CompeticaoEquipe competicaoEquipe = await db.CompeticaoEquipes.FindAsync(id);
-            db.CompeticaoEquipes.Remove(competicaoEquipe);
+            CompeticaoEquipe competicaoEquipe = await db.CompeticoesEquipes.FindAsync(id);
+            db.CompeticoesEquipes.Remove(competicaoEquipe);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
 		private async Task ViewBags()
 		{
-            ViewBag.Competicaos = new SelectList(await db.Competicaos.ToListAsync(), "CompeticaoId", "Nome");
+            ViewBag.Competicaos = new SelectList(await db.Competicoes.ToListAsync(), "CompeticaoId", "Nome");
             ViewBag.Equipes = new SelectList(await db.Equipes.ToListAsync(), "EquipeId", "Nome");
     
 		}

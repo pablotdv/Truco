@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.RegiaoCidades.AsQueryable();
+			var query = db.RegioesCidades.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Cidade))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RegiaoCidade regiaoCidade = await db.RegiaoCidades.FindAsync(id);
+            RegiaoCidade regiaoCidade = await db.RegioesCidades.FindAsync(id);
             if (regiaoCidade == null)
             {
                 return HttpNotFound();
@@ -86,7 +86,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 regiaoCidade.RegiaoCidadeId = Guid.NewGuid();
-                db.RegiaoCidades.Add(regiaoCidade);
+                db.RegioesCidades.Add(regiaoCidade);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -105,7 +105,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RegiaoCidade regiaoCidade = await db.RegiaoCidades.FindAsync(id);
+            RegiaoCidade regiaoCidade = await db.RegioesCidades.FindAsync(id);
             if (regiaoCidade == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RegiaoCidade regiaoCidade = await db.RegiaoCidades.FindAsync(id);
+            RegiaoCidade regiaoCidade = await db.RegioesCidades.FindAsync(id);
             if (regiaoCidade == null)
             {
                 return HttpNotFound();
@@ -160,14 +160,14 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            RegiaoCidade regiaoCidade = await db.RegiaoCidades.FindAsync(id);
-            db.RegiaoCidades.Remove(regiaoCidade);
+            RegiaoCidade regiaoCidade = await db.RegioesCidades.FindAsync(id);
+            db.RegioesCidades.Remove(regiaoCidade);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }
 		private async Task ViewBags()
 		{
-            ViewBag.Regiaos = new SelectList(await db.Regiaos.ToListAsync(), "RegiaoId", "Numero");
+            ViewBag.Regiaos = new SelectList(await db.Regioes.ToListAsync(), "RegiaoId", "Numero");
             ViewBag.Cidades = new SelectList(await db.Cidades.ToListAsync(), "CidadeId", "Nome");
     
 		}

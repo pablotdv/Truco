@@ -33,7 +33,7 @@ namespace Truco.Controllers
 		{
 			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Competicaos.AsQueryable();
+			var query = db.Competicoes.AsQueryable();
 
 			//TODO: parâmetros de pesquisa
 			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
@@ -58,7 +58,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicaos.FindAsync(id);
+            Competicao competicao = await db.Competicoes.FindAsync(id);
             if (competicao == null)
             {
                 return HttpNotFound();
@@ -82,7 +82,7 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 competicao.CompeticaoId = Guid.NewGuid();
-                db.Competicaos.Add(competicao);
+                db.Competicoes.Add(competicao);
                 await db.SaveChangesAsync();
 				TempData["Mensagem"] = "Operação realizada com sucesso!";
                 return RedirectToAction("Indice");  
@@ -99,7 +99,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicaos.FindAsync(id);
+            Competicao competicao = await db.Competicoes.FindAsync(id);
             if (competicao == null)
             {
                 return HttpNotFound();
@@ -132,7 +132,7 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicaos.FindAsync(id);
+            Competicao competicao = await db.Competicoes.FindAsync(id);
             if (competicao == null)
             {
                 return HttpNotFound();
@@ -148,8 +148,8 @@ namespace Truco.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
-            Competicao competicao = await db.Competicaos.FindAsync(id);
-            db.Competicaos.Remove(competicao);
+            Competicao competicao = await db.Competicoes.FindAsync(id);
+            db.Competicoes.Remove(competicao);
             await db.SaveChangesAsync();
             return RedirectToAction("Indice");
         }

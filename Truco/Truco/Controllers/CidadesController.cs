@@ -167,7 +167,7 @@ namespace Truco.Controllers
         }
 		private async Task ViewBags()
 		{
-            ViewBag.Estadoes = new SelectList(await db.Estadoes.ToListAsync(), "EstadoId", "Nome");
+            ViewBag.Estadoes = new SelectList(await db.Estados.ToListAsync(), "EstadoId", "Nome");
     
 		}
 
