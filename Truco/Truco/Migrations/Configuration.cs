@@ -3,6 +3,7 @@ namespace Truco.Migrations
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Models;
+    using Models.Enums;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -41,6 +42,54 @@ namespace Truco.Migrations
             CriarLogradouros(context, user1);
 
             CriarRegioes(context, user1);
+
+            for (int i = 10; i <= 100; i++)
+            {
+                CriarCompeticao(context, $"Torneio de teste com {i} trios", i);
+            }
+        }
+
+        private void CriarCompeticao(TrucoDbContext context, string nome, int trios)
+        {            
+            if (!context.Competicoes.Any(a => a.Nome.Equals(nome)))
+            {
+                Competicao competicao = new Competicao()
+                {
+                    CompeticaoId = Guid.NewGuid(),
+                    DataHoraCad = DateTime.Now,
+                    Modalidade = CompeticaoModalidade.Trio,
+                    Tipo = CompeticaoTipo.Torneio,
+                    Nome = nome,
+                    UsuarioCad = "sistema",
+                    Equipes = new HashSet<CompeticaoEquipe>()
+                };
+                for (int i = 1; i <= trios; i++)
+                {
+                    competicao.Equipes.Add(new CompeticaoEquipe()
+                    {
+                        CompeticaoEquipeId = Guid.NewGuid(),
+                        Equipe = CriarEquipe(context, $"Trio - {i}")
+                    });
+                }
+
+                context.Competicoes.Add(competicao);
+
+                context.SaveChanges();
+            }
+        }
+
+        private static Equipe CriarEquipe(TrucoDbContext context, string nome)
+        {
+            var regiao = context.Regioes.Include(a => a.Cidades).OrderBy(r => Guid.NewGuid()).FirstOrDefault();
+            Equipe equipe = new Equipe()
+            {
+                EquipeId = Guid.NewGuid(),
+                DataHoraCad = DateTime.Now,
+                Nome = nome,
+                RegiaoId = regiao.RegiaoId,
+                CidadeId = regiao.Cidades.OrderBy(a => Guid.NewGuid()).FirstOrDefault().CidadeId
+            };
+            return equipe;
         }
 
         private void CriarRegioes(TrucoDbContext context, Usuario user1)

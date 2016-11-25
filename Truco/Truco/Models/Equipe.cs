@@ -14,7 +14,10 @@ namespace Truco.Models
         public Guid EquipeId { get; set; }
         public string Nome { get; set; }
         public Guid? RegiaoId { get; set; }
-        public Regiao Regiao { get; set; }
+        public Guid? CidadeId { get; set; }
+        public virtual Regiao Regiao { get; set; }
+        public virtual Cidade Cidade { get; set; }
         public ICollection<EquipeAtleta> Atletas { get; set; }
+        
     }
 }
