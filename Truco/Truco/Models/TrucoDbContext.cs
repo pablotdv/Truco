@@ -68,6 +68,8 @@ namespace Truco.Models
         public DbSet<Cidade> Cidades { get; set; }
         public DbSet<Competicao> Competicoes { get; set; }
         public DbSet<CompeticaoEquipe> CompeticoesEquipes { get; set; }
+        public DbSet<CompeticaoFase> CompeticoesFases { get; set; }
+        public DbSet<CompeticaoFaseGrupo> CompeticoesFasesGrupos { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Entidade> Entidades { get; set; }
         public DbSet<Equipe> Equipes { get; set; }

@@ -568,6 +568,7 @@
     <Content Include="Views\RegioesCidades\Detalhes.cshtml" />
     <Content Include="Views\Competicoes\Sorteio.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Views\Competicoes\Fase.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -655,6 +656,9 @@
     <Compile Include="Models\CompeticaoFase.cs" />
     <Compile Include="Models\CompeticaoFaseGrupo.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoEquipe.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodada.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogo.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoSet.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Entidade.cs" />
     <Compile Include="Models\Entity.cs" />

@@ -7,7 +7,7 @@ using Truco.Models;
 
 namespace Truco.Controllers
 {
-    [Authorize(Roles = "Administradores")]
+    //[Authorize(Roles = "Administradores")]
     public class Controller : System.Web.Mvc.Controller
     {
         protected TrucoDbContext db = new TrucoDbContext();

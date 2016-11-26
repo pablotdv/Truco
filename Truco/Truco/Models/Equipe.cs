@@ -8,7 +8,7 @@ namespace Truco.Models
 {
     [Table("Equipes")]
     [DisplayColumn("Nome")]
-    public class Equipe : Entity
+    public class Equipe //: Entity
     {
         [Key]
         public Guid EquipeId { get; set; }

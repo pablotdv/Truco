@@ -1,45 +1,57 @@
 @using Truco.ViewModels
 @model CompeticoesViewModel
 <div id="no-more-tables">
-	<table class="table-bordered table-striped table-condensed cf table-hover col-md-12">
-		<thead class="cf">
-			<tr>
-                <th class="col-lg-2 col-md-3 col-xs-12"></th>
-				<th>
-					Nome
-				</th>
+    <table class="table-bordered table-striped table-condensed cf table-hover col-md-12">
+        <thead class="cf">
+            <tr>
+                <th></th>
+                <th>
+                    Nome
+                </th>
                 <th>
                     Trios
-                </th>                                
+                </th>
+                <th></th>
             </tr>
         </thead>
 
         <tbody>
-			@foreach (var item in Model.Resultados) 
-			{
-				<tr>
-					<td data-title="">
-						<div class="btn-group">							
-							<a class="btn btn-default" id="editar" title="Editar" href="@Url.Action("Editar", new { id=item.CompeticaoId})"><i class="fa fa-edit fa-align-left"></i></a>							
-							<a class="btn btn-default" id="detalhes" title="Detalhes" href="@Url.Action("Detalhes", new {id=item.CompeticaoId})"><i class="fa fa-eye fa-align-right"></i></a>							
-							<a class="btn btn-default" id="Deletar" title="Excluir" href="@Url.Action("Excluir", new { id=item.CompeticaoId })"><i class="fa fa-trash fa-align-right"></i></a>
-                            <a class="btn btn-default" id="Sortear" title="Excluir" href="@Url.Action("Sorteio", new { id=item.CompeticaoId })"><i class="fa fa-trash fa-random"></i> Sortear</a>
-						</div>									
-					</td>
-					<td data-title="Nome">
-						@item.Nome
-					</td>
+            @foreach (var item in Model.Resultados)
+            {
+                <tr>
+                    <td data-title="">
+                        <div class="btn-group">
+                            <a class="btn btn-default" id="editar" title="Editar" href="@Url.Action("Editar", new { id=item.CompeticaoId})"><i class="fa fa-edit fa-align-left"></i></a>
+                            <a class="btn btn-default" id="detalhes" title="Detalhes" href="@Url.Action("Detalhes", new {id=item.CompeticaoId})"><i class="fa fa-eye fa-align-right"></i></a>
+                            <a class="btn btn-default" id="Deletar" title="Excluir" href="@Url.Action("Excluir", new { id=item.CompeticaoId })"><i class="fa fa-trash fa-align-right"></i></a>
+                            @if (!item.Sorteada)
+                            {
+                                <a class="btn btn-default" id="Sortear" title="Excluir" href="@Url.Action("Sorteio", new { id = item.CompeticaoId })"><i class="fa fa-random"></i> Sortear</a>
+                            }
+                        </div>
+                    </td>
+                    <td data-title="Nome">
+                        @item.Nome
+                    </td>
                     <td>
                         @item.CompeticoesEquipes.Count
                     </td>
-				</tr>
-			}                            
+                    <td>
+                        <div class="btn-group">
+                            @foreach (var fase in item.CompeticoesFases)
+                            {
+                                <a href="@Url.Action("Fase", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@fase.Nome</a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
 
-@Html.PagedListPager(Model.Resultados, page => Url.Action("Pesquisa", 
-	new CompeticoesViewModel()
+@Html.PagedListPager(Model.Resultados, page => Url.Action("Pesquisa",
+    new CompeticoesViewModel()
     {
         Pagina = page,
         Nome = Model.Nome

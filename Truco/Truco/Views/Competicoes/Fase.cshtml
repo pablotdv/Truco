@@ -1,0 +1,33 @@
+﻿@model IList<Truco.Models.CompeticaoFaseGrupo>
+@{
+    var competicaoFase = Model.FirstOrDefault()?.CompeticaoFase;
+
+    ViewBag.Title = "Fase";
+}
+
+<hgroup>
+    <h2>@competicaoFase.Competicao.Nome.</h2>
+    <h3>@competicaoFase.Nome.</h3>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var grupo in Model)
+        {
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @grupo.Nome
+                    </div>
+                    <div class="panel-body">
+                        @foreach (var equipe in grupo.CompeticoesFasesGruposEquipes.OrderBy(a => a.Numero))
+                        {
+                            <p>@equipe.Equipe.Nome</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

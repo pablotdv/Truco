@@ -35,7 +35,10 @@ namespace Truco.Controllers
         {
             await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-            var query = db.Competicoes.Include(a => a.CompeticoesEquipes).AsQueryable();
+            var query = db.Competicoes
+                .Include(a => a.CompeticoesEquipes)
+                .Include(a => a.CompeticoesFases)
+                .AsQueryable();
 
             //TODO: parâmetros de pesquisa
             if (!String.IsNullOrWhiteSpace(viewModel.Nome))
@@ -60,7 +63,9 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicoes.FindAsync(id);
+            Competicao competicao = await db.Competicoes
+                .Include(a => a.CompeticoesFases)
+                .FirstOrDefaultAsync(a => a.CompeticaoId == id);
             if (competicao == null)
             {
                 return HttpNotFound();
@@ -259,6 +264,22 @@ namespace Truco.Controllers
             }
             model.Competicao = competicao;
             return View(model);
+        }
+
+        public async Task<ActionResult> Fase(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var competicaoFaseGrupos = await db.CompeticoesFasesGrupos
+                .Include(a => a.CompeticoesFasesGruposEquipes)
+                .Where(a => a.CompeticaoFaseId == id)
+                .OrderBy(a => a.Grupo)
+                .ToListAsync();
+
+
+            return View(competicaoFaseGrupos);
         }
 
         protected override void Dispose(bool disposing)

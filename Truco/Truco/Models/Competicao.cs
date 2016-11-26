@@ -10,7 +10,7 @@ namespace Truco.Models
 {
     [Table("Competicoes")]
     [DisplayColumn("Nome")]
-    public class Competicao : Entity
+    public class Competicao //: Entity
     {
         [Key]
         public Guid CompeticaoId { get; set; }

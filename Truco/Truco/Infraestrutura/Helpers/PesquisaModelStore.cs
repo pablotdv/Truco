@@ -14,31 +14,37 @@ namespace Truco.Infraestrutura.Helpers
     {
         public static async Task AddAsync(string key, object viewModel)
         {
-            using (TrucoDbContext context = new TrucoDbContext())
+            if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                Guid usuarioId = Guid.Parse(HttpContext.Current.User.Identity.GetUserId());
+                using (TrucoDbContext context = new TrucoDbContext())
+                {
+                    Guid usuarioId = Guid.Parse(HttpContext.Current.User.Identity.GetUserId());
 
-                PesquisaModel model = await context.PesquisasModels.FirstOrDefaultAsync(a => a.UsuarioId == usuarioId && a.Key == key);
-                bool novo = model == null;
-                if (novo)
-                    model = new PesquisaModel()
-                    {
-                        PesquisaModelId = Guid.NewGuid(),
-                        Key = key
-                    };
+                    PesquisaModel model = await context.PesquisasModels.FirstOrDefaultAsync(a => a.UsuarioId == usuarioId && a.Key == key);
+                    bool novo = model == null;
+                    if (novo)
+                        model = new PesquisaModel()
+                        {
+                            PesquisaModelId = Guid.NewGuid(),
+                            Key = key
+                        };
 
-                model.UsuarioId = usuarioId;
-                model.Filtro = JsonConvert.SerializeObject(viewModel);
+                    model.UsuarioId = usuarioId;
+                    model.Filtro = JsonConvert.SerializeObject(viewModel);
 
-                if (novo)
-                    context.PesquisasModels.Add(model);
+                    if (novo)
+                        context.PesquisasModels.Add(model);
 
-                await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
+                }
             }
         }
 
         public static async Task<string> GetAsync(string key)
         {
+            if (!HttpContext.Current.User.Identity.IsAuthenticated)
+                return "";
+
             using (TrucoDbContext context = new TrucoDbContext())
             {
                 Guid usuarioId = Guid.Parse(HttpContext.Current.User.Identity.GetUserId());
