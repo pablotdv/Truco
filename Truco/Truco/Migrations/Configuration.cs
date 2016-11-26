@@ -50,7 +50,7 @@ namespace Truco.Migrations
         }
 
         private void CriarCompeticao(TrucoDbContext context, string nome, int trios)
-        {            
+        {
             if (!context.Competicoes.Any(a => a.Nome.Equals(nome)))
             {
                 Competicao competicao = new Competicao()
@@ -61,11 +61,11 @@ namespace Truco.Migrations
                     Tipo = CompeticaoTipo.Torneio,
                     Nome = nome,
                     UsuarioCad = "sistema",
-                    Equipes = new HashSet<CompeticaoEquipe>()
+                    CompeticoesEquipes = new HashSet<CompeticaoEquipe>()
                 };
                 for (int i = 1; i <= trios; i++)
                 {
-                    competicao.Equipes.Add(new CompeticaoEquipe()
+                    competicao.CompeticoesEquipes.Add(new CompeticaoEquipe()
                     {
                         CompeticaoEquipeId = Guid.NewGuid(),
                         Equipe = CriarEquipe(context, $"Trio - {i}")
@@ -81,13 +81,14 @@ namespace Truco.Migrations
         private static Equipe CriarEquipe(TrucoDbContext context, string nome)
         {
             var regiao = context.Regioes.Include(a => a.Cidades).OrderBy(r => Guid.NewGuid()).FirstOrDefault();
+            var cidade = regiao.Cidades.OrderBy(a => Guid.NewGuid()).FirstOrDefault();
             Equipe equipe = new Equipe()
             {
                 EquipeId = Guid.NewGuid(),
                 DataHoraCad = DateTime.Now,
-                Nome = nome,
+                Nome = $"{nome} - {cidade.Cidade.Nome}",
                 RegiaoId = regiao.RegiaoId,
-                CidadeId = regiao.Cidades.OrderBy(a => Guid.NewGuid()).FirstOrDefault().CidadeId
+                CidadeId = cidade.CidadeId
             };
             return equipe;
         }

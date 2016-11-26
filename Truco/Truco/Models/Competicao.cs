@@ -24,6 +24,9 @@ namespace Truco.Models
         [Required]
         public CompeticaoModalidade Modalidade { get; set; }
 
-        public ICollection<CompeticaoEquipe> Equipes { get; set; }
+        public ICollection<CompeticaoEquipe> CompeticoesEquipes { get; set; }
+
+        public ICollection<CompeticaoFase> CompeticoesFases { get; set; }
+        public bool Sorteada { get; set; }
     }
 }

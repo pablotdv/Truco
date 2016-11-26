@@ -12,31 +12,33 @@ using System.Net;
 using Truco.Infraestrutura.Helpers;
 using Truco.ViewModels;
 using Truco.Models;
+using Truco.ViewModels.Enums;
+using Truco.Models.Enums;
 
 namespace Truco.Controllers
-{   
+{
 
     public class CompeticoesController : Controller
-    {	        
+    {
         //
         // GET: /Competicoes/
         public async Task<ActionResult> Indice()
         {
-			var viewModel = JsonConvert.DeserializeObject<CompeticoesViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+            var viewModel = JsonConvert.DeserializeObject<CompeticoesViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
 
             return await Pesquisa(viewModel ?? new CompeticoesViewModel());
         }
 
-		//
+        //
         // GET: /Competicoes/Pesquisa
-		public async Task<ActionResult> Pesquisa(CompeticoesViewModel viewModel)
-		{
-			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
+        public async Task<ActionResult> Pesquisa(CompeticoesViewModel viewModel)
+        {
+            await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Competicoes.AsQueryable();
+            var query = db.Competicoes.Include(a => a.CompeticoesEquipes).AsQueryable();
 
-			//TODO: parâmetros de pesquisa
-			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
+            //TODO: parâmetros de pesquisa
+            if (!String.IsNullOrWhiteSpace(viewModel.Nome))
             {
                 var nomes = viewModel.Nome?.Split(' ');
                 query = query.Where(a => nomes.All(nome => a.Nome.Contains(nome)));
@@ -48,7 +50,7 @@ namespace Truco.Controllers
                 return PartialView("_Pesquisa", viewModel);
 
             return View("Indice", viewModel);
-		}
+        }
 
         //
         // GET: /Competicoes/Detalhes/5
@@ -62,21 +64,21 @@ namespace Truco.Controllers
             if (competicao == null)
             {
                 return HttpNotFound();
-            }  
+            }
             return View(competicao);
         }
 
         //
         // GET: /Competicoes/Criar        
-		public ActionResult Criar()
+        public ActionResult Criar()
         {
             return View();
-        } 
+        }
 
         //
         // POST: /Competicoes/Criar
         [HttpPost]
-		[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Criar(Competicao competicao)
         {
             if (ModelState.IsValid)
@@ -84,18 +86,18 @@ namespace Truco.Controllers
                 competicao.CompeticaoId = Guid.NewGuid();
                 db.Competicoes.Add(competicao);
                 await db.SaveChangesAsync();
-				TempData["Mensagem"] = "Operação realizada com sucesso!";
-                return RedirectToAction("Indice");  
+                TempData["Mensagem"] = "Operação realizada com sucesso!";
+                return RedirectToAction("Indice");
             }
 
             return View(competicao);
         }
-        
+
         //
         // GET: /Competicoes/Editar/5 
         public async Task<ActionResult> Editar(System.Guid? id)
         {
-			if (id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -103,21 +105,21 @@ namespace Truco.Controllers
             if (competicao == null)
             {
                 return HttpNotFound();
-            }            
+            }
             return View(competicao);
         }
 
         //
         // POST: /Competicoes/Editar/5
         [HttpPost]
-		[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Editar(Competicao competicao)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(competicao).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-				TempData["Mensagem"] = "Alteração realizada com sucesso!";
+                TempData["Mensagem"] = "Alteração realizada com sucesso!";
                 return RedirectToAction("Indice");
             }
 
@@ -136,16 +138,16 @@ namespace Truco.Controllers
             if (competicao == null)
             {
                 return HttpNotFound();
-            }   
+            }
 
-  
+
             return View(competicao);
         }
 
         //
         // POST: /Competicoes/Excluir/5
         [HttpPost, ActionName("Excluir")]
-		[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
             Competicao competicao = await db.Competicoes.FindAsync(id);
@@ -154,9 +156,115 @@ namespace Truco.Controllers
             return RedirectToAction("Indice");
         }
 
+        public async Task<ActionResult> Sorteio(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Competicao competicao = await db.Competicoes.FindAsync(id);
+            if (competicao == null)
+            {
+                return HttpNotFound();
+            }
+
+
+            return View(new CompeticaoSorteioViewModel
+            {
+                Competicao = competicao,
+                SorteioModo = CompeticaoSorteioModo.Cidades
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Sorteio(CompeticaoSorteioViewModel model)
+        {
+            var competicao = await db.Competicoes
+                .Include(a => a.CompeticoesEquipes)
+                .Include(a => a.CompeticoesFases)
+                .FirstOrDefaultAsync(a => a.CompeticaoId == model.Competicao.CompeticaoId);
+
+            if (competicao.Sorteada)
+                ModelState.AddModelError("", $"A competição {competicao.Nome} já foi sorteada!");
+
+            if (ModelState.IsValid)
+            {
+                int grupos3 = 0;
+                int grupos4 = 0;
+                int numeroEquipes = competicao.CompeticoesEquipes.Count;
+
+                do
+                {
+                    grupos3++;
+                    numeroEquipes = numeroEquipes - 3;
+                } while (numeroEquipes % 4 != 0);
+
+                grupos4 = numeroEquipes / 4;
+
+                var chaves = grupos3 + grupos4;
+
+                var competicaoFase = new CompeticaoFase()
+                {
+                    CompeticaoFaseId = Guid.NewGuid(),
+                    CompeticaoId = competicao.CompeticaoId,
+                    Modo = CompeticaoFaseModo.Chaveamento,
+                    Tipo = CompeticaoFaseTipo.Principal,
+                    Nome = "1ª Fase",
+                    CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
+                };
+
+                var competicoesFasesGrupos = new List<CompeticaoFaseGrupo>();
+                for (int i = 1; i <= chaves; i++)
+                {
+                    competicoesFasesGrupos.Add(new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Nome = $"Chave {i}",
+                        Grupo = i,
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    });
+                }
+
+                var equipesCidades = competicao.CompeticoesEquipes.GroupBy(a => a.Equipe.CidadeId).OrderByDescending(a => a.Count());
+
+                int indiceChave = 1;
+
+                foreach (var equipesCidade in equipesCidades)
+                {
+                    var equipes = equipesCidade.OrderByDescending(a => Guid.NewGuid());
+                    foreach (var equipe in equipes)
+                    {
+                        competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = equipe.EquipeId,
+                            Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                        });
+                        indiceChave++;
+
+                        if (indiceChave > chaves)
+                            indiceChave = 1;
+                    }
+                }
+
+                foreach (var grupo in competicoesFasesGrupos)
+                {
+                    competicaoFase.CompeticoesFasesGrupos.Add(grupo);
+                }
+                competicao.CompeticoesFases.Add(competicaoFase);
+                competicao.Sorteada = true;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Indice");
+            }
+            model.Competicao = competicao;
+            return View(model);
+        }
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing) {
+            if (disposing)
+            {
                 db.Dispose();
             }
             base.Dispose(disposing);
