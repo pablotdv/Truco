@@ -10,6 +10,5 @@ namespace Truco.ViewModels.Enums
         Geral = 1,
         Regioes = 2,
         Cidades = 3,
-        CidadesRegioes = 4,
     }
 }

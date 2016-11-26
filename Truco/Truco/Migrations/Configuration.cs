@@ -83,7 +83,7 @@ namespace Truco.Migrations
             Equipe equipe = new Equipe()
             {
                 EquipeId = Guid.NewGuid(),                
-                Nome = $"{nome} - {cidade.Cidade.Nome}",
+                Nome = $"{nome} - {cidade.Regiao.Numero} - {cidade.Cidade.Nome}",
                 RegiaoId = regiao.RegiaoId,
                 CidadeId = cidade.CidadeId
             };

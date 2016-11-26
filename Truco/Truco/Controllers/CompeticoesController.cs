@@ -218,39 +218,12 @@ namespace Truco.Controllers
                     Nome = "1ª Fase",
                     CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
                 };
-
-                var competicoesFasesGrupos = new List<CompeticaoFaseGrupo>();
-                for (int i = 1; i <= chaves; i++)
+                List<CompeticaoFaseGrupo> competicoesFasesGrupos = null;
+                switch (model.SorteioModo)
                 {
-                    competicoesFasesGrupos.Add(new CompeticaoFaseGrupo()
-                    {
-                        CompeticaoFaseGrupoId = Guid.NewGuid(),
-                        Nome = $"Chave {i}",
-                        Grupo = i,
-                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
-                    });
-                }
-
-                var equipesCidades = competicao.CompeticoesEquipes.GroupBy(a => a.Equipe.CidadeId).OrderByDescending(a => a.Count());
-
-                int indiceChave = 1;
-
-                foreach (var equipesCidade in equipesCidades)
-                {
-                    var equipes = equipesCidade.OrderByDescending(a => Guid.NewGuid());
-                    foreach (var equipe in equipes)
-                    {
-                        competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
-                        {
-                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                            EquipeId = equipe.EquipeId,
-                            Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
-                        });
-                        indiceChave++;
-
-                        if (indiceChave > chaves)
-                            indiceChave = 1;
-                    }
+                    case CompeticaoSorteioModo.Cidades: competicoesFasesGrupos = SortearPorCidade(competicao, chaves); break;
+                    case CompeticaoSorteioModo.Geral: competicoesFasesGrupos = SortearPorGeral(competicao, chaves); break;
+                    case CompeticaoSorteioModo.Regioes: competicoesFasesGrupos = SortearPorRegiao(competicao, chaves); break;
                 }
 
                 foreach (var grupo in competicoesFasesGrupos)
@@ -264,6 +237,106 @@ namespace Truco.Controllers
             }
             model.Competicao = competicao;
             return View(model);
+        }
+
+        private static List<CompeticaoFaseGrupo> SortearPorGeral(Competicao competicao, int chaves)
+        {
+            List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
+
+            var equipes = competicao.CompeticoesEquipes.OrderByDescending(a => Guid.NewGuid());
+
+            int indiceChave = 1;
+
+            foreach (var equipe in equipes)
+            {
+                competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                {
+                    CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                    EquipeId = equipe.Equipe.EquipeId,
+                    Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                });
+                indiceChave++;
+
+                if (indiceChave > chaves)
+                    indiceChave = 1;
+            }
+
+            return competicoesFasesGrupos;
+        }
+
+        private static List<CompeticaoFaseGrupo> SortearPorRegiao(Competicao competicao, int chaves)
+        {
+            List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
+
+            var equipesRegioes = competicao.CompeticoesEquipes.GroupBy(a => a.Equipe.RegiaoId).OrderByDescending(a => a.Count());
+
+            int indiceChave = 1;
+
+            foreach (var equipesRegiao in equipesRegioes)
+            {
+                var equipes = equipesRegiao.OrderByDescending(a => Guid.NewGuid());
+                foreach (var equipe in equipes)
+                {
+                    competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                    {
+                        CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                        EquipeId = equipe.EquipeId,
+                        Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                    });
+                    indiceChave++;
+
+                    if (indiceChave > chaves)
+                        indiceChave = 1;
+                }
+            }
+
+            return competicoesFasesGrupos;
+        }
+
+        private static List<CompeticaoFaseGrupo> SortearPorCidade(Competicao competicao, int chaves)
+        {
+            List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
+
+            var equipesCidades = competicao.CompeticoesEquipes.GroupBy(a => a.Equipe.CidadeId).OrderByDescending(a => a.Count());
+
+            int indiceChave = 1;
+
+            foreach (var equipesCidade in equipesCidades)
+            {
+                var equipes = equipesCidade.OrderByDescending(a => Guid.NewGuid());
+                foreach (var equipe in equipes)
+                {
+                    competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                    {
+                        CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                        EquipeId = equipe.EquipeId,
+                        Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                    });
+                    indiceChave++;
+
+                    if (indiceChave > chaves)
+                        indiceChave = 1;
+                }
+            }
+
+            return competicoesFasesGrupos;
+        }
+        
+        private static List<CompeticaoFaseGrupo> MontarChaveamento(int chaves)
+        {
+            var competicoesFasesGrupos = new List<CompeticaoFaseGrupo>();
+            for (int i = 1; i <= chaves; i++)
+            {
+                competicoesFasesGrupos.Add(new CompeticaoFaseGrupo()
+                {
+                    CompeticaoFaseGrupoId = Guid.NewGuid(),
+                    Nome = $"Chave {i}",
+                    Grupo = i,
+                    CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                });
+            }
+
+            return competicoesFasesGrupos;
         }
 
         public async Task<ActionResult> Fase(Guid id)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Truco.Models
@@ -8,12 +9,12 @@ namespace Truco.Models
     [Table("CompeticoesFasesGruposRodadasJogos")]
     public class CompeticaoFaseGrupoRodadaJogo
     {
+        [Key]
         public Guid CompeticaoFaseGrupoRodadaJogoId { get; set; }
-        public Guid EquipeUmId { get; set; }
-        public Guid EquipeDoisId { get; set; }
-        public virtual Equipe EquipeUm { get; set; }
-        public virtual Equipe EquipeDois { get; set; }
-        
+        public Guid CompeticaoFaseGrupoEquipeUmId { get; set; }
+        public Guid CompeticaoFaseGrupoEquipeDoisId { get; set; }
+        public virtual CompeticaoFaseGrupoEquipe CompeticaoFaseGrupoEquipeUm { get; set; }
+        public virtual CompeticaoFaseGrupoEquipe CompeticaoFaseGrupoEquipeDois { get; set; }
         public ICollection<CompeticaoFaseGrupoRodadaJogoSet> CompeticoesFasesGruposRodadasJogosSets { get; set; }
     }
 }
