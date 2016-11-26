@@ -199,11 +199,11 @@ namespace Truco.Controllers
                 int grupos4 = 0;
                 int numeroEquipes = competicao.CompeticoesEquipes.Count;
 
-                do
+                while (numeroEquipes % 4 != 0)
                 {
                     grupos3++;
                     numeroEquipes = numeroEquipes - 3;
-                } while (numeroEquipes % 4 != 0);
+                }
 
                 grupos4 = numeroEquipes / 4;
 
@@ -249,15 +249,15 @@ namespace Truco.Controllers
                         CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
                     };
 
-                    foreach(var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    foreach (var e in chaves3[0].CompeticoesFasesGruposEquipes)
                     {
                         chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                         {
                             CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
                             EquipeId = e.EquipeId,
-                            Lado = Lado.LadoA,   
-                            Numero = e.Numero,                                                    
-                        });                        
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
                     }
 
                     foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
@@ -272,7 +272,7 @@ namespace Truco.Controllers
                     }
                     competicaoFase.CompeticoesFasesGrupos.Add(chave6);
                 }
-                else if(chaves3.Count == 3)
+                else if (chaves3.Count == 3)
                 {
                     var chave6 = new CompeticaoFaseGrupo()
                     {
@@ -307,7 +307,7 @@ namespace Truco.Controllers
                     competicaoFase.CompeticoesFasesGrupos.Add(chaves3[2]);
 
                 }
-                else if(chaves3.Count == 4)
+                else if (chaves3.Count == 4)
                 {
                     var chave6A = new CompeticaoFaseGrupo()
                     {
@@ -376,7 +376,7 @@ namespace Truco.Controllers
                 competicao.CompeticoesFases.Add(competicaoFase);
                 competicao.Sorteada = true;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Indice");
+                return RedirectToAction("Fase", new { id = competicaoFase.CompeticaoFaseId });
             }
             model.Competicao = competicao;
             return View(model);
@@ -464,7 +464,7 @@ namespace Truco.Controllers
 
             return competicoesFasesGrupos;
         }
-        
+
         private static List<CompeticaoFaseGrupo> MontarChaveamento(int chaves)
         {
             var competicoesFasesGrupos = new List<CompeticaoFaseGrupo>();
