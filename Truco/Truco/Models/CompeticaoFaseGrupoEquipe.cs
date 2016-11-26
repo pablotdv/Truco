@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Truco.Models.Enums;
 
 namespace Truco.Models
 {
@@ -19,6 +20,7 @@ namespace Truco.Models
         public int Sets { get; set; }
         public int Tentos { get; set; }
         public int Numero { get; set; }
+        public Lado Lado { get; set; } = Lado.LadoA;
         public ICollection<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposEquipesJogosUm { get; set; }
         public ICollection<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposEquipesJogosDois { get; set; }
     }

@@ -226,10 +226,153 @@ namespace Truco.Controllers
                     case CompeticaoSorteioModo.Regioes: competicoesFasesGrupos = SortearPorRegiao(competicao, chaves); break;
                 }
 
-                foreach (var grupo in competicoesFasesGrupos)
+                var chaves4 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == 4);
+
+                foreach (var chave4 in chaves4)
                 {
-                    competicaoFase.CompeticoesFasesGrupos.Add(grupo);
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave4);
                 }
+
+                var chaves3 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == 3).ToList();
+
+                if (chaves3.Count == 1)
+                {
+                    competicaoFase.CompeticoesFasesGrupos.Add(chaves3.FirstOrDefault());
+                }
+                else if (chaves3.Count == 2)
+                {
+                    var chave6 = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach(var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,   
+                            Numero = e.Numero,                                                    
+                        });                        
+                    }
+
+                    foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6);
+                }
+                else if(chaves3.Count == 3)
+                {
+                    var chave6 = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6);
+                    competicaoFase.CompeticoesFasesGrupos.Add(chaves3[2]);
+
+                }
+                else if(chaves3.Count == 4)
+                {
+                    var chave6A = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6A.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6A.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    var chave6B = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[2].Grupo} & {chaves3[3].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[2].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6B.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[3].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6B.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6A);
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6B);
+                }
+
                 competicao.CompeticoesFases.Add(competicaoFase);
                 competicao.Sorteada = true;
                 await db.SaveChangesAsync();

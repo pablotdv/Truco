@@ -666,6 +666,7 @@
     <Compile Include="Models\Enums\CompeticaoFaseTipo.cs" />
     <Compile Include="Models\Enums\CompeticaoModalidade.cs" />
     <Compile Include="Models\Enums\CompeticaoTipo.cs" />
+    <Compile Include="Models\Enums\Lado.cs" />
     <Compile Include="Models\Equipe.cs" />
     <Compile Include="Models\EquipeAtleta.cs" />
     <Compile Include="Models\Estado.cs" />
