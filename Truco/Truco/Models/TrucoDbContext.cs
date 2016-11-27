@@ -23,7 +23,7 @@ namespace Truco.Models
             // Set the database intializer which is run once during application start
             // This seeds the database with admin user credentials and admin role
             Database.SetInitializer<TrucoDbContext>(new ApplicationDbInitializer());
-        }       
+        }
 
         public static TrucoDbContext Create()
         {
@@ -62,21 +62,27 @@ namespace Truco.Models
                 }
             }
         }
-        
+
         public DbSet<Atleta> Atletas { get; set; }
         public DbSet<Bairro> Bairros { get; set; }
         public DbSet<Cidade> Cidades { get; set; }
         public DbSet<Competicao> Competicoes { get; set; }
         public DbSet<CompeticaoEquipe> CompeticoesEquipes { get; set; }
+        public DbSet<CompeticaoFase> CompeticoesFases { get; set; }
+        public DbSet<CompeticaoFaseGrupo> CompeticoesFasesGrupos { get; set; }
+        public DbSet<CompeticaoFaseGrupoEquipe> CompeticoesFasesGruposEquipes { get; set; }
+        public DbSet<CompeticaoFaseGrupoRodada> CompeticoesFasesGruposRodadas { get; set; }
+        public DbSet<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposRodadasJogos { get; set; }
+        public DbSet<CompeticaoFaseGrupoRodadaJogoSet> CompeticoesFasesGruposRodadasJogosSets { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Entidade> Entidades { get; set; }
         public DbSet<Equipe> Equipes { get; set; }
         public DbSet<EquipeAtleta> EquipesAtletas { get; set; }
-        public DbSet<Estado> Estados { get; set; }        
-        public DbSet<Logradouro> Logradouros { get; set; }        
+        public DbSet<Estado> Estados { get; set; }
+        public DbSet<Logradouro> Logradouros { get; set; }
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Regiao> Regioes { get; set; }
         public DbSet<RegiaoCidade> RegioesCidades { get; set; }
-        public DbSet<PesquisaModel> PesquisasModels { get; set; }        
+        public DbSet<PesquisaModel> PesquisasModels { get; set; }
     }
 }

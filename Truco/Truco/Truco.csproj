@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <ApplicationInsightsResourceId>/subscriptions/e960c007-1962-4488-aa35-5bc66a103c0e/resourcegroups/trucotche/providers/microsoft.insights/components/trucotche</ApplicationInsightsResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -85,6 +86,10 @@
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.1.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights.TraceListener, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.TraceListener.2.1.0\lib\net45\Microsoft.ApplicationInsights.TraceListener.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -396,8 +401,9 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="CodeTemplates\Scaffolders\All\All.ps1" />
     <Content Include="CodeTemplates\Scaffolders\All\AllTemplate.cs.t4" />
-    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
-    <None Include="Properties\PublishProfiles\Truco.pubxml" />
+    <None Include="Properties\PublishProfiles\ftp smaterasp.pubxml" />
+    <None Include="Properties\PublishProfiles\trucotche - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\trucotche - Web Deploy.pubxml" />
     <None Include="Resources\Bairros.csv" />
     <None Include="Resources\Cidades.csv" />
     <None Include="Resources\Estados.csv" />
@@ -564,6 +570,9 @@
     <Content Include="Views\RegioesCidades\Detalhes.cshtml" />
     <Content Include="Views\Equipes\_Alteta.cshtml" />
     <Content Include="Views\Equipes\_Atletas.cshtml" />
+    <Content Include="Views\Competicoes\Sorteio.cshtml" />
+    <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Views\Competicoes\Fase.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -585,7 +594,9 @@
     <Content Include="scripts\respond.min.js" />
     <Content Include="scripts\toastr.js" />
     <Content Include="scripts\toastr.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\UsersAdmin\Index.cshtml" />
@@ -634,6 +645,7 @@
     <Compile Include="Controllers\RegioesController.cs" />
     <Compile Include="Controllers\TesteController.cs" />
     <Compile Include="Controllers\UserAdminController.cs" />
+    <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -645,11 +657,20 @@
     <Compile Include="Models\Cidade.cs" />
     <Compile Include="Models\Competicao.cs" />
     <Compile Include="Models\CompeticaoEquipe.cs" />
+    <Compile Include="Models\CompeticaoFase.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupo.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoEquipe.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodada.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogo.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoSet.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Entidade.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Enums\CompeticaoFaseModo.cs" />
+    <Compile Include="Models\Enums\CompeticaoFaseTipo.cs" />
     <Compile Include="Models\Enums\CompeticaoModalidade.cs" />
     <Compile Include="Models\Enums\CompeticaoTipo.cs" />
+    <Compile Include="Models\Enums\Lado.cs" />
     <Compile Include="Models\Equipe.cs" />
     <Compile Include="Models\EquipeAtleta.cs" />
     <Compile Include="Models\Estado.cs" />
@@ -675,10 +696,12 @@
     <Compile Include="ViewModels\AtletasViewModel.cs" />
     <Compile Include="ViewModels\BairrosViewModel.cs" />
     <Compile Include="ViewModels\CidadesViewModel.cs" />
+    <Compile Include="ViewModels\CompeticaoSorteioViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />
     <Compile Include="ViewModels\EnderecosViewModel.cs" />
     <Compile Include="ViewModels\EntidadesViewModel.cs" />
+    <Compile Include="ViewModels\Enums\CompeticaoSorteioModo.cs" />
     <Compile Include="ViewModels\EquipesAtletasViewModel.cs" />
     <Compile Include="ViewModels\EquipesViewModel.cs" />
     <Compile Include="ViewModels\Equipe_AtletaViewModel.cs" />
@@ -717,6 +740,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

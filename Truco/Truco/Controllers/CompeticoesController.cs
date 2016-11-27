@@ -12,31 +12,36 @@ using System.Net;
 using Truco.Infraestrutura.Helpers;
 using Truco.ViewModels;
 using Truco.Models;
+using Truco.ViewModels.Enums;
+using Truco.Models.Enums;
 
 namespace Truco.Controllers
-{   
+{
 
     public class CompeticoesController : Controller
-    {	        
+    {
         //
         // GET: /Competicoes/
         public async Task<ActionResult> Indice()
         {
-			var viewModel = JsonConvert.DeserializeObject<CompeticoesViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
+            var viewModel = JsonConvert.DeserializeObject<CompeticoesViewModel>(await PesquisaModelStore.GetAsync(PesquisaKey));
 
             return await Pesquisa(viewModel ?? new CompeticoesViewModel());
         }
 
-		//
+        //
         // GET: /Competicoes/Pesquisa
-		public async Task<ActionResult> Pesquisa(CompeticoesViewModel viewModel)
-		{
-			await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
+        public async Task<ActionResult> Pesquisa(CompeticoesViewModel viewModel)
+        {
+            await PesquisaModelStore.AddAsync(PesquisaKey, viewModel);
 
-			var query = db.Competicoes.AsQueryable();
+            var query = db.Competicoes
+                .Include(a => a.CompeticoesEquipes)
+                .Include(a => a.CompeticoesFases)
+                .AsQueryable();
 
-			//TODO: parâmetros de pesquisa
-			if (!String.IsNullOrWhiteSpace(viewModel.Nome))
+            //TODO: parâmetros de pesquisa
+            if (!String.IsNullOrWhiteSpace(viewModel.Nome))
             {
                 var nomes = viewModel.Nome?.Split(' ');
                 query = query.Where(a => nomes.All(nome => a.Nome.Contains(nome)));
@@ -48,7 +53,7 @@ namespace Truco.Controllers
                 return PartialView("_Pesquisa", viewModel);
 
             return View("Indice", viewModel);
-		}
+        }
 
         //
         // GET: /Competicoes/Detalhes/5
@@ -58,25 +63,27 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicoes.FindAsync(id);
+            Competicao competicao = await db.Competicoes
+                .Include(a => a.CompeticoesFases)
+                .FirstOrDefaultAsync(a => a.CompeticaoId == id);
             if (competicao == null)
             {
                 return HttpNotFound();
-            }  
+            }
             return View(competicao);
         }
 
         //
         // GET: /Competicoes/Criar        
-		public ActionResult Criar()
+        public ActionResult Criar()
         {
             return View();
-        } 
+        }
 
         //
         // POST: /Competicoes/Criar
         [HttpPost]
-		[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Criar(Competicao competicao)
         {
             if (ModelState.IsValid)
@@ -84,18 +91,18 @@ namespace Truco.Controllers
                 competicao.CompeticaoId = Guid.NewGuid();
                 db.Competicoes.Add(competicao);
                 await db.SaveChangesAsync();
-				TempData["Mensagem"] = "Operação realizada com sucesso!";
-                return RedirectToAction("Indice");  
+                TempData["Mensagem"] = "Operação realizada com sucesso!";
+                return RedirectToAction("Indice");
             }
 
             return View(competicao);
         }
-        
+
         //
         // GET: /Competicoes/Editar/5 
         public async Task<ActionResult> Editar(System.Guid? id)
         {
-			if (id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -103,21 +110,21 @@ namespace Truco.Controllers
             if (competicao == null)
             {
                 return HttpNotFound();
-            }            
+            }
             return View(competicao);
         }
 
         //
         // POST: /Competicoes/Editar/5
         [HttpPost]
-		[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Editar(Competicao competicao)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(competicao).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-				TempData["Mensagem"] = "Alteração realizada com sucesso!";
+                TempData["Mensagem"] = "Alteração realizada com sucesso!";
                 return RedirectToAction("Indice");
             }
 
@@ -136,16 +143,16 @@ namespace Truco.Controllers
             if (competicao == null)
             {
                 return HttpNotFound();
-            }   
+            }
 
-  
+
             return View(competicao);
         }
 
         //
         // POST: /Competicoes/Excluir/5
         [HttpPost, ActionName("Excluir")]
-		[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExcluirConfirmacao(System.Guid id)
         {
             Competicao competicao = await db.Competicoes.FindAsync(id);
@@ -154,9 +161,347 @@ namespace Truco.Controllers
             return RedirectToAction("Indice");
         }
 
+        public async Task<ActionResult> Sorteio(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Competicao competicao = await db.Competicoes.FindAsync(id);
+            if (competicao == null)
+            {
+                return HttpNotFound();
+            }
+
+
+            return View(new CompeticaoSorteioViewModel
+            {
+                Competicao = competicao,
+                SorteioModo = CompeticaoSorteioModo.Cidades
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Sorteio(CompeticaoSorteioViewModel model)
+        {
+            var competicao = await db.Competicoes
+                .Include(a => a.CompeticoesEquipes)
+                .Include(a => a.CompeticoesFases)
+                .FirstOrDefaultAsync(a => a.CompeticaoId == model.Competicao.CompeticaoId);
+
+            if (competicao.Sorteada)
+                ModelState.AddModelError("", $"A competição {competicao.Nome} já foi sorteada!");
+
+            if (ModelState.IsValid)
+            {
+                int grupos3 = 0;
+                int grupos4 = 0;
+                int numeroEquipes = competicao.CompeticoesEquipes.Count;
+
+                while (numeroEquipes % 4 != 0)
+                {
+                    grupos3++;
+                    numeroEquipes = numeroEquipes - 3;
+                }
+
+                grupos4 = numeroEquipes / 4;
+
+                var chaves = grupos3 + grupos4;
+
+                var competicaoFase = new CompeticaoFase()
+                {
+                    CompeticaoFaseId = Guid.NewGuid(),
+                    CompeticaoId = competicao.CompeticaoId,
+                    Modo = CompeticaoFaseModo.Chaveamento,
+                    Tipo = CompeticaoFaseTipo.Principal,
+                    Nome = "1ª Fase",
+                    CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
+                };
+                List<CompeticaoFaseGrupo> competicoesFasesGrupos = null;
+                switch (model.SorteioModo)
+                {
+                    case CompeticaoSorteioModo.Cidades: competicoesFasesGrupos = SortearPorCidade(competicao, chaves); break;
+                    case CompeticaoSorteioModo.Geral: competicoesFasesGrupos = SortearPorGeral(competicao, chaves); break;
+                    case CompeticaoSorteioModo.Regioes: competicoesFasesGrupos = SortearPorRegiao(competicao, chaves); break;
+                }
+
+                var chaves4 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == 4);
+
+                foreach (var chave4 in chaves4)
+                {
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave4);
+                }
+
+                var chaves3 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == 3).ToList();
+
+                if (chaves3.Count == 1)
+                {
+                    competicaoFase.CompeticoesFasesGrupos.Add(chaves3.FirstOrDefault());
+                }
+                else if (chaves3.Count == 2)
+                {
+                    var chave6 = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6);
+                }
+                else if (chaves3.Count == 3)
+                {
+                    var chave6 = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6);
+                    competicaoFase.CompeticoesFasesGrupos.Add(chaves3[2]);
+
+                }
+                else if (chaves3.Count == 4)
+                {
+                    var chave6A = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[0].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6A.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[1].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6A.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    var chave6B = new CompeticaoFaseGrupo()
+                    {
+                        CompeticaoFaseGrupoId = Guid.NewGuid(),
+                        Grupo = chaves3[0].Grupo,
+                        Nome = $"Chave {chaves3[2].Grupo} & {chaves3[3].Grupo}",
+                        CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                    };
+
+                    foreach (var e in chaves3[2].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6B.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoA,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    foreach (var e in chaves3[3].CompeticoesFasesGruposEquipes)
+                    {
+                        chave6B.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                        {
+                            CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                            EquipeId = e.EquipeId,
+                            Lado = Lado.LadoB,
+                            Numero = e.Numero,
+                        });
+                    }
+
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6A);
+                    competicaoFase.CompeticoesFasesGrupos.Add(chave6B);
+                }
+
+                competicao.CompeticoesFases.Add(competicaoFase);
+                competicao.Sorteada = true;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Fase", new { id = competicaoFase.CompeticaoFaseId });
+            }
+            model.Competicao = competicao;
+            return View(model);
+        }
+
+        private static List<CompeticaoFaseGrupo> SortearPorGeral(Competicao competicao, int chaves)
+        {
+            List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
+
+            var equipes = competicao.CompeticoesEquipes.OrderByDescending(a => Guid.NewGuid());
+
+            int indiceChave = 1;
+
+            foreach (var equipe in equipes)
+            {
+                competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                {
+                    CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                    EquipeId = equipe.Equipe.EquipeId,
+                    Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                });
+                indiceChave++;
+
+                if (indiceChave > chaves)
+                    indiceChave = 1;
+            }
+
+            return competicoesFasesGrupos;
+        }
+
+        private static List<CompeticaoFaseGrupo> SortearPorRegiao(Competicao competicao, int chaves)
+        {
+            List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
+
+            var equipesRegioes = competicao.CompeticoesEquipes.GroupBy(a => a.Equipe.RegiaoId).OrderByDescending(a => a.Count());
+
+            int indiceChave = 1;
+
+            foreach (var equipesRegiao in equipesRegioes)
+            {
+                var equipes = equipesRegiao.OrderByDescending(a => Guid.NewGuid());
+                foreach (var equipe in equipes)
+                {
+                    competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                    {
+                        CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                        EquipeId = equipe.EquipeId,
+                        Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                    });
+                    indiceChave++;
+
+                    if (indiceChave > chaves)
+                        indiceChave = 1;
+                }
+            }
+
+            return competicoesFasesGrupos;
+        }
+
+        private static List<CompeticaoFaseGrupo> SortearPorCidade(Competicao competicao, int chaves)
+        {
+            List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
+
+            var equipesCidades = competicao.CompeticoesEquipes.GroupBy(a => a.Equipe.CidadeId).OrderByDescending(a => a.Count());
+
+            int indiceChave = 1;
+
+            foreach (var equipesCidade in equipesCidades)
+            {
+                var equipes = equipesCidade.OrderByDescending(a => Guid.NewGuid());
+                foreach (var equipe in equipes)
+                {
+                    competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
+                    {
+                        CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
+                        EquipeId = equipe.EquipeId,
+                        Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
+                    });
+                    indiceChave++;
+
+                    if (indiceChave > chaves)
+                        indiceChave = 1;
+                }
+            }
+
+            return competicoesFasesGrupos;
+        }
+
+        private static List<CompeticaoFaseGrupo> MontarChaveamento(int chaves)
+        {
+            var competicoesFasesGrupos = new List<CompeticaoFaseGrupo>();
+            for (int i = 1; i <= chaves; i++)
+            {
+                competicoesFasesGrupos.Add(new CompeticaoFaseGrupo()
+                {
+                    CompeticaoFaseGrupoId = Guid.NewGuid(),
+                    Nome = $"Chave {i}",
+                    Grupo = i,
+                    CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
+                });
+            }
+
+            return competicoesFasesGrupos;
+        }
+
+        public async Task<ActionResult> Fase(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var competicaoFaseGrupos = await db.CompeticoesFasesGrupos
+                .Include(a => a.CompeticoesFasesGruposEquipes)
+                .Where(a => a.CompeticaoFaseId == id)
+                .OrderBy(a => a.Grupo)
+                .ToListAsync();
+
+
+            return View(competicaoFaseGrupos);
+        }
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing) {
+            if (disposing)
+            {
                 db.Dispose();
             }
             base.Dispose(disposing);

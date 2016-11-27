@@ -17,7 +17,5 @@ namespace Truco.Models
         public Guid RegiaoId { get; set; }
 
         public virtual Regiao Regiao { get; set; }
-
-        public ICollection<Equipe> Equipes { get; set; }
     }
 }

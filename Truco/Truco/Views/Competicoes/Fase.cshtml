@@ -1,0 +1,93 @@
+﻿@model IList<Truco.Models.CompeticaoFaseGrupo>
+@{
+    var competicaoFase = Model.FirstOrDefault()?.CompeticaoFase;
+
+    ViewBag.Title = "Fase";
+}
+
+<hgroup>
+    <h2>@competicaoFase.Competicao.Nome.</h2>
+    <h3>@competicaoFase.Nome.</h3>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var grupo in Model)
+        {
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title pull-left">@grupo.Nome</h3>
+                        <a href="@Url.Action("Jogos", new { id = grupo.CompeticaoFaseGrupoId })" class="btn btn-primary pull-right">Jogos</a>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-responsive table-bordered">
+                            <thead>
+                                <tr>
+                                    @if (grupo.CompeticoesFasesGruposEquipes.Count == 6)
+                                    {
+                                        <th>Lado</th>
+                                    }
+                                    <th>
+                                        Trio
+                                    </th>
+                                    <th>
+                                        Jogos
+                                    </th>
+                                    <th>
+                                        Vitórias
+                                    </th>
+                                    <th>
+                                        Sets
+                                    </th>
+                                    <th>
+                                        Tentos
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var equipe in grupo.CompeticoesFasesGruposEquipes.OrderBy(a => a.Lado).ThenBy(a => a.Numero))
+                                {
+                                    <tr>
+                                        @if (grupo.CompeticoesFasesGruposEquipes.Count == 6)
+                                        {
+                                            <td>@equipe.Lado</td>
+                                        }
+                                        <td>@equipe.Equipe.Nome</td>
+                                        <td>@equipe.Jogos</td>
+                                        <td>@equipe.Vitorias</td>
+                                        <td>@equipe.Sets</td>
+                                        <td>@equipe.Tentos</td>
+                                    </tr>
+                                }
+
+                                @if (grupo.CompeticoesFasesGruposEquipes.Count == 3)
+                                {
+                                    <tr>
+                                        <td colspan="5"></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section styles {
+    <style type="text/css">
+        .panel-heading h3 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: normal;
+            width: 75%;
+            padding-top: 8px;
+        }
+    </style>
+}
