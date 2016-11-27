@@ -4,13 +4,11 @@
 
     ViewBag.Title = "Fase";
 }
-
 <hgroup>
     <h2>@competicaoFase.Competicao.Nome.</h2>
     <h3>@competicaoFase.Nome.</h3>
     <h3>@ViewBag.Message</h3>
 </hgroup>
-
 <div class="row">
     <div class="col-md-12">
         @foreach (var grupo in Model)
@@ -19,7 +17,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title pull-left">@grupo.Nome</h3>
-                        <a href="@Url.Action("Jogos", new { id = grupo.CompeticaoFaseGrupoId })" class="btn btn-primary pull-right">Jogos</a>
+                        <a href="@Url.Action("Jogos", new { id = grupo.CompeticaoFaseGrupoId })" class="btn btn-primary pull-right hidden-print">Jogos</a>
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">

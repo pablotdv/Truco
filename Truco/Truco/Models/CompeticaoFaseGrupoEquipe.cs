@@ -21,7 +21,9 @@ namespace Truco.Models
         public int Tentos { get; set; }
         public int Numero { get; set; }
         public Lado Lado { get; set; } = Lado.LadoA;
+                
         public ICollection<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposEquipesJogosUm { get; set; }
+                
         public ICollection<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposEquipesJogosDois { get; set; }
     }
 }
