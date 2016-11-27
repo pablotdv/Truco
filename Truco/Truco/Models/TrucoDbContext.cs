@@ -22,12 +22,29 @@ namespace Truco.Models
         {
             // Set the database intializer which is run once during application start
             // This seeds the database with admin user credentials and admin role
-            Database.SetInitializer<TrucoDbContext>(new ApplicationDbInitializer());
+            // Database.SetInitializer<TrucoDbContext>(new ApplicationDbInitializer());
         }
 
         public static TrucoDbContext Create()
         {
             return new TrucoDbContext();
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CompeticaoFaseGrupoRodadaJogo>()
+                .HasRequired(a => a.CompeticaoFaseGrupoEquipeUm)
+                .WithMany(a => a.CompeticoesFasesGruposEquipesJogosUm)
+                .HasForeignKey(a => a.CompeticaoFaseGrupoEquipeUmId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CompeticaoFaseGrupoRodadaJogo>()
+                .HasRequired(a => a.CompeticaoFaseGrupoEquipeDois)
+                .WithMany(a => a.CompeticoesFasesGruposEquipesJogosDois)
+                .HasForeignKey(a => a.CompeticaoFaseGrupoEquipeDoisId)
+                .WillCascadeOnDelete(false);
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public override int SaveChanges()

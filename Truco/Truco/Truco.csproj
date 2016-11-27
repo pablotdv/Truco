@@ -573,6 +573,7 @@
     <Content Include="Views\Competicoes\Sorteio.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Competicoes\Fase.cshtml" />
+    <Content Include="Views\Competicoes\Jogos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
