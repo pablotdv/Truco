@@ -178,5 +178,56 @@ namespace Truco.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult InserirAtleta(EquipeAtleta model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var equipe = db.Equipes 
+                    .Include(a => a.Atleta)
+                    .FirstOrDefault(a => a.EquipeId == model.EquipeId);
+
+                var atleta = db.Atletas
+                    .Find(model.AtletaId);
+
+                equipe.Atletas.Add(atleta);
+                db.SaveChanges();
+
+                var dados = equipe.Atletas
+                .Select(a => new EquipeAtleta()
+                {
+                    AtletaId = a.AtletaId,
+                    EquipeId = equipe.EquipeId,
+                    EquipeAtletaId = a.EquipeAtletaId,
+
+                }).ToList();
+
+                return PartialView("_Atletas", dados);
+            }
+
+            return View();
+
+        }
+
+
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+        public async Task<JsonResult> PesquisarAtletas(string nome)
+        {
+            var nomes = String.IsNullOrEmpty(nome) ? new string[0] : nome.Split(' ');
+            var dados = await context.Atletas.Where(b => nomes.All(c => b.Nome.Contains(c)))
+                .Select(a => new
+                {
+                    Id = a.AtletaId,
+                    value = a.Nome,
+
+                }).ToListAsync();
+
+            return Json(dados, JsonRequestBehavior.AllowGet);
+
+        }
+
     }
 }

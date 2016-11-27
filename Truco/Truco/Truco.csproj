@@ -410,6 +410,8 @@
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="scripts\jquery-3.1.1.min.map" />
+    <Content Include="scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Views\Competicoes\Indice.cshtml" />
     <Content Include="Views\Competicoes\_Pesquisa.cshtml" />
     <Content Include="Views\Competicoes\_ParametrosPesquisa.cshtml" />
@@ -560,6 +562,8 @@
     <Content Include="Views\RegioesCidades\Excluir.cshtml" />
     <Content Include="Views\RegioesCidades\_Scripts.cshtml" />
     <Content Include="Views\RegioesCidades\Detalhes.cshtml" />
+    <Content Include="Views\Equipes\_Alteta.cshtml" />
+    <Content Include="Views\Equipes\_Atletas.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -677,6 +681,7 @@
     <Compile Include="ViewModels\EntidadesViewModel.cs" />
     <Compile Include="ViewModels\EquipesAtletasViewModel.cs" />
     <Compile Include="ViewModels\EquipesViewModel.cs" />
+    <Compile Include="ViewModels\Equipe_AtletaViewModel.cs" />
     <Compile Include="ViewModels\EstadosViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoGrupos\GrupoViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoUsuarios\EditarUsuarioViewModel.cs" />

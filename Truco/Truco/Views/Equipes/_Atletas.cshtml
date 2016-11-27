@@ -1,0 +1,61 @@
+﻿
+@using Truco.ViewModels
+@model List<Equipe_AtletaViewModel>
+
+
+@* *********************************************************
+    *************    PAINEL ESPECIALIDADES    *****************
+    *********************************************************** *@
+@using (Ajax.BeginForm(actionName: "ExlcuirAtletaEquipe", controllerName: "Equipe",
+                                                        ajaxOptions: new AjaxOptions()
+                                                        {
+                                                            HttpMethod = "POST",
+
+                                                            UpdateTargetId = "atletasDiv"
+                                                        }))
+
+{
+
+
+    <div id="atletasDiv">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="col-lg-1"></th>
+                    <td>
+                        Atletas
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+
+                            @Ajax.ActionLink(linkText: "Excluir",
+                                        actionName: "ExcluirAtletaEquipe",
+                                        controllerName: "Equipe",
+                                        routeValues: new { parceiroId = item.EquipeId, especialidadeId = item.AtletaId },
+                                        ajaxOptions: new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "atletasDiv" },
+                                        htmlAttributes: new { @class = "btn btn-danger" })
+
+
+                        </td>
+                        <td>
+                            @item.Atleta
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
+
+
+
+

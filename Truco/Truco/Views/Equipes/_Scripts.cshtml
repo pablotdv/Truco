@@ -20,5 +20,33 @@
     }).on('typeahead:selected', function (e, suggestion, name) {
         $("#RegiaoId").val(suggestion.RegiaoId);
     });
-</script>
 
+
+
+    var engineAtletas = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarAtletas", "Equipe")?nome=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engineAtletas.initialize();
+
+    $('#AtletaIdNome').typeahead(null, {
+        source: engineAtletas.ttAdapter(),
+        displayKey: "value",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data.value + '</strong> </p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#AtletaId").val(suggestion.AtletaId);
+    });
+
+
+
+</script>
+<script src="~/scripts/jquery.unobtrusive-ajax.js"></script>
+
+
+ 

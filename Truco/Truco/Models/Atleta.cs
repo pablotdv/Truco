@@ -11,5 +11,6 @@ namespace Truco.Models
         [Key]
         public Guid AtletaId { get; set; }
         public string Nome { get; set; }
+        
     }
 }
