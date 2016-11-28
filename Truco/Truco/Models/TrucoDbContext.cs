@@ -33,15 +33,15 @@ namespace Truco.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CompeticaoFaseGrupoRodadaJogo>()
-                .HasRequired(a => a.CompeticaoFaseGrupoEquipeUm)
-                .WithMany(a => a.CompeticoesFasesGruposEquipesJogosUm)
-                .HasForeignKey(a => a.CompeticaoFaseGrupoEquipeUmId)
+                .HasRequired(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUm)
+                .WithMany(a => a.CompeticoesFasesGruposRodadasJogosUm)
+                .HasForeignKey(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUmId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CompeticaoFaseGrupoRodadaJogo>()
-                .HasRequired(a => a.CompeticaoFaseGrupoEquipeDois)
-                .WithMany(a => a.CompeticoesFasesGruposEquipesJogosDois)
-                .HasForeignKey(a => a.CompeticaoFaseGrupoEquipeDoisId)
+                .HasRequired(a => a.CompeticaoFaseGrupoRodadaJogoEquipeDois)
+                .WithMany(a => a.CompeticoesFasesGruposRodadasJogosDois)
+                .HasForeignKey(a => a.CompeticaoFaseGrupoRodadaJogoEquipeDoisId)
                 .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
@@ -90,7 +90,7 @@ namespace Truco.Models
         public DbSet<CompeticaoFaseGrupoEquipe> CompeticoesFasesGruposEquipes { get; set; }
         public DbSet<CompeticaoFaseGrupoRodada> CompeticoesFasesGruposRodadas { get; set; }
         public DbSet<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposRodadasJogos { get; set; }
-        public DbSet<CompeticaoFaseGrupoRodadaJogoSet> CompeticoesFasesGruposRodadasJogosSets { get; set; }
+        public DbSet<CompeticaoFaseGrupoRodadaJogoEquipeSet> CompeticoesFasesGruposRodadasJogosEquipesSets { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Entidade> Entidades { get; set; }
         public DbSet<Equipe> Equipes { get; set; }
@@ -101,5 +101,6 @@ namespace Truco.Models
         public DbSet<Regiao> Regioes { get; set; }
         public DbSet<RegiaoCidade> RegioesCidades { get; set; }
         public DbSet<PesquisaModel> PesquisasModels { get; set; }
+        public DbSet<CompeticaoFaseGrupoRodadaJogoEquipe> CompeticoesFasesGruposRodadasJogosEquipes { get; set; }
     }
 }

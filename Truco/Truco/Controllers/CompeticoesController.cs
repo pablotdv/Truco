@@ -424,9 +424,21 @@ namespace Truco.Controllers
                 Rodada = 1,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB1.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA2.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB2.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA3.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB3.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB1.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA2.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB2.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA3.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB3.CompeticaoFaseGrupoEquipeId },
+                    }
                 }
             });
 
@@ -436,9 +448,21 @@ namespace Truco.Controllers
                 Rodada = 2,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB2.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA2.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB3.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA3.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB1.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB2.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA2.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB3.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA3.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB1.CompeticaoFaseGrupoEquipeId },
+                    }
                 }
             });
 
@@ -448,9 +472,21 @@ namespace Truco.Controllers
                 Rodada = 3,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB3.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA2.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB1.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipeA3.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipeB2.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB3.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA2.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB1.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeA3.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipeB2.CompeticaoFaseGrupoEquipeId },
+                    }
                 }
             });
         }
@@ -467,7 +503,11 @@ namespace Truco.Controllers
                 Rodada = 1,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe2.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
+                    },
                 }
             });
             grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
@@ -476,7 +516,11 @@ namespace Truco.Controllers
                 Rodada = 2,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    },
                 }
             });
             grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
@@ -485,7 +529,11 @@ namespace Truco.Controllers
                 Rodada = 3,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe2.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    },
                 }
             });
         }
@@ -503,8 +551,16 @@ namespace Truco.Controllers
                 Rodada = 1,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe2.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe3.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe4.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe4.CompeticaoFaseGrupoEquipeId },
+                    },
                 }
             });
             grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
@@ -513,8 +569,16 @@ namespace Truco.Controllers
                 Rodada = 2,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe3.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe4.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe2.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe4.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
+                    },
                 }
             });
             grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
@@ -523,8 +587,16 @@ namespace Truco.Controllers
                 Rodada = 3,
                 CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
                 {
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe1.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe4.CompeticaoFaseGrupoEquipeId },
-                    new CompeticaoFaseGrupoRodadaJogo() { CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeUmId = equipe2.CompeticaoFaseGrupoEquipeId, CompeticaoFaseGrupoEquipeDoisId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe4.CompeticaoFaseGrupoEquipeId },
+                    },
+                    new CompeticaoFaseGrupoRodadaJogo() {
+                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
+                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
+                    },
                 }
             });
         }
@@ -654,7 +726,7 @@ namespace Truco.Controllers
 
                 .Where(a => a.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupoId == id)
                 .OrderBy(a => a.CompeticaoFaseGrupoRodada.Rodada)
-                .ThenBy(a => a.CompeticaoFaseGrupoEquipeUm.Numero)
+                .ThenBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Numero)
                 .ToListAsync();
 
             return View(competicaoFaseGruposRodadasJogos);
@@ -667,7 +739,8 @@ namespace Truco.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var jogo = await db.CompeticoesFasesGruposRodadasJogos
-                .Include(a => a.CompeticoesFasesGruposRodadasJogosSets)
+                .Include(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets)
+                .Include(a => a.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets)
                 .FirstOrDefaultAsync(a => a.CompeticaoFaseGrupoRodadaJogoId == id);
 
             if (jogo == null)
@@ -675,25 +748,28 @@ namespace Truco.Controllers
                 return HttpNotFound();
             }
 
-            if (jogo.CompeticoesFasesGruposRodadasJogosSets.Count == 0)
+            if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Count == 0)
             {
-                jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+                for (int i = 1; i <= 3; i++)
                 {
-                    CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
-                    Set = 1
-                });
+                    jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Add(new CompeticaoFaseGrupoRodadaJogoEquipeSet()
+                    {
+                        CompeticaoFaseGrupoRodadaJogoEquipeSetId = Guid.NewGuid(),
+                        Set = i
+                    });
+                }
+            }
 
-                jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+            if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Count == 0)
+            {
+                for (int i = 1; i <= 3; i++)
                 {
-                    CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
-                    Set = 2
-                });
-
-                jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
-                {
-                    CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
-                    Set = 3
-                });
+                    jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Add(new CompeticaoFaseGrupoRodadaJogoEquipeSet()
+                    {
+                        CompeticaoFaseGrupoRodadaJogoEquipeSetId = Guid.NewGuid(),
+                        Set = i
+                    });
+                }
             }
 
             return View(jogo);
@@ -706,47 +782,90 @@ namespace Truco.Controllers
             if (ModelState.IsValid)
             {
                 var jogo = await db.CompeticoesFasesGruposRodadasJogos
-                    .Include(a => a.CompeticoesFasesGruposRodadasJogosSets)
+                    .Include(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets)
+                    .Include(a => a.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets)
                     .FirstOrDefaultAsync(a => a.CompeticaoFaseGrupoRodadaJogoId == model.CompeticaoFaseGrupoRodadaJogoId);
 
-                if (jogo.CompeticoesFasesGruposRodadasJogosSets.Count != 0)
+                if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Count != 0)
                 {
-                    var sets = jogo.CompeticoesFasesGruposRodadasJogosSets.ToList();
+                    var sets = jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.ToList();
                     foreach (var set in sets)
                     {
-                        db.CompeticoesFasesGruposRodadasJogosSets.Remove(set);
-                        jogo.CompeticoesFasesGruposRodadasJogosSets.Remove(set);
+                        db.CompeticoesFasesGruposRodadasJogosEquipesSets.Remove(set);
+                        jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Remove(set);
                     }
                 }
 
-                foreach (var set in model.CompeticoesFasesGruposRodadasJogosSets)
+                if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Count != 0)
                 {
-                    jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+                    var sets = jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.ToList();
+                    foreach (var set in sets)
                     {
-                        CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
+                        db.CompeticoesFasesGruposRodadasJogosEquipesSets.Remove(set);
+                        jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Remove(set);
+                    }
+                }
+
+                foreach (var set in model.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets)
+                {
+                    jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Add(new CompeticaoFaseGrupoRodadaJogoEquipeSet()
+                    {
+                        CompeticaoFaseGrupoRodadaJogoEquipeSetId = Guid.NewGuid(),
                         Set = set.Set,
-                        EquipeUmTentos = set.EquipeUmTentos,
-                        EquipeDoisTentos = set.EquipeDoisTentos,
+                        Tentos = set.Tentos
+                    });
+                }
+
+                foreach (var set in model.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets)
+                {
+                    jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Add(new CompeticaoFaseGrupoRodadaJogoEquipeSet()
+                    {
+                        CompeticaoFaseGrupoRodadaJogoEquipeSetId = Guid.NewGuid(),
+                        Set = set.Set,
+                        Tentos = set.Tentos
                     });
                 }
 
                 await db.SaveChangesAsync();
 
-                //var equipeUm = jogo.CompeticaoFaseGrupoEquipeUm;
-                //var jogosEquipeUm = db.CompeticoesFasesGruposRodadasJogos
-                //    .Include(a => a.CompeticaoFaseGrupoEquipeUm)
-                //    .Include(a => a.CompeticaoFaseGrupoEquipeDois)
-                //    .Where(a => a.CompeticaoFaseGrupoEquipeUm.CompeticaoFaseGrupoEquipeId == equipeUm.CompeticaoFaseGrupoEquipeId || a.CompeticaoFaseGrupoEquipeDois.CompeticaoFaseGrupoEquipeId == equipeUm.CompeticaoFaseGrupoEquipeId)
-                //    .ToList();
+                var jogosEquipeUm = db.CompeticoesFasesGruposRodadasJogosEquipesSets
+                    .Where(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoEquipeId == jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipeId);
 
-                //var equipeDois = jogo.CompeticaoFaseGrupoEquipeDois;
-                //var jogosEquipeDois = db.CompeticoesFasesGruposRodadasJogos
-                //    .Include(a => a.CompeticaoFaseGrupoEquipeUm)
-                //    .Include(a => a.CompeticaoFaseGrupoEquipeDois)
-                //    .Where(a => a.CompeticaoFaseGrupoEquipeUm.CompeticaoFaseGrupoEquipeId == equipeDois.CompeticaoFaseGrupoEquipeId || a.CompeticaoFaseGrupoEquipeDois.CompeticaoFaseGrupoEquipeId == equipeDois.CompeticaoFaseGrupoEquipeId)
-                //    .ToList();
+                var jogosEquipeDois = db.CompeticoesFasesGruposRodadasJogosEquipesSets
+                    .Where(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoEquipeId == jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipeId);
 
-                //await db.SaveChangesAsync();
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Jogos = jogosEquipeUm
+                    .GroupBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoRodadaJogoEquipeId)
+                    .Count();
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Jogos = jogosEquipeDois
+                    .GroupBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoRodadaJogoEquipeId)
+                    .Count();
+
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Vitorias = jogosEquipeUm
+                    .Where(a => a.Tentos == 24)
+                    .GroupBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoRodadaJogoEquipeId)
+                    .Where(a => a.Count() >= 2)
+                    .Count();
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Vitorias = jogosEquipeDois
+                    .Where(a => a.Tentos == 24)
+                    .GroupBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoRodadaJogoEquipeId)
+                    .Where(a => a.Count() >= 2)
+                    .Count();
+
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Sets = jogosEquipeUm
+                    .Where(a => a.Tentos == 24)
+                    .Count();
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Sets = jogosEquipeDois
+                    .Where(a => a.Tentos == 24)
+                    .Count();
+
+
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Tentos = jogosEquipeUm
+                    .Sum(a => a.Tentos);
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Tentos = jogosEquipeDois
+                    .Sum(a => a.Tentos);
+
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Jogos", new { id = jogo.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupoId });
             }

@@ -24,6 +24,7 @@
                         <table class="table table-responsive table-bordered">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     @if (grupo.CompeticoesFasesGruposEquipes.Count == 6)
                                     {
                                         <th>Lado</th>
@@ -46,9 +47,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var equipe in grupo.CompeticoesFasesGruposEquipes.OrderBy(a => a.Lado).ThenBy(a => a.Numero))
+                                @{ var equipes = grupo.CompeticoesFasesGruposEquipes.OrderByDescending(a => a.Vitorias).ThenByDescending(a => a.Sets).ThenByDescending(a => a.Tentos).ThenBy(a => a.Lado).ThenBy(a => a.Numero).ToList();}
+                                @foreach (var equipe in equipes)
                                 {
                                     <tr>
+                                        <td>@($"{equipes.IndexOf(equipe) + 1}º")</td>
                                         @if (grupo.CompeticoesFasesGruposEquipes.Count == 6)
                                         {
                                             <td>@equipe.Lado</td>
@@ -73,7 +76,7 @@
                     </div>
                 </div>
             </div>
-        }
+                                    }
     </div>
 </div>
 

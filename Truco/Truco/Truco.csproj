@@ -580,7 +580,8 @@
     <Content Include="Views\Competicoes\Jogos.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Competicoes\Jogo.cshtml" />
-    <Content Include="Views\Competicoes\_JogoSet.cshtml" />
+    <Content Include="Views\Competicoes\_JogoSetDois.cshtml" />
+    <Content Include="Views\Competicoes\_JogoSetUm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -668,9 +669,10 @@
     <Compile Include="Models\CompeticaoFase.cs" />
     <Compile Include="Models\CompeticaoFaseGrupo.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoEquipe.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoEquipe.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoRodada.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoRodadaJogo.cs" />
-    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoSet.cs" />
+    <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoEquipeSet.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Entidade.cs" />
     <Compile Include="Models\Entity.cs" />

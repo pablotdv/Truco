@@ -12,11 +12,13 @@ namespace Truco.Models
         [Key]
         public Guid CompeticaoFaseGrupoRodadaJogoId { get; set; }
         public Guid CompeticaoFaseGrupoRodadaId { get; set; }
-        public Guid CompeticaoFaseGrupoEquipeUmId { get; set; }
-        public Guid CompeticaoFaseGrupoEquipeDoisId { get; set; }
-        public virtual CompeticaoFaseGrupoEquipe CompeticaoFaseGrupoEquipeUm { get; set; }
-        public virtual CompeticaoFaseGrupoEquipe CompeticaoFaseGrupoEquipeDois { get; set; }
+        public Guid CompeticaoFaseGrupoRodadaJogoEquipeUmId { get; set; }
+        public Guid CompeticaoFaseGrupoRodadaJogoEquipeDoisId { get; set; }
+        [ForeignKey("CompeticaoFaseGrupoRodadaJogoEquipeUmId")]
+        public virtual CompeticaoFaseGrupoRodadaJogoEquipe CompeticaoFaseGrupoRodadaJogoEquipeUm { get; set; }
+        [ForeignKey("CompeticaoFaseGrupoRodadaJogoEquipeDoisId")]
+        public virtual CompeticaoFaseGrupoRodadaJogoEquipe CompeticaoFaseGrupoRodadaJogoEquipeDois { get; set; }
         public virtual CompeticaoFaseGrupoRodada CompeticaoFaseGrupoRodada { get; set; }
-        public ICollection<CompeticaoFaseGrupoRodadaJogoSet> CompeticoesFasesGruposRodadasJogosSets { get; set; }
+        
     }
 }

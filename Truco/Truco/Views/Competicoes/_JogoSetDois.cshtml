@@ -1,0 +1,8 @@
+﻿@model Truco.Models.CompeticaoFaseGrupoRodadaJogoEquipeSet
+
+@using (Html.BeginCollectionItem("CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets"))
+{
+    @Html.HiddenFor(a => a.CompeticaoFaseGrupoRodadaJogoEquipeSetId)
+    @Html.HiddenFor(a => a.Set)
+    @Html.EditorFor(a => a.Tentos, new { htmlAttributes = new { @class = "form-control" } })
+}
