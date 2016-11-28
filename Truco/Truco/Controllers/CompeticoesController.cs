@@ -660,6 +660,99 @@ namespace Truco.Controllers
             return View(competicaoFaseGruposRodadasJogos);
         }
 
+        public async Task<ActionResult> Jogo(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var jogo = await db.CompeticoesFasesGruposRodadasJogos
+                .Include(a => a.CompeticoesFasesGruposRodadasJogosSets)
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseGrupoRodadaJogoId == id);
+
+            if (jogo == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (jogo.CompeticoesFasesGruposRodadasJogosSets.Count == 0)
+            {
+                jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+                {
+                    CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
+                    Set = 1
+                });
+
+                jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+                {
+                    CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
+                    Set = 2
+                });
+
+                jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+                {
+                    CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
+                    Set = 3
+                });
+            }
+
+            return View(jogo);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Jogo(CompeticaoFaseGrupoRodadaJogo model)
+        {
+            if (ModelState.IsValid)
+            {
+                var jogo = await db.CompeticoesFasesGruposRodadasJogos
+                    .Include(a => a.CompeticoesFasesGruposRodadasJogosSets)
+                    .FirstOrDefaultAsync(a => a.CompeticaoFaseGrupoRodadaJogoId == model.CompeticaoFaseGrupoRodadaJogoId);
+
+                if (jogo.CompeticoesFasesGruposRodadasJogosSets.Count != 0)
+                {
+                    var sets = jogo.CompeticoesFasesGruposRodadasJogosSets.ToList();
+                    foreach (var set in sets)
+                    {
+                        db.CompeticoesFasesGruposRodadasJogosSets.Remove(set);
+                        jogo.CompeticoesFasesGruposRodadasJogosSets.Remove(set);
+                    }
+                }
+
+                foreach (var set in model.CompeticoesFasesGruposRodadasJogosSets)
+                {
+                    jogo.CompeticoesFasesGruposRodadasJogosSets.Add(new CompeticaoFaseGrupoRodadaJogoSet()
+                    {
+                        CompeticaoFaseGrupoRodadaJogoSetId = Guid.NewGuid(),
+                        Set = set.Set,
+                        EquipeUmTentos = set.EquipeUmTentos,
+                        EquipeDoisTentos = set.EquipeDoisTentos,
+                    });
+                }
+
+                await db.SaveChangesAsync();
+
+                //var equipeUm = jogo.CompeticaoFaseGrupoEquipeUm;
+                //var jogosEquipeUm = db.CompeticoesFasesGruposRodadasJogos
+                //    .Include(a => a.CompeticaoFaseGrupoEquipeUm)
+                //    .Include(a => a.CompeticaoFaseGrupoEquipeDois)
+                //    .Where(a => a.CompeticaoFaseGrupoEquipeUm.CompeticaoFaseGrupoEquipeId == equipeUm.CompeticaoFaseGrupoEquipeId || a.CompeticaoFaseGrupoEquipeDois.CompeticaoFaseGrupoEquipeId == equipeUm.CompeticaoFaseGrupoEquipeId)
+                //    .ToList();
+
+                //var equipeDois = jogo.CompeticaoFaseGrupoEquipeDois;
+                //var jogosEquipeDois = db.CompeticoesFasesGruposRodadasJogos
+                //    .Include(a => a.CompeticaoFaseGrupoEquipeUm)
+                //    .Include(a => a.CompeticaoFaseGrupoEquipeDois)
+                //    .Where(a => a.CompeticaoFaseGrupoEquipeUm.CompeticaoFaseGrupoEquipeId == equipeDois.CompeticaoFaseGrupoEquipeId || a.CompeticaoFaseGrupoEquipeDois.CompeticaoFaseGrupoEquipeId == equipeDois.CompeticaoFaseGrupoEquipeId)
+                //    .ToList();
+
+                //await db.SaveChangesAsync();
+
+                return RedirectToAction("Jogos", new { id = jogo.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupoId });
+            }
+            return View(model);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
