@@ -44,6 +44,7 @@
                                     <th>
                                         Tentos
                                     </th>
+                                    <th>Aproveitamento</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -61,13 +62,14 @@
                                         <td>@equipe.Vitorias</td>
                                         <td>@equipe.Sets</td>
                                         <td>@equipe.Tentos</td>
+                                        <td>@equipe.Aproveitamento</td>
                                     </tr>
                                 }
 
                                 @if (grupo.CompeticoesFasesGruposEquipes.Count == 3)
                                 {
                                     <tr>
-                                        <td colspan="5"></td>
+                                        <td colspan="7">-</td>
                                     </tr>
                                 }
                             </tbody>

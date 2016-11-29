@@ -19,6 +19,7 @@ namespace Truco.Models
         public int Vitorias { get; set; }
         public int Sets { get; set; }
         public int Tentos { get; set; }
+        public decimal Aproveitamento { get; set; }        
         public int Numero { get; set; }
         public Lado Lado { get; set; } = Lado.LadoA;  
 

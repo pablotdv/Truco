@@ -706,6 +706,7 @@
     <Compile Include="ViewModels\AtletasViewModel.cs" />
     <Compile Include="ViewModels\BairrosViewModel.cs" />
     <Compile Include="ViewModels\CidadesViewModel.cs" />
+    <Compile Include="ViewModels\ClassificacaoViewModel.cs" />
     <Compile Include="ViewModels\CompeticaoSorteioViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />

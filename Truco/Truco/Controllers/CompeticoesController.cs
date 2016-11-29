@@ -865,11 +865,45 @@ namespace Truco.Controllers
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Tentos = jogosEquipeDois
                     .Sum(a => a.Tentos);
 
+                var equipe = jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe;
+                double vitorias = (double)(equipe.Vitorias * 100) / equipe.Jogos;
+                double setes = (double)(equipe.Sets * 100) / (equipe.Jogos * 3);
+                double tentos = (double)(equipe.Tentos * 100) / (equipe.Jogos * 72);
+                double aproveitamento = (double)(vitorias + setes + tentos) / 3;
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Aproveitamento = (decimal)aproveitamento;
+
+                equipe = jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe;
+                vitorias = (double)(equipe.Vitorias * 100) / equipe.Jogos;
+                setes = (double)(equipe.Sets * 100) / (equipe.Jogos * 3);
+                tentos = (double)(equipe.Tentos * 100) / (equipe.Jogos * 72);
+                aproveitamento = (double)(vitorias + setes + tentos) / 3;
+                jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Aproveitamento = (decimal)aproveitamento;
+
                 await db.SaveChangesAsync();
 
                 return RedirectToAction("Jogos", new { id = jogo.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupoId });
             }
             return View(model);
+        }
+
+        public async Task<ActionResult> Classificacao(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var grupos = await db.CompeticoesFasesGrupos
+                .Include(a => a.CompeticoesFasesGruposEquipes)
+                .OrderBy(a => a.Grupo)
+                .Where(a => a.CompeticaoFaseId == id)
+                .ToListAsync();
+
+            if (grupos == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(grupos);
         }
 
         protected override void Dispose(bool disposing)
