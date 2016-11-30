@@ -29,22 +29,7 @@
                     </div>
                 }
             </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <label>Atletas</label>
-                </div>
-                <div class="panel-body">
-                                
-                    @Html.Partial("_Atleta", new Truco.Models.EquipeAtleta() { EquipeId = Model.EquipeId })
-                                       
-                    <div id="atletasDiv">
-                        @Html.Partial("_Atletas", Truco.ViewModels.Equipe_AtletaViewModel)
-                    </div>
-                    @*para comiit teste*@
-                </div>
-
-            </div>
+           
         </div>
     </div>
 </div>

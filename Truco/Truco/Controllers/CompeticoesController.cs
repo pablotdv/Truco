@@ -1041,8 +1041,8 @@ namespace Truco.Controllers
                 CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
             };
 
-            var gruposPrincipal = SortearPrincipal(equipesPrincipal.OrderByDescending(a=>a.Aproveitamento).ToList());
-            var gruposRepescagem = SortearRepescagem(equipesRepescagem.OrderByDescending(a=>a.Aproveitamento).ToList());
+            var gruposPrincipal = SortearPrincipal(equipesPrincipal.OrderByDescending(a => a.Aproveitamento).ToList());
+            var gruposRepescagem = SortearRepescagem(equipesRepescagem.OrderByDescending(a => a.Aproveitamento).ToList());
 
             gruposPrincipal = ReorganizaChaves(gruposPrincipal);
             gruposRepescagem = ReorganizaChaves(gruposRepescagem);
@@ -1097,6 +1097,86 @@ namespace Truco.Controllers
             var chaves = grupos3 + grupos4;
             return SorteioPosicao(equipes, chaves);
         }
+
+        //CADASTRO DE EQUIPES E VINCULO COM COMPETIÇÃO
+        public async Task<ActionResult> CompeticaoEquipe(Guid id, Equipe equipe)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (ModelState.IsValid)
+            {
+                //adiciona equipe
+                equipe.EquipeId = Guid.NewGuid();
+                db.Equipes.Add(equipe);
+                await db.SaveChangesAsync();
+                equipe = null;
+                //vincula equipe a competição
+                var equipe_comp = new CompeticaoEquipe();
+                equipe_comp.CompeticaoEquipeId = Guid.NewGuid();
+                equipe_comp.EquipeId = equipe.EquipeId;
+                equipe_comp.CompeticaoId = id;
+                db.CompeticoesEquipes.Add(equipe_comp);
+                await db.SaveChangesAsync();
+                equipe_comp = null;
+                var competicao = await db.Competicoes.Include(a => a.CompeticoesEquipes).FirstOrDefaultAsync(a => a.CompeticaoId == id);
+                if (competicao == null)
+                {
+                    return HttpNotFound();
+                }
+
+                CompeticaoEquipeViewModel model = new CompeticaoEquipeViewModel()
+                {
+                    CompeticaoId = competicao.CompeticaoId,
+
+                    CompeticaoEquipes = competicao.CompeticoesEquipes
+                        .Select(a => new CompeticaoEquipe()
+                        {
+                            CompeticaoId = competicao.CompeticaoId,
+                            Equipe = a.Equipe
+                        })
+                        .ToList(),
+                };
+                await ViewBags();
+                return View(model);
+            }
+
+            await ViewBags();
+            return View();
+        }
+
+
+        //
+        // POST: /Equipes/Criar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CadastrarEquipe(CompeticoesEquipesViewModel competicoesequipes)
+        {
+            if (ModelState.IsValid)
+            {
+                //competicoesequipes.Equipe.EquipeId = Guid.NewGuid();
+                //db.Equipes.Add(competicoesequipes);
+                //await db.SaveChangesAsync();
+                //TempData["Mensagem"] = "Operação realizada com sucesso!";
+                //return RedirectToAction("Indice");
+            }
+
+
+            await ViewBags();
+            return View(competicoesequipes);
+        }
+
+
+
+
+        private async Task ViewBags()
+        {
+            ViewBag.Regiaos = new SelectList(await db.Regioes.ToListAsync(), "RegiaoId", "Numero");
+            ViewBag.Cidades = new SelectList(await db.Cidades.ToListAsync(), "CidadeId", "Nome");
+
+        }
+
 
         protected override void Dispose(bool disposing)
         {

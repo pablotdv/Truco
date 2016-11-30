@@ -29,8 +29,28 @@
                             <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Salvar</button>
                         </div>
                     </div>
+
+                   
                 }
             </div>
+            @if (Model.EquipeId != null)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <label>Atletas</label>
+                    </div>
+                    <div class="panel-body">
+
+                        @Html.Partial("_Alteta", new Truco.Models.EquipeAtleta() { EquipeId = Model.EquipeId })
+                  
+                        <div id="atletasDiv">
+                            @*  @Html.Partial("_Atletas", Truco.ViewModels.Equipe_AtletaViewModel)*@
+                        </div>
+
+                    </div>
+
+                </div>
+            }
         </div>
     </div>
 </div>

@@ -1,0 +1,50 @@
+﻿@using Truco.ViewModels
+@model CompeticaoEquipeViewModel
+
+@using (Ajax.BeginForm(actionName: "CadastrarEquipe", controllerName: "Competicoes",
+                                                        ajaxOptions: new AjaxOptions()
+                                                        {
+                                                            HttpMethod = "POST",
+                                                            InsertionMode = InsertionMode.Replace,
+                                                            UpdateTargetId = "equipesDiv"
+                                                        }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.CompeticaoId)
+    <div class="row form-group">
+        <div class="col-lg-3">
+            @*aqui auto complete com especialidade*@
+            @Html.LabelFor(model => model.Equipe.Nome, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Equipe.Nome, new { htmlAttributes = new { @class = "form-control", @autofocus = "" } })
+            @Html.ValidationMessageFor(model => model.Equipe.Nome, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            <div class="col-md-4 col-xs-6">
+                @Html.LabelFor(model => model.Equipe.RegiaoId, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Equipe.RegiaoId,
+            (SelectList)ViewBag.Regiaos,
+            "Selecione um Regiao...",
+            new { @class = "form-control selectpicker" })
+                @Html.ValidationMessageFor(model => model.Equipe.RegiaoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="col-md-6 col-xs-12">
+                @Html.LabelFor(model => model.Equipe.CidadeId, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Equipe.CidadeId,
+            (SelectList)ViewBag.Cidades,
+            "Selecione uma Cidade...",
+            new { @class = "form-control selectpicker" })
+                @Html.ValidationMessageFor(model => model.Equipe.CidadeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-lg-12">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-fw"></i> Salvar</button>
+        </div>
+    </div>
+
+}

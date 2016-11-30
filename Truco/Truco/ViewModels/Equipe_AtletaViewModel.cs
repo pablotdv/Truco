@@ -13,6 +13,7 @@ namespace Truco.ViewModels
 
         public Guid EquipeAtletaId { get; set; }
 
+        
         public string NomeAtleta { get; set; }
     }
 }
