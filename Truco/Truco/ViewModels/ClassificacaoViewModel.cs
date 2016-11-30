@@ -7,5 +7,7 @@ namespace Truco.ViewModels
 {
     public class ClassificacaoViewModel
     {
+        public Guid CompeticaoFaseId { get; internal set; }
+        public List<ClassificacaoEquipeViewModel> Equipes { get; set; }
     }
 }

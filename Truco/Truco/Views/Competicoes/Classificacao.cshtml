@@ -1,0 +1,62 @@
+﻿@model Truco.ViewModels.ClassificacaoViewModel
+@{
+    ViewBag.Title = "Classificacao";
+}
+
+<hgroup>
+    <h2>@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+</hgroup>
+
+<div class="row">
+    @foreach (var posicao in Model.Equipes.OrderBy(a => a.Posicao).GroupBy(a => a.Classificacao).ToList())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>@($"{posicao.Key}")</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-responsive table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Chave</th>
+                                <th>Equipe</th>
+                                <th>Vitórias</th>
+                                <th>Sets</th>
+                                <th>Tentos</th>
+                                <th>Aproveitamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var equipes = posicao.OrderByDescending(a => a.CompeticaoFaseGrupoEquipe.Aproveitamento).ToList();}
+                            @foreach (var equipe in equipes)
+                            {
+                                <tr>
+                                    <td>@($"{equipes.IndexOf(equipe) + 1}º Lugar")</td>
+                                    <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoFaseGrupo.Nome</td>
+                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Equipe.Nome</td>
+                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Vitorias</td>
+                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Sets</td>
+                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Tentos</td>
+                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Aproveitamento</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+                                }
+
+    
+</div>
+
+<div class="row"></div>
+@using (Html.BeginForm("Classificacao"))
+{
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-default">Sortear</button>
+}

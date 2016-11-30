@@ -405,7 +405,6 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="CodeTemplates\Scaffolders\All\All.ps1" />
     <Content Include="CodeTemplates\Scaffolders\All\AllTemplate.cs.t4" />
-    <None Include="Properties\PublishProfiles\ftp smaterasp.pubxml" />
     <None Include="Properties\PublishProfiles\trucotche - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\trucotche - Web Deploy.pubxml" />
     <None Include="Resources\Bairros.csv" />
@@ -582,6 +581,7 @@
     <Content Include="Views\Competicoes\Jogo.cshtml" />
     <Content Include="Views\Competicoes\_JogoSetDois.cshtml" />
     <Content Include="Views\Competicoes\_JogoSetUm.cshtml" />
+    <Content Include="Views\Competicoes\Classificacao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -707,11 +707,13 @@
     <Compile Include="ViewModels\BairrosViewModel.cs" />
     <Compile Include="ViewModels\CidadesViewModel.cs" />
     <Compile Include="ViewModels\ClassificacaoViewModel.cs" />
+    <Compile Include="ViewModels\ClassificacaoEquipeViewModel.cs" />
     <Compile Include="ViewModels\CompeticaoSorteioViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />
     <Compile Include="ViewModels\EnderecosViewModel.cs" />
     <Compile Include="ViewModels\EntidadesViewModel.cs" />
+    <Compile Include="ViewModels\Enums\Classificacao.cs" />
     <Compile Include="ViewModels\Enums\CompeticaoSorteioModo.cs" />
     <Compile Include="ViewModels\EquipesAtletasViewModel.cs" />
     <Compile Include="ViewModels\EquipesViewModel.cs" />

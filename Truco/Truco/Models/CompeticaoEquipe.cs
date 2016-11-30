@@ -16,6 +16,6 @@ namespace Truco.Models
         public Guid EquipeId { get; set; }
         public virtual Competicao Competicao { get; set; }
         public virtual Equipe Equipe { get; set; }
-
+        public decimal? Aproveitamento { get; internal set; }
     }
 }
