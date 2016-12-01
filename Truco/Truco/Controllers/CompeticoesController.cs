@@ -1110,7 +1110,7 @@ namespace Truco.Controllers
                 //adiciona equipe
                 equipe.EquipeId = Guid.NewGuid();
                 db.Equipes.Add(equipe);
-                await db.SaveChangesAsync();
+               
                 equipe = null;
                 //vincula equipe a competição
                 var equipe_comp = new CompeticaoEquipe();
