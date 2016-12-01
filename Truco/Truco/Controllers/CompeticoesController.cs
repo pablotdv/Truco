@@ -739,11 +739,9 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var competicaoFaseGrupos = await db.CompeticoesFasesGrupos
-                .Include(a => a.CompeticoesFasesGruposEquipes)
-                .Where(a => a.CompeticaoFaseId == id)
-                .OrderBy(a => a.Grupo)
-                .ToListAsync();
+            var competicaoFaseGrupos = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFasesGrupos.Select(b => b.CompeticoesFasesGruposEquipes))
+                .Where(a => a.CompeticaoFaseId == id).FirstOrDefaultAsync();
 
             return View(competicaoFaseGrupos);
         }
@@ -947,7 +945,7 @@ namespace Truco.Controllers
                              .OrderBy(a => a.Grupo)
                              .Where(a => a.CompeticaoFaseId == id)
                              .ToListAsync();
-                       
+
 
             ClassificacaoViewModel model = new ClassificacaoViewModel()
             {
@@ -962,7 +960,9 @@ namespace Truco.Controllers
             var totalGrupos = totalGrupos3 + totalGrupos4 + (totalGrupos6 * 2);
 
             if (!principal.HasValue)
-                principal = totalGrupos * 2;
+            {
+                principal = totalGrupos * 2;                
+            }
 
             if (principal % totalGrupos == 0) //classifica 2 por grupo
             {
@@ -1102,6 +1102,7 @@ namespace Truco.Controllers
             CompeticaoFase competicaoFaseRepescagem = new CompeticaoFase()
             {
                 CompeticaoFaseId = Guid.NewGuid(),
+                CompeticaoFasePrincipalId = competicaoFasePrincipal.CompeticaoFaseId,
                 CompeticaoId = competicao.CompeticaoId,
                 Modo = CompeticaoFaseModo.Chaveamento,
                 Nome = "1ª Fase Repescagem",

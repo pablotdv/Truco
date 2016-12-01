@@ -1,17 +1,15 @@
-﻿@model IList<Truco.Models.CompeticaoFaseGrupo>
+﻿@model Truco.Models.CompeticaoFase
 @{
-    var competicaoFase = Model.FirstOrDefault()?.CompeticaoFase;
-
     ViewBag.Title = "Fase";
 }
 <hgroup>
-    <h2>@competicaoFase.Competicao.Nome.</h2>
-    <h3>@competicaoFase.Nome.</h3>
+    <h2>@Model.Competicao.Nome.</h2>
+    <h3>@Model.Nome.</h3>
     <h3>@ViewBag.Message</h3>
 </hgroup>
 <div class="row">
     <div class="col-md-12">
-        @foreach (var grupo in Model)
+        @foreach (var grupo in Model.CompeticoesFasesGrupos.OrderBy(a => a.Grupo))
         {
             <div class="col-md-6">
                 <div class="panel panel-default">
@@ -78,12 +76,15 @@
                     </div>
                 </div>
             </div>
+
+
                                     }
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
-        <a href="@Url.Action("Classificacao", new { id = competicaoFase.CompeticaoFaseId })" class="btn btn-default">Classificação</a>
+        <a href="@Url.Action("Classificacao", new { id = Model.CompeticaoFaseId })" class="btn btn-default">Classificação</a>
     </div>
 </div>
 
