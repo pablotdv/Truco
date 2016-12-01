@@ -1,4 +1,5 @@
-﻿using Truco.Models;
+﻿using System;
+using Truco.Models;
 using Truco.ViewModels.Enums;
 
 namespace Truco.ViewModels
@@ -8,5 +9,7 @@ namespace Truco.ViewModels
         public int Posicao { get; set; }
         public CompeticaoFaseGrupoEquipe CompeticaoFaseGrupoEquipe { get; set; }
         public Classificacao Classificacao { get;set;}
+        public decimal Aproveitamento { get; internal set; }
+        public Guid EquipeId { get; internal set; }
     }
 }
