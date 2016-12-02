@@ -1,11 +1,30 @@
 @model Truco.Models.CompeticaoEquipe
 @Html.HiddenFor(a => a.CompeticaoId)
-    <div class="row form-group">
-
+   <div class="row form-group">
+    <div class="col-lg-3">
+        @*aqui auto complete com especialidade*@
+        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control", @autofocus = "" } })
+        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-4">
         <div class="col-md-4 col-xs-6">
-
+            @Html.LabelFor(model => model.RegiaoId, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.RegiaoId,
+            (SelectList)ViewBag.Regioes,
+            "Selecione um Regiao...",
+            new { @class = "form-control selectpicker" })
+            @Html.ValidationMessageFor(model => model.RegiaoId, "", new { @class = "text-danger" })
         </div>
-        <div class="col-md-4 col-xs-6">
-
+    </div>
+    <div class="col-lg-4">
+        <div class="col-md-6 col-xs-12">
+            @Html.LabelFor(model => model.CidadeId, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.CidadeId,
+            (SelectList)ViewBag.Cidades,
+            "Selecione uma Cidade...",
+            new { @class = "form-control selectpicker" })
+            @Html.ValidationMessageFor(model => model.CidadeId, "", new { @class = "text-danger" })
         </div>
-    </div> <!-- ./row -->
+    </div>
+</div>
