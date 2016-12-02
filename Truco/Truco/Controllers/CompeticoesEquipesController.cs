@@ -39,10 +39,10 @@ namespace Truco.Controllers
 			if (!String.IsNullOrWhiteSpace(viewModel.Equipe))
             {
                 var equipes = viewModel.Equipe?.Split(' ');
-                query = query.Where(a => equipes.All(equipe => a.Equipe.Nome.Contains(equipe)));
+                query = query.Where(a => equipes.All(equipe => a.Nome.Contains(equipe)));
             }
 
-            viewModel.Resultados = await query.OrderBy(a => a.Equipe.Nome).ToPagedListAsync(viewModel.Pagina, viewModel.TamanhoPagina);
+            viewModel.Resultados = await query.OrderBy(a => a.Nome).ToPagedListAsync(viewModel.Pagina, viewModel.TamanhoPagina);
 
             if (Request.IsAjaxRequest())
                 return PartialView("_Pesquisa", viewModel);
@@ -168,8 +168,6 @@ namespace Truco.Controllers
 		private async Task ViewBags()
 		{
             ViewBag.Competicaos = new SelectList(await db.Competicoes.ToListAsync(), "CompeticaoId", "Nome");
-            ViewBag.Equipes = new SelectList(await db.Equipes.ToListAsync(), "EquipeId", "Nome");
-    
 		}
 
         protected override void Dispose(bool disposing)

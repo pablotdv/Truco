@@ -10,6 +10,6 @@ namespace Truco.ViewModels
         public CompeticaoFaseGrupoEquipe CompeticaoFaseGrupoEquipe { get; set; }
         public Classificacao Classificacao { get;set;}
         public decimal Aproveitamento { get; internal set; }
-        public Guid EquipeId { get; internal set; }
+        public Guid CompeticaoEquipeId { get; internal set; }
     }
 }

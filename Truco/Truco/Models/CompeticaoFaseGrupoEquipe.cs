@@ -12,9 +12,9 @@ namespace Truco.Models
         [Key]
         public Guid CompeticaoFaseGrupoEquipeId { get; set; }
         public Guid CompeticaoFaseGrupoId { get; set; }
-        public Guid EquipeId { get; set; }
+        public Guid CompeticaoEquipeId { get; set; }
         public virtual CompeticaoFaseGrupo CompeticaoFaseGrupo { get; set; }
-        public virtual Equipe Equipe { get; set; }
+        public virtual CompeticaoEquipe CompeticaoEquipe { get; set; }
         public int Jogos { get; set; }
         public int Vitorias { get; set; }
         public int Sets { get; set; }
@@ -23,6 +23,6 @@ namespace Truco.Models
         public int Numero { get; set; }
         public Lado Lado { get; set; } = Lado.LadoA;  
 
-        public ICollection<CompeticaoFaseGrupoRodadaJogoEquipe> CompeticoesFasesGruposRodadasJogosEquipes { get; set; }
+        public ICollection<CompeticaoFaseGrupoRodadaJogoEquipe> CompeticoesFasesGruposRodadasJogosEquipes { get; set; }        
     }
 }

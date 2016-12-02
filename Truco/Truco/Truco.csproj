@@ -613,8 +613,6 @@
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EnderecosController.cs" />
     <Compile Include="Controllers\EntidadesController.cs" />
-    <Compile Include="Controllers\EquipesAtletasController.cs" />
-    <Compile Include="Controllers\EquipesController.cs" />
     <Compile Include="Controllers\EstadosController.cs" />
     <Compile Include="Controllers\GerenciamentoController.cs" />
     <Compile Include="Controllers\GruposController.cs" />
@@ -655,8 +653,6 @@
     <Compile Include="Models\Enums\CompeticaoModalidade.cs" />
     <Compile Include="Models\Enums\CompeticaoTipo.cs" />
     <Compile Include="Models\Enums\Lado.cs" />
-    <Compile Include="Models\Equipe.cs" />
-    <Compile Include="Models\EquipeAtleta.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\Identity\ApplicationRole.cs" />
     <Compile Include="Models\Identity\ApplicationUserClaim.cs" />
@@ -690,8 +686,6 @@
     <Compile Include="ViewModels\EntidadesViewModel.cs" />
     <Compile Include="ViewModels\Enums\Classificacao.cs" />
     <Compile Include="ViewModels\Enums\CompeticaoSorteioModo.cs" />
-    <Compile Include="ViewModels\EquipesAtletasViewModel.cs" />
-    <Compile Include="ViewModels\EquipesViewModel.cs" />
     <Compile Include="ViewModels\Equipe_AtletaViewModel.cs" />
     <Compile Include="ViewModels\EstadosViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoGrupos\GrupoViewModel.cs" />

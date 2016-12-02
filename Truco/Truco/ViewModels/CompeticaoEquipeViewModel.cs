@@ -9,8 +9,7 @@ namespace Truco.ViewModels
     public class CompeticaoEquipeViewModel
     {
         public Guid CompeticaoId { get; set; }
-
-        public Equipe Equipe { get; set; }
+        
 
         public Competicao Competicao { get; set; }
 

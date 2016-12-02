@@ -10,5 +10,7 @@ namespace Truco.ViewModels
     {
 		//TODO: adicionar filtros de pesquisa
 		public string Equipe { get; set; }
+
+        public Guid CompeticaoId { get; set; }
 	}
 }

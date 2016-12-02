@@ -36,14 +36,14 @@
                             @Ajax.ActionLink(linkText: "Excluir",
                                         actionName: "ExlcuirEquipeCompeticao",
                                         controllerName: "Competicoes",
-                                        routeValues: new { equipeId = item.Equipe.EquipeId, competicaoId = item.CompeticaoId },
+                                        routeValues: new { equipeId = item.CompeticaoEquipe.EquipeId, competicaoId = item.CompeticaoId },
                                         ajaxOptions: new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "equipesDiv" },
                                         htmlAttributes: new { @class = "btn btn-danger" })
 
 
                         </td>
                         <td>
-                            @item.Equipe.Nome
+                            @item.CompeticaoEquipe.Nome
                         </td>
                     </tr>
                 }

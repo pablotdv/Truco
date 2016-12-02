@@ -272,7 +272,7 @@ namespace Truco.Controllers
                     chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoA,
                         Numero = e.Numero,
                     });
@@ -283,7 +283,7 @@ namespace Truco.Controllers
                     chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoB,
                         Numero = e.Numero,
                     });
@@ -305,7 +305,7 @@ namespace Truco.Controllers
                     chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoA,
                         Numero = e.Numero,
                     });
@@ -316,7 +316,7 @@ namespace Truco.Controllers
                     chave6.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoB,
                         Numero = e.Numero,
                     });
@@ -340,7 +340,7 @@ namespace Truco.Controllers
                     chave6A.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoA,
                         Numero = e.Numero,
                     });
@@ -351,7 +351,7 @@ namespace Truco.Controllers
                     chave6A.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoB,
                         Numero = e.Numero,
                     });
@@ -370,7 +370,7 @@ namespace Truco.Controllers
                     chave6B.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoA,
                         Numero = e.Numero,
                     });
@@ -381,7 +381,7 @@ namespace Truco.Controllers
                     chave6B.CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = e.EquipeId,
+                        CompeticaoEquipeId = e.CompeticaoEquipeId,
                         Lado = Lado.LadoB,
                         Numero = e.Numero,
                     });
@@ -623,7 +623,7 @@ namespace Truco.Controllers
                 competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                 {
                     CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                    EquipeId = equipe.Equipe.EquipeId,
+                    CompeticaoEquipeId = equipe.CompeticaoEquipeId,
                     Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
                 });
                 indiceChave++;
@@ -646,7 +646,7 @@ namespace Truco.Controllers
                 competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                 {
                     CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                    EquipeId = equipe.EquipeId,
+                    CompeticaoEquipeId = equipe.CompeticaoEquipeId,
                     Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
                 });
                 indiceChave++;
@@ -662,7 +662,7 @@ namespace Truco.Controllers
         {
             List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
 
-            var equipesRegioes = competicaoEquipes.GroupBy(a => a.Equipe.RegiaoId).OrderByDescending(a => a.Count());
+            var equipesRegioes = competicaoEquipes.GroupBy(a => a.RegiaoId).OrderByDescending(a => a.Count());
 
             int indiceChave = 1;
 
@@ -674,7 +674,7 @@ namespace Truco.Controllers
                     competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = equipe.EquipeId,
+                        CompeticaoEquipeId = equipe.CompeticaoEquipeId,
                         Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
                     });
                     indiceChave++;
@@ -691,7 +691,7 @@ namespace Truco.Controllers
         {
             List<CompeticaoFaseGrupo> competicoesFasesGrupos = MontarChaveamento(chaves);
 
-            var equipesCidades = competicaoEquipes.GroupBy(a => a.Equipe.CidadeId).OrderByDescending(a => a.Count());
+            var equipesCidades = competicaoEquipes.GroupBy(a => a.CidadeId).OrderByDescending(a => a.Count());
 
             int indiceChave = 1;
 
@@ -703,7 +703,7 @@ namespace Truco.Controllers
                     competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Add(new CompeticaoFaseGrupoEquipe()
                     {
                         CompeticaoFaseGrupoEquipeId = Guid.NewGuid(),
-                        EquipeId = equipe.EquipeId,
+                        CompeticaoEquipeId = equipe.CompeticaoEquipeId,
                         Numero = competicoesFasesGrupos[indiceChave - 1].CompeticoesFasesGruposEquipes.Count() + 1
                     });
                     indiceChave++;
@@ -1000,7 +1000,7 @@ namespace Truco.Controllers
                             CompeticaoFaseGrupoEquipe = equipe,
                             Classificacao = classificacao,
                             Aproveitamento = equipe.Aproveitamento,
-                            EquipeId = equipe.EquipeId
+                            CompeticaoEquipeId = equipe.CompeticaoEquipeId
                         });
                     }
                 }
@@ -1036,12 +1036,12 @@ namespace Truco.Controllers
                                 CompeticaoFaseGrupoEquipe = equipe,
                                 Classificacao = classificacao,
                                 Aproveitamento = equipe.Aproveitamento,
-                                EquipeId = equipe.EquipeId
+                                CompeticaoEquipeId = equipe.CompeticaoEquipeId
                             });
                     }
                 }
 
-                terceiros = terceiros.OrderByDescending(a => a.Aproveitamento).ThenBy(a => a.Equipe.Nome).ToList();
+                terceiros = terceiros.OrderByDescending(a => a.Aproveitamento).ThenBy(a => a.CompeticaoEquipe.Nome).ToList();
                 foreach (var t in terceiros)
                 {
                     var classificacao = ViewModels.Enums.Classificacao.Principal;
@@ -1054,7 +1054,7 @@ namespace Truco.Controllers
                         CompeticaoFaseGrupoEquipe = t,
                         Classificacao = classificacao,
                         Aproveitamento = t.Aproveitamento,
-                        EquipeId = t.EquipeId
+                        CompeticaoEquipeId = t.CompeticaoEquipeId
                     });
                 }
             }
@@ -1119,7 +1119,7 @@ namespace Truco.Controllers
                         {
                             CompeticaoFaseEquipeId = Guid.NewGuid(),
                             CompeticaoFaseId = fase.CompeticaoFaseId,
-                            EquipeId = equipesPrincipal[i].CompeticaoFaseGrupoEquipe.EquipeId
+                            CompeticaoEquipeId = equipesPrincipal[i].CompeticaoFaseGrupoEquipe.CompeticaoEquipeId
                         }
                     },
                     CompeticaoFaseJogoEquipeDois = new CompeticaoFaseJogoEquipe()
@@ -1129,7 +1129,7 @@ namespace Truco.Controllers
                         {
                             CompeticaoFaseEquipeId = Guid.NewGuid(),
                             CompeticaoFaseId = fase.CompeticaoFaseId,
-                            EquipeId = equipesPrincipal[j].CompeticaoFaseGrupoEquipe.EquipeId
+                            CompeticaoEquipeId = equipesPrincipal[j].CompeticaoFaseGrupoEquipe.CompeticaoEquipeId
                         }
                     },
                 });
@@ -1180,7 +1180,7 @@ namespace Truco.Controllers
                     {
                         CompeticaoEquipeId = Guid.NewGuid(),
                         Aproveitamento = e.Aproveitamento,
-                        EquipeId = e.EquipeId
+                        //CompeticaoEquipeId = e.CompeticaoEquipeId
                     });
                 }
                 else if (e.Classificacao == ViewModels.Enums.Classificacao.Repescagem)
@@ -1188,8 +1188,7 @@ namespace Truco.Controllers
                     equipesRepescagem.Add(new CompeticaoEquipe
                     {
                         CompeticaoEquipeId = Guid.NewGuid(),
-                        Aproveitamento = e.Aproveitamento,
-                        EquipeId = e.EquipeId
+                        Aproveitamento = e.Aproveitamento
                     });
                 }
             }
@@ -1423,72 +1422,43 @@ namespace Truco.Controllers
 
 
         //CADASTRO DE EQUIPES E VINCULO COM COMPETIÇÃO
-        public async Task<ActionResult> CompeticaoEquipe(Guid id, Equipe equipe)
+        public async Task<ActionResult> CompeticaoEquipe(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (ModelState.IsValid)
+            var competicao = await db.Competicoes.Include(a => a.CompeticoesEquipes).FirstOrDefaultAsync(a => a.CompeticaoId == id);
+            CompeticaoEquipe model = new CompeticaoEquipe()
             {
-                //adiciona equipe
-                equipe.EquipeId = Guid.NewGuid();
-                db.Equipes.Add(equipe);
-               
-                equipe = null;
-                //vincula equipe a competição
-                var equipe_comp = new CompeticaoEquipe();
-                equipe_comp.CompeticaoEquipeId = Guid.NewGuid();
-                equipe_comp.EquipeId = equipe.EquipeId;
-                equipe_comp.CompeticaoId = id;
-                db.CompeticoesEquipes.Add(equipe_comp);
-                await db.SaveChangesAsync();
-                equipe_comp = null;
-                var competicao = await db.Competicoes.Include(a => a.CompeticoesEquipes).FirstOrDefaultAsync(a => a.CompeticaoId == id);
-                if (competicao == null)
-                {
-                    return HttpNotFound();
-                }
-
-                CompeticaoEquipeViewModel model = new CompeticaoEquipeViewModel()
-                {
-                    CompeticaoId = competicao.CompeticaoId,
-
-                    CompeticaoEquipes = competicao.CompeticoesEquipes
-                        .Select(a => new CompeticaoEquipe()
-                        {
-                            CompeticaoId = competicao.CompeticaoId,
-                            Equipe = a.Equipe
-                        })
-                        .ToList(),
-                };
-                await ViewBags();
-                return View(model);
-            }
-
+                CompeticaoId = competicao.CompeticaoId
+            };
             await ViewBags();
-            return View();
+            return View(model);
+
         }
 
-
-        //
+       
         // POST: /Equipes/Criar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CadastrarEquipe(CompeticoesEquipesViewModel competicoesequipes)
+        public async Task<ActionResult> CompeticaoEquipe(CompeticaoEquipe model)
         {
             if (ModelState.IsValid)
             {
                 //competicoesequipes.Equipe.EquipeId = Guid.NewGuid();
-                //db.Equipes.Add(competicoesequipes);
+                //db.Equipes.Add(competicoesequipes.Equipe);
+                //competicoesequipes.CompeticaoEquipe.CompeticaoEquipeId = Guid.NewGuid();
+                //competicoesequipes.Competicao.CompeticaoId = competicoesequipes.CompeticaoId;
+                //competicoesequipes.CompeticaoEquipe.EquipeId = competicoesequipes.Equipe.EquipeId;
+                //db.CompeticoesEquipes.Add(competicoesequipes.CompeticaoEquipe);
                 //await db.SaveChangesAsync();
                 //TempData["Mensagem"] = "Operação realizada com sucesso!";
-                //return RedirectToAction("Indice");
+                return RedirectToAction("Indice");
             }
 
-
             await ViewBags();
-            return View(competicoesequipes);
+            return View(model);
         }
 
 

@@ -12,10 +12,15 @@ namespace Truco.Models
         public Guid CompeticaoEquipeId { get; set; }
         [Required]
         public Guid CompeticaoId { get; set; }
-        [Required]
-        public Guid EquipeId { get; set; }
+
+        public string Nome { get; set; }
+        public Guid? RegiaoId { get; set; }
+        public Guid? CidadeId { get; set; }
+        public virtual Regiao Regiao { get; set; }
+        public virtual Cidade Cidade { get; set; }
+
         public virtual Competicao Competicao { get; set; }
-        public virtual Equipe Equipe { get; set; }
-        public decimal? Aproveitamento { get; internal set; }
+        
+        public decimal? Aproveitamento { get; set; }        
     }
 }

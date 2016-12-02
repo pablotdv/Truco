@@ -63,11 +63,7 @@ namespace Truco.Migrations
                 };
                 for (int i = 1; i <= trios; i++)
                 {
-                    competicao.CompeticoesEquipes.Add(new CompeticaoEquipe()
-                    {
-                        CompeticaoEquipeId = Guid.NewGuid(),
-                        Equipe = CriarEquipe(context, $"Trio - {i}")
-                    });
+                    competicao.CompeticoesEquipes.Add(CriarEquipe(context, $"Trio - {i}"));
                 }
 
                 context.Competicoes.Add(competicao);
@@ -76,13 +72,13 @@ namespace Truco.Migrations
             }
         }
 
-        private static Equipe CriarEquipe(TrucoDbContext context, string nome)
+        private static CompeticaoEquipe CriarEquipe(TrucoDbContext context, string nome)
         {
             var regiao = context.Regioes.Include(a => a.Cidades).OrderBy(r => Guid.NewGuid()).FirstOrDefault();
             var cidade = regiao.Cidades.OrderBy(a => Guid.NewGuid()).FirstOrDefault();
-            Equipe equipe = new Equipe()
+            CompeticaoEquipe equipe = new CompeticaoEquipe()
             {
-                EquipeId = Guid.NewGuid(),                
+                CompeticaoEquipeId = Guid.NewGuid(),                
                 Nome = $"{nome} - {cidade.Regiao.Numero} - {cidade.Cidade.Nome}",
                 RegiaoId = regiao.RegiaoId,
                 CidadeId = cidade.CidadeId
