@@ -16,7 +16,7 @@ namespace Truco.Models
         public Guid CompeticaoId { get; set; }
         public Guid? CompeticaoFasePrincipalId { get; set; }
         [Required]
-        public string Nome { get; set; }
+        public int Fase { get; set; }
         public CompeticaoFaseModo Modo { get; set; }
         public CompeticaoFaseTipo Tipo { get; set; }
         public virtual Competicao Competicao { get; set; }
@@ -25,5 +25,6 @@ namespace Truco.Models
         [InverseProperty("CompeticaoFasePrincipal")]
         public ICollection<CompeticaoFase> CompeticoesFesesRepescagem { get; set; }
         public ICollection<CompeticaoFaseGrupo> CompeticoesFasesGrupos { get; set; }
+        public ICollection<CompeticaoFaseJogo> CompeticoesFasesJogos { get; set; }
     }
 }

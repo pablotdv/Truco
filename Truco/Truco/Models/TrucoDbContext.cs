@@ -44,6 +44,18 @@ namespace Truco.Models
                 .HasForeignKey(a => a.CompeticaoFaseGrupoRodadaJogoEquipeDoisId)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<CompeticaoFaseJogo>()
+                .HasRequired(a => a.CompeticaoFaseJogoEquipeUm)
+                .WithMany(a => a.CompeticoesFasesJogosUm)
+                .HasForeignKey(a => a.CompeticaoFaseJogoEquipeUmId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CompeticaoFaseJogo>()
+                .HasRequired(a => a.CompeticaoFaseJogoEquipeDois)
+                .WithMany(a => a.CompeticoesFasesJogosDois)
+                .HasForeignKey(a => a.CompeticaoFaseJogoEquipeDoisId)
+                .WillCascadeOnDelete(false);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -91,6 +103,9 @@ namespace Truco.Models
         public DbSet<CompeticaoFaseGrupoRodada> CompeticoesFasesGruposRodadas { get; set; }
         public DbSet<CompeticaoFaseGrupoRodadaJogo> CompeticoesFasesGruposRodadasJogos { get; set; }
         public DbSet<CompeticaoFaseGrupoRodadaJogoEquipeSet> CompeticoesFasesGruposRodadasJogosEquipesSets { get; set; }
+        public DbSet<CompeticaoFaseJogo> CompeticoesFasesJogos { get; set; }
+        public DbSet<CompeticaoFaseJogoEquipe> CompeticoesFasesJogosEquipes { get; set; }
+        public DbSet<CompeticaoFaseJogoEquipeSet> CompeticoesFasesJogosEquipesSets { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Entidade> Entidades { get; set; }
         public DbSet<Equipe> Equipes { get; set; }
@@ -102,5 +117,6 @@ namespace Truco.Models
         public DbSet<RegiaoCidade> RegioesCidades { get; set; }
         public DbSet<PesquisaModel> PesquisasModels { get; set; }
         public DbSet<CompeticaoFaseGrupoRodadaJogoEquipe> CompeticoesFasesGruposRodadasJogosEquipes { get; set; }
+        public DbSet<CompeticaoFaseEquipe> CompeticoesFasesEquipes { get; set; }
     }
 }

@@ -2,11 +2,12 @@
 @{
     ViewBag.Title = "Jogos";
     var roda = Model.FirstOrDefault()?.CompeticaoFaseGrupoRodada;
+    var competicaoFase = roda.CompeticaoFaseGrupo.CompeticaoFase;
 }
 
 <hgroup>
     <h1>@roda.CompeticaoFaseGrupo.CompeticaoFase.Competicao.Nome</h1>
-    <h2>@roda.CompeticaoFaseGrupo.CompeticaoFase.Nome</h2>
+    <h3>@($"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo}").</h3>
     <h3>@roda.CompeticaoFaseGrupo.Nome - @($"{roda.Rodada}ª Rodada")</h3>
 </hgroup>
 <div class="row">

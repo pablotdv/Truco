@@ -215,7 +215,7 @@ namespace Truco.Controllers
                     CompeticaoId = competicao.CompeticaoId,
                     Modo = CompeticaoFaseModo.Chaveamento,
                     Tipo = CompeticaoFaseTipo.Principal,
-                    Nome = "1ª Fase",
+                    Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Principal).Count() + 1,
                     CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
 
                 };
@@ -777,10 +777,12 @@ namespace Truco.Controllers
             {
                 return HttpNotFound();
             }
-
+            int sets = 3;
+            if (jogo.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupo.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+                sets = 1;
             if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Count == 0)
             {
-                for (int i = 1; i <= 3; i++)
+                for (int i = 1; i <= sets; i++)
                 {
                     jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Add(new CompeticaoFaseGrupoRodadaJogoEquipeSet()
                     {
@@ -792,7 +794,7 @@ namespace Truco.Controllers
 
             if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Count == 0)
             {
-                for (int i = 1; i <= 3; i++)
+                for (int i = 1; i <= sets; i++)
                 {
                     jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Add(new CompeticaoFaseGrupoRodadaJogoEquipeSet()
                     {
@@ -858,6 +860,10 @@ namespace Truco.Controllers
 
                 await db.SaveChangesAsync();
 
+                var setsParavitoria = 2;
+                if (jogo.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupo.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+                    setsParavitoria = 1;
+
                 var jogosEquipeUm = db.CompeticoesFasesGruposRodadasJogosEquipesSets
                     .Where(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoEquipeId == jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipeId);
 
@@ -874,12 +880,12 @@ namespace Truco.Controllers
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Vitorias = jogosEquipeUm
                     .Where(a => a.Tentos == 24)
                     .GroupBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoRodadaJogoEquipeId)
-                    .Where(a => a.Count() >= 2)
+                    .Where(a => a.Count() >= setsParavitoria)
                     .Count();
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Vitorias = jogosEquipeDois
                     .Where(a => a.Tentos == 24)
                     .GroupBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipe.CompeticaoFaseGrupoRodadaJogoEquipeId)
-                    .Where(a => a.Count() >= 2)
+                    .Where(a => a.Count() >= setsParavitoria)
                     .Count();
 
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Sets = jogosEquipeUm
@@ -895,17 +901,21 @@ namespace Truco.Controllers
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Tentos = jogosEquipeDois
                     .Sum(a => a.Tentos);
 
+                var setsJogados = 3;
+                if (jogo.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupo.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+                    setsJogados = 1;
+
                 var equipe = jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe;
                 double vitorias = (double)(equipe.Vitorias * 100) / equipe.Jogos;
-                double setes = (double)(equipe.Sets * 100) / (equipe.Jogos * 3);
-                double tentos = (double)(equipe.Tentos * 100) / (equipe.Jogos * 72);
+                double setes = (double)(equipe.Sets * 100) / (equipe.Jogos * setsJogados);
+                double tentos = (double)(equipe.Tentos * 100) / (equipe.Jogos * 24 * setsJogados);
                 double aproveitamento = (double)(vitorias + setes + tentos) / 3;
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Aproveitamento = (decimal)aproveitamento;
 
                 equipe = jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe;
                 vitorias = (double)(equipe.Vitorias * 100) / equipe.Jogos;
-                setes = (double)(equipe.Sets * 100) / (equipe.Jogos * 3);
-                tentos = (double)(equipe.Tentos * 100) / (equipe.Jogos * 72);
+                setes = (double)(equipe.Sets * 100) / (equipe.Jogos * setsJogados);
+                tentos = (double)(equipe.Tentos * 100) / (equipe.Jogos * 24 * setsJogados);
                 aproveitamento = (double)(vitorias + setes + tentos) / 3;
                 jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Aproveitamento = (decimal)aproveitamento;
 
@@ -925,7 +935,7 @@ namespace Truco.Controllers
 
             ClassificacaoViewModel model = null;
             model = await Classificar(id, null);
-
+            model.Modo = CompeticaoFaseModo.Chaveamento;
             return View(model);
         }
         [HttpPost]
@@ -961,7 +971,7 @@ namespace Truco.Controllers
 
             if (!principal.HasValue)
             {
-                principal = totalGrupos * 2;                
+                principal = totalGrupos * 2;
             }
 
             if (principal % totalGrupos == 0) //classifica 2 por grupo
@@ -1048,15 +1058,112 @@ namespace Truco.Controllers
                     });
                 }
             }
-
             model.Principal = model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal).Count();
-            model.Repescagem = model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Repescagem).Count();
+
             return model;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Classificacao(ClassificacaoViewModel model)
+        {
+
+            if (model.Modo == CompeticaoFaseModo.Chaveamento)
+            {
+                return await ClassificarGrupos(model);
+            }
+            else
+            {
+                return await ClassificarMataMata(model);
+            }
+
+            //return RedirectToAction("Indice");
+        }
+
+        private async Task<ActionResult> ClassificarMataMata(ClassificacaoViewModel model)
+        {
+            var classificar = await Classificar(model.CompeticaoFaseId, model.Principal);
+
+            var competicao = classificar.CompeticaoFase.Competicao;
+
+            CompeticaoFase fase = new CompeticaoFase()
+            {
+                CompeticaoFaseId = Guid.NewGuid(),
+                CompeticaoId = competicao.CompeticaoId,
+                Tipo = classificar.CompeticaoFase.Tipo,
+                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == classificar.CompeticaoFase.Tipo).Count() + 1,
+                Modo = CompeticaoFaseModo.MataMata,
+                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
+            };
+
+            var equipesPrincipal = classificar.Equipes
+                .Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal)
+                .OrderByDescending(a => a.Aproveitamento)
+                .ToList();
+
+            int equipes = equipesPrincipal.Count();
+            int jogos = equipes / 2;
+
+            int i = 0;
+            int j = equipes - 1;
+            for (int jogo = 0; jogo < jogos; jogo++)
+            {
+                fase.CompeticoesFasesJogos.Add(new CompeticaoFaseJogo()
+                {
+                    CompeticaoFaseJogoId = Guid.NewGuid(),
+                    Jogo = jogo + 1,
+                    CompeticaoFaseJogoEquipeUm = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            EquipeId = equipesPrincipal[i].CompeticaoFaseGrupoEquipe.EquipeId
+                        }
+                    },
+                    CompeticaoFaseJogoEquipeDois = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            EquipeId = equipesPrincipal[j].CompeticaoFaseGrupoEquipe.EquipeId
+                        }
+                    },
+                });
+                i++;
+                j--;
+            }
+
+            db.CompeticoesFases.Add(fase);
+
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("FaseMataMata", new { id = fase.CompeticaoFaseId });
+        }
+
+        public async Task<ActionResult> FaseMataMata(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var competicaoFase = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFasesJogos)
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseId == id);
+
+            if (competicaoFase == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(competicaoFase);
+        }
+
+        private async Task<ActionResult> ClassificarGrupos(ClassificacaoViewModel model)
         {
             var classificar = await Classificar(model.CompeticaoFaseId, model.Principal);
 
@@ -1094,7 +1201,7 @@ namespace Truco.Controllers
                 CompeticaoFaseId = Guid.NewGuid(),
                 CompeticaoId = competicao.CompeticaoId,
                 Modo = CompeticaoFaseModo.Chaveamento,
-                Nome = "2ª Fase Principal",
+                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Principal).Count() + 1,
                 Tipo = CompeticaoFaseTipo.Principal,
                 CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
             };
@@ -1105,7 +1212,7 @@ namespace Truco.Controllers
                 CompeticaoFasePrincipalId = competicaoFasePrincipal.CompeticaoFaseId,
                 CompeticaoId = competicao.CompeticaoId,
                 Modo = CompeticaoFaseModo.Chaveamento,
-                Nome = "1ª Fase Repescagem",
+                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem).Count() + 1,
                 Tipo = CompeticaoFaseTipo.Repescagem,
                 CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
             };
@@ -1166,6 +1273,154 @@ namespace Truco.Controllers
             var chaves = grupos3 + grupos4;
             return SorteioPosicao(equipes, chaves);
         }
+
+
+
+        public async Task<ActionResult> JogoMataMata(Guid id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var jogo = await db.CompeticoesFasesJogos
+                .Include(a => a.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets)
+                .Include(a => a.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets)
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseJogoId == id);
+
+            if (jogo == null)
+            {
+                return HttpNotFound();
+            }
+            int sets = 3;
+            if (jogo.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+                sets = 1;
+            if (jogo.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.Count == 0)
+            {
+                for (int i = 1; i <= sets; i++)
+                {
+                    jogo.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.Add(new CompeticaoFaseJogoEquipeSet()
+                    {
+                        CompeticaoFaseJogoEquipeSetId = Guid.NewGuid(),
+                        Set = i
+                    });
+                }
+            }
+
+            if (jogo.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.Count == 0)
+            {
+                for (int i = 1; i <= sets; i++)
+                {
+                    jogo.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.Add(new CompeticaoFaseJogoEquipeSet()
+                    {
+                        CompeticaoFaseJogoEquipeSetId = Guid.NewGuid(),
+                        Set = i
+                    });
+                }
+            }
+
+            return View(jogo);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> JogoMataMata(CompeticaoFaseJogo model)
+        {
+            if (ModelState.IsValid)
+            {
+                var jogo = await db.CompeticoesFasesJogos
+                    .Include(a => a.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets)
+                    .Include(a => a.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets)
+                    .FirstOrDefaultAsync(a => a.CompeticaoFaseJogoId == model.CompeticaoFaseJogoId);
+
+                if (jogo.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.Count != 0)
+                {
+                    var sets = jogo.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.ToList();
+                    foreach (var set in sets)
+                    {
+                        db.CompeticoesFasesJogosEquipesSets.Remove(set);
+                        jogo.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.Remove(set);
+                    }
+                }
+
+                if (jogo.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.Count != 0)
+                {
+                    var sets = jogo.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.ToList();
+                    foreach (var set in sets)
+                    {
+                        db.CompeticoesFasesJogosEquipesSets.Remove(set);
+                        jogo.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.Remove(set);
+                    }
+                }
+
+                foreach (var set in model.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets)
+                {
+                    jogo.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.Add(new CompeticaoFaseJogoEquipeSet()
+                    {
+                        CompeticaoFaseJogoEquipeSetId = Guid.NewGuid(),
+                        Set = set.Set,
+                        Tentos = set.Tentos
+                    });
+                }
+
+                foreach (var set in model.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets)
+                {
+                    jogo.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.Add(new CompeticaoFaseJogoEquipeSet()
+                    {
+                        CompeticaoFaseJogoEquipeSetId = Guid.NewGuid(),
+                        Set = set.Set,
+                        Tentos = set.Tentos
+                    });
+                }
+
+                await db.SaveChangesAsync();
+
+                var setsParavitoria = 2;
+                if (jogo.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+                    setsParavitoria = 1;
+
+                var jogosEquipeUm = db.CompeticoesFasesJogosEquipesSets
+                    .Where(a => a.CompeticaoFaseJogoEquipe.CompeticaoFaseEquipeId == jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipeId);
+
+                var jogosEquipeDois = db.CompeticoesFasesJogosEquipesSets
+                    .Where(a => a.CompeticaoFaseJogoEquipe.CompeticaoFaseEquipeId == jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipeId);
+
+                jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Jogos = jogosEquipeUm
+                    .GroupBy(a => a.CompeticaoFaseJogoEquipe.CompeticaoFaseJogoEquipeId)
+                    .Count();
+                jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Jogos = jogosEquipeDois
+                    .GroupBy(a => a.CompeticaoFaseJogoEquipe.CompeticaoFaseJogoEquipeId)
+                    .Count();
+
+                jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias = jogosEquipeUm
+                    .Where(a => a.Tentos == 24)
+                    .GroupBy(a => a.CompeticaoFaseJogoEquipe.CompeticaoFaseJogoEquipeId)
+                    .Where(a => a.Count() >= setsParavitoria)
+                    .Count();
+                jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias = jogosEquipeDois
+                    .Where(a => a.Tentos == 24)
+                    .GroupBy(a => a.CompeticaoFaseJogoEquipe.CompeticaoFaseJogoEquipeId)
+                    .Where(a => a.Count() >= setsParavitoria)
+                    .Count();
+
+                jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Sets = jogosEquipeUm
+                    .Where(a => a.Tentos == 24)
+                    .Count();
+                jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Sets = jogosEquipeDois
+                    .Where(a => a.Tentos == 24)
+                    .Count();
+
+                jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Tentos = jogosEquipeUm
+                    .Sum(a => a.Tentos);
+                jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Tentos = jogosEquipeDois
+                    .Sum(a => a.Tentos);
+
+                await db.SaveChangesAsync();
+
+                return RedirectToAction("FaseMataMata", new { id = jogo.CompeticaoFase.CompeticaoFaseId });
+            }
+            return View(model);
+        }
+
 
         protected override void Dispose(bool disposing)
         {

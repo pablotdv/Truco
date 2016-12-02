@@ -1,10 +1,11 @@
 ﻿@model Truco.ViewModels.ClassificacaoViewModel
 @{
     ViewBag.Title = "Classificacao";
+    var competicaoFase = Model.CompeticaoFase;
 }
 <hgroup>
     <h2>@Model.CompeticaoFase.Competicao.Nome.</h2>
-    <h3>@Model.CompeticaoFase.Nome.</h3>
+    <h3>@($"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo}").</h3>
     <h3>@ViewBag.Message</h3>
 </hgroup>
 
@@ -14,7 +15,21 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3>@($"{posicao.Key}")</h3>
+                    @if (competicaoFase.Tipo == Truco.Models.Enums.CompeticaoFaseTipo.Principal)
+                    {
+                        <h3>@($"{posicao.Key}")</h3>
+                    }
+                    else
+                    {
+                        if (posicao.Key == Truco.ViewModels.Enums.Classificacao.Principal)
+                        {
+                            <h3>Classificados</h3>
+                        }
+                        else
+                        {
+                            <h3>Desclassificados</h3>
+                        }
+                    }
                 </div>
                 <div class="panel-body">
                     <table class="table table-responsive table-bordered table-striped">
@@ -65,12 +80,7 @@
                     @Html.LabelFor(model => model.Principal, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Principal, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Principal, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-4 col-xs-6">
-                    @Html.LabelFor(model => model.Repescagem, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Repescagem, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Repescagem, "", new { @class = "text-danger" })
-                </div>
+                </div>                
             </div>
             <div class="row form-group">
                 <div class="col-md-12">
@@ -87,8 +97,16 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(a => a.CompeticaoFaseId)
             @Html.HiddenFor(a => a.Principal)
-            @Html.HiddenFor(a => a.Repescagem)
-            <button type="submit" class="btn btn-default">Sortear</button>
+            <div class="row form-group">
+                <div class="col-md-4 col-xs-6">
+                    @Html.LabelFor(model => model.Modo, htmlAttributes: new { @class = "control-label" })
+                    @Html.EnumDropDownListFor(model => model.Modo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Modo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <button type="submit" class="btn btn-default">Gerar</button>
+            </div>
         }
     </div>
 </div>

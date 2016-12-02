@@ -1,12 +1,12 @@
-﻿@model Truco.Models.CompeticaoFaseGrupoRodadaJogo
+﻿@model Truco.Models.CompeticaoFaseJogo
 @{
     ViewBag.Title = "Jogo";
-    var competicaoFase = Model.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupo.CompeticaoFase;
+    var competicaoFase = Model.CompeticaoFase;
 }
 <hgroup>
-    <h3>@Model.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupo.CompeticaoFase.Competicao.Nome</h3>
-    <h3>@($"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo}").</h3>
-    <h1>@Model.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupo.Nome - @($"{Model.CompeticaoFaseGrupoRodada.Rodada}ª Rodada")</h1>
+    <h3>@competicaoFase.Competicao.Nome</h3>
+    <h3>@($"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo} {Model.CompeticaoFase.Modo}").</h3>
+    <h1>@($"{Model.Jogo}º Jogo")</h1>
 </hgroup>
 <div class="row">
     <div class="col-md-12">
@@ -16,42 +16,42 @@
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            @Html.HiddenFor(a => a.CompeticaoFaseGrupoRodadaJogoId)
+            @Html.HiddenFor(a => a.CompeticaoFaseJogoId)
 
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
                         <td></td>
                         <td align="right">
-                            @Model.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Equipe.Nome
+                            @Model.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Equipe.Nome
                         </td>
                         <td align="center">
                             VS
                         </td>
                         <td>
-                            @Model.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Equipe.Nome
+                            @Model.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Equipe.Nome
                         </td>
                     </tr>
-                    @foreach (var set in Model.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.OrderBy(a => a.Set))
+                    @foreach (var set in Model.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.OrderBy(a => a.Set))
                     {
                         <tr>
                             <td>
                                 @($"{set.Set}º set")
                             </td>
                             <td>
-                                @foreach (var setUm in Model.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Where(a => a.Set == set.Set))
+                                @foreach (var setUm in Model.CompeticaoFaseJogoEquipeUm.CompeticoesFasesJogosEquipesSets.Where(a => a.Set == set.Set))
                                 {
                                     <p>
-                                        @Html.Partial("_JogoSetUm", setUm)
+                                        @Html.Partial("_JogoMataMataSetUm", setUm)
                                     </p>
                                 }
                             </td>
                             <td></td>
                             <td>
-                                @foreach (var setDois in Model.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticoesFasesGruposRodadasJogosEquipesSets.Where(a => a.Set == set.Set))
+                                @foreach (var setDois in Model.CompeticaoFaseJogoEquipeDois.CompeticoesFasesJogosEquipesSets.Where(a => a.Set == set.Set))
                                 {
                                     <p>
-                                        @Html.Partial("_JogoSetDois", setDois)
+                                        @Html.Partial("_JogoMataMataSetDois", setDois)
                                     </p>
                                 }
                             </td>

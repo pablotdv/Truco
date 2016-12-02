@@ -546,6 +546,10 @@
     <Content Include="Views\Competicoes\_JogoSetDois.cshtml" />
     <Content Include="Views\Competicoes\_JogoSetUm.cshtml" />
     <Content Include="Views\Competicoes\Classificacao.cshtml" />
+    <Content Include="Views\Competicoes\FaseMataMata.cshtml" />
+    <Content Include="Views\Competicoes\JogoMataMata.cshtml" />
+    <Content Include="Views\Competicoes\_JogoMataMataSetDois.cshtml" />
+    <Content Include="Views\Competicoes\_JogoMataMataSetUm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -630,12 +634,16 @@
     <Compile Include="Models\Competicao.cs" />
     <Compile Include="Models\CompeticaoEquipe.cs" />
     <Compile Include="Models\CompeticaoFase.cs" />
+    <Compile Include="Models\CompeticaoFaseEquipe.cs" />
     <Compile Include="Models\CompeticaoFaseGrupo.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoEquipe.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoEquipe.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoRodada.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoRodadaJogo.cs" />
     <Compile Include="Models\CompeticaoFaseGrupoRodadaJogoEquipeSet.cs" />
+    <Compile Include="Models\CompeticaoFaseJogo.cs" />
+    <Compile Include="Models\CompeticaoFaseJogoEquipe.cs" />
+    <Compile Include="Models\CompeticaoFaseJogoEquipeSet.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Entidade.cs" />
     <Compile Include="Models\Entity.cs" />
