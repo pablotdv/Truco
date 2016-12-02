@@ -38,12 +38,12 @@ namespace Truco.Migrations
             CriarPaises(context, user1);
             CriarEstados(context, user1);
             CriarCidades(context, user1);
-            CriarBairros(context, user1);
-            CriarLogradouros(context, user1);
+            //CriarBairros(context, user1);
+            //CriarLogradouros(context, user1);
 
             CriarRegioes(context, user1);
 
-            for (int i = 10; i <= 100; i++)
+            for (int i = 10; i <= 41; i++)
             {
                 CriarCompeticao(context, $"Torneio de teste com {i} trios", i);
             }

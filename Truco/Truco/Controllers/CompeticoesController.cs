@@ -1000,7 +1000,8 @@ namespace Truco.Controllers
                             CompeticaoFaseGrupoEquipe = equipe,
                             Classificacao = classificacao,
                             Aproveitamento = equipe.Aproveitamento,
-                            CompeticaoEquipeId = equipe.CompeticaoEquipeId
+                            CompeticaoEquipeId = equipe.CompeticaoEquipeId,
+                            CompeticaoEquipe = equipe.CompeticaoEquipe,
                         });
                     }
                 }
@@ -1036,7 +1037,8 @@ namespace Truco.Controllers
                                 CompeticaoFaseGrupoEquipe = equipe,
                                 Classificacao = classificacao,
                                 Aproveitamento = equipe.Aproveitamento,
-                                CompeticaoEquipeId = equipe.CompeticaoEquipeId
+                                CompeticaoEquipeId = equipe.CompeticaoEquipeId,
+                                CompeticaoEquipe = equipe.CompeticaoEquipe
                             });
                     }
                 }
@@ -1054,7 +1056,8 @@ namespace Truco.Controllers
                         CompeticaoFaseGrupoEquipe = t,
                         Classificacao = classificacao,
                         Aproveitamento = t.Aproveitamento,
-                        CompeticaoEquipeId = t.CompeticaoEquipeId
+                        CompeticaoEquipeId = t.CompeticaoEquipeId,
+                        CompeticaoEquipe = t.CompeticaoEquipe,
                     });
                 }
             }
@@ -1173,23 +1176,14 @@ namespace Truco.Controllers
             var equipesClassificacoes = classificar.Equipes.ToList();
 
             foreach (var e in equipesClassificacoes)
-            {
+            {                
                 if (e.Classificacao == ViewModels.Enums.Classificacao.Principal)
                 {
-                    equipesPrincipal.Add(new CompeticaoEquipe
-                    {
-                        CompeticaoEquipeId = Guid.NewGuid(),
-                        Aproveitamento = e.Aproveitamento,
-                        //CompeticaoEquipeId = e.CompeticaoEquipeId
-                    });
+                    equipesPrincipal.Add(e.CompeticaoEquipe);
                 }
                 else if (e.Classificacao == ViewModels.Enums.Classificacao.Repescagem)
                 {
-                    equipesRepescagem.Add(new CompeticaoEquipe
-                    {
-                        CompeticaoEquipeId = Guid.NewGuid(),
-                        Aproveitamento = e.Aproveitamento
-                    });
+                    equipesRepescagem.Add(e.CompeticaoEquipe);
                 }
             }
 
