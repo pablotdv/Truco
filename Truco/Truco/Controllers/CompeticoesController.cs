@@ -180,7 +180,8 @@ namespace Truco.Controllers
             return View(new CompeticaoSorteioViewModel
             {
                 Competicao = competicao,
-                SorteioModo = CompeticaoSorteioModo.Cidades
+                SorteioModo = CompeticaoSorteioModo.Cidades,
+                EquipesPorChave = 4
             });
         }
 
@@ -202,13 +203,13 @@ namespace Truco.Controllers
                 int grupos4 = 0;
                 int numeroEquipes = competicao.CompeticoesEquipes.Count;
 
-                while (numeroEquipes % 4 != 0)
+                while (numeroEquipes % model.EquipesPorChave != 0)
                 {
                     grupos3++;
-                    numeroEquipes = numeroEquipes - 3;
+                    numeroEquipes = numeroEquipes - (model.EquipesPorChave - 1);
                 }
 
-                grupos4 = numeroEquipes / 4;
+                grupos4 = numeroEquipes / model.EquipesPorChave;
 
                 var chaves = grupos3 + grupos4;
 
@@ -230,7 +231,7 @@ namespace Truco.Controllers
                     case CompeticaoSorteioModo.Regioes: competicoesFasesGrupos = SorteioRegiao(competicao.CompeticoesEquipes.ToList(), chaves); break;
                 }
 
-                foreach (var grupo in ReorganizaChaves(competicoesFasesGrupos))
+                foreach (var grupo in ReorganizaChaves(competicoesFasesGrupos, model.EquipesPorChave))
                     competicaoFase.CompeticoesFasesGrupos.Add(grupo);
 
                 CompeticaoFaseGrupoJogos(competicaoFase);
@@ -244,17 +245,17 @@ namespace Truco.Controllers
             return View(model);
         }
 
-        private List<CompeticaoFaseGrupo> ReorganizaChaves(List<CompeticaoFaseGrupo> competicoesFasesGrupos)
+        private List<CompeticaoFaseGrupo> ReorganizaChaves(List<CompeticaoFaseGrupo> competicoesFasesGrupos, int equipesPorChaves)
         {
             List<CompeticaoFaseGrupo> grupos = new List<CompeticaoFaseGrupo>();
-            var chaves4 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == 4);
+            var chaves4 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == equipesPorChaves);
 
             foreach (var chave4 in chaves4)
             {
                 grupos.Add(chave4);
             }
 
-            var chaves3 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == 3).ToList();
+            var chaves3 = competicoesFasesGrupos.Where(a => a.CompeticoesFasesGruposEquipes.Count == equipesPorChaves - 1).ToList();
 
             if (chaves3.Count == 1)
             {
@@ -408,7 +409,7 @@ namespace Truco.Controllers
                 {
                     CompeticaoFaseGrupoJogosChave6(grupo);
                 }
-                else  CompeticaoFaseGrupoJogosChave(grupo);                
+                else CompeticaoFaseGrupoJogosChave(grupo);
             }
 
         }
@@ -495,7 +496,7 @@ namespace Truco.Controllers
                 }
             });
         }
-              
+
         private static void CompeticaoFaseGrupoJogosChave(CompeticaoFaseGrupo grupo)
         {
             var equipes = grupo.CompeticoesFasesGruposEquipes.ToList();
@@ -527,13 +528,14 @@ namespace Truco.Controllers
                             CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe()
                             {
                                 CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(),
-                                CompeticaoFaseGrupoEquipeId = equipes[results[team, round]].CompeticaoFaseGrupoEquipeId },
+                                CompeticaoFaseGrupoEquipeId = equipes[results[team, round]].CompeticaoFaseGrupoEquipeId
+                            },
                         });
                     }
                 }
 
                 grupo.CompeticoesFasesGruposRodadas.Add(rodada);
-            }            
+            }
         }
 
         private static List<CompeticaoFaseGrupo> SorteioGeral(IList<CompeticaoEquipe> competicaoEquipes, int chaves)
@@ -892,8 +894,9 @@ namespace Truco.Controllers
 
             var totalGrupos3 = grupos.Where(a => a.CompeticoesFasesGruposEquipes.Count() == 3).Count();
             var totalGrupos4 = grupos.Where(a => a.CompeticoesFasesGruposEquipes.Count() == 4).Count();
+            var totalGrupos5 = grupos.Where(a => a.CompeticoesFasesGruposEquipes.Count() == 5).Count();
             var totalGrupos6 = grupos.Where(a => a.CompeticoesFasesGruposEquipes.Count() == 6).Count();
-            var totalGrupos = totalGrupos3 + totalGrupos4 + (totalGrupos6 * 2);
+            var totalGrupos = totalGrupos3 + totalGrupos4 + totalGrupos5 + (totalGrupos6 * 2);
 
             if (!principal.HasValue)
             {
@@ -970,10 +973,11 @@ namespace Truco.Controllers
                 }
 
                 terceiros = terceiros.OrderByDescending(a => a.Aproveitamento).ThenBy(a => a.CompeticaoEquipe.Nome).ToList();
+                int classificadosPrincipal = model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal).Count();
                 foreach (var t in terceiros)
                 {
                     var classificacao = ViewModels.Enums.Classificacao.Principal;
-                    if (terceiros.IndexOf(t) > 1)
+                    if (terceiros.IndexOf(t) >= (principal - (classificadosPrincipal)))
                         classificacao = ViewModels.Enums.Classificacao.Repescagem;
 
                     model.Equipes.Add(new ClassificacaoEquipeViewModel()
@@ -1139,8 +1143,8 @@ namespace Truco.Controllers
             var gruposPrincipal = SortearPrincipal(equipesPrincipal.OrderByDescending(a => a.Aproveitamento).ToList());
             var gruposRepescagem = SortearRepescagem(equipesRepescagem.OrderByDescending(a => a.Aproveitamento).ToList());
 
-            gruposPrincipal = ReorganizaChaves(gruposPrincipal);
-            gruposRepescagem = ReorganizaChaves(gruposRepescagem);
+            gruposPrincipal = ReorganizaChaves(gruposPrincipal, 4);
+            gruposRepescagem = ReorganizaChaves(gruposRepescagem, 4);
 
             foreach (var p in gruposPrincipal)
                 competicaoFasePrincipal.CompeticoesFasesGrupos.Add(p);

@@ -10,6 +10,7 @@ namespace Truco.ViewModels
     public class CompeticaoSorteioViewModel
     {
         public Competicao Competicao { get; set; }
+        public int EquipesPorChave { get; set; }
         public CompeticaoSorteioModo SorteioModo { get; set; }
     }
 }
