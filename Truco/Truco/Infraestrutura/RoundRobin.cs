@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Truco.RoundRobin.Test
+namespace Truco.Infraestrutura
 {
     public class RoundRobin
     {
-        private const int BYE = -1;
+        public const int BYE = -1;
 
         // Return an array where results(i, j) gives
         // the opponent of team i in round j.

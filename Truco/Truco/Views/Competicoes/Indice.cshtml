@@ -1,7 +1,7 @@
 @using Truco.ViewModels
 @model CompeticoesViewModel
 @{
-	ViewBag.Title = "Competicoes";
+	ViewBag.Title = "Competições";
 }
 <hgroup>
     <h2>@ViewBag.Title.</h2>
@@ -14,12 +14,12 @@
 		</div>
 			<div class="panel-body">
 			<div class="row form-group">
-				<div class="col-lg-12">                
+				<div class="col-md-12">                
 					@Html.Partial("_ParametrosPesquisa", Model)                            
 				</div> @*-- Fim row _ParametrosPesquisa*@
 			</div>	       
 			<div class="row">
-				<div class="col-lg-12">
+				<div class="col-md-12">
 					<div id="pesquisa">
 						@Html.Partial("_Pesquisa", Model)
 					</div>          

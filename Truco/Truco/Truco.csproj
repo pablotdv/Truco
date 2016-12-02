@@ -627,6 +627,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infraestrutura\Helpers\PesquisaModelStore.cs" />
+    <Compile Include="Infraestrutura\RoundRobin.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\PostalMigrationUtils.cs" />
     <Compile Include="Models\Atleta.cs" />

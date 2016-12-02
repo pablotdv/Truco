@@ -4,9 +4,30 @@
 }
 
 <hgroup>
+    <h1>@Model.Competicao.Nome</h1>
     <h2>@ViewBag.Title.</h2>
     <h3>@ViewBag.Message</h3>
 </hgroup>
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var cidade in Model.Competicao.CompeticoesEquipes.GroupBy(a => a.Cidade).OrderByDescending(a => a.Count()).ToList())
+        {
+            <div class="col-md-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @cidade.Key.Nome (@cidade.Count() Trios)
+                    </div>
+                    <div class="panel-body">
+                        @foreach (var equipe in cidade.OrderBy(a => a.Nome))
+                        {
+                            <p>@equipe.Nome</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         @using (Html.BeginForm())

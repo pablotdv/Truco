@@ -14,6 +14,6 @@ namespace Truco.Models
 
         public int Numero { get; set; }
 
-        public ICollection<RegiaoCidade> Cidades { get; set; }
+        public ICollection<RegiaoCidade> RegioesCidades { get; set; }
     }
 }

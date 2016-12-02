@@ -14,6 +14,7 @@ using Truco.ViewModels;
 using Truco.Models;
 using Truco.ViewModels.Enums;
 using Truco.Models.Enums;
+using Truco.Infraestrutura;
 
 namespace Truco.Controllers
 {
@@ -167,7 +168,9 @@ namespace Truco.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Competicao competicao = await db.Competicoes.FindAsync(id);
+            Competicao competicao = await db.Competicoes
+                .Include(a => a.CompeticoesEquipes)
+                .FirstOrDefaultAsync(a => a.CompeticaoId == id);
             if (competicao == null)
             {
                 return HttpNotFound();
@@ -405,14 +408,7 @@ namespace Truco.Controllers
                 {
                     CompeticaoFaseGrupoJogosChave6(grupo);
                 }
-                else if (grupo.CompeticoesFasesGruposEquipes.Count == 4)
-                {
-                    CompeticaoFaseGrupoJogosChave4(grupo);
-                }
-                else if (grupo.CompeticoesFasesGruposEquipes.Count == 3)
-                {
-                    CompeticaoFaseGrupoJogosChave3(grupo);
-                }
+                else  CompeticaoFaseGrupoJogosChave(grupo);                
             }
 
         }
@@ -499,115 +495,45 @@ namespace Truco.Controllers
                 }
             });
         }
-
-        private void CompeticaoFaseGrupoJogosChave3(CompeticaoFaseGrupo grupo)
+              
+        private static void CompeticaoFaseGrupoJogosChave(CompeticaoFaseGrupo grupo)
         {
-            var equipe1 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 1);
-            var equipe2 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 2);
-            var equipe3 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 3);
+            var equipes = grupo.CompeticoesFasesGruposEquipes.ToList();
+            RoundRobin roundRobin = new RoundRobin();
 
-            grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
-            {
-                CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
-                Rodada = 1,
-                CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
-                {
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
-                    },
-                }
-            });
-            grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
-            {
-                CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
-                Rodada = 2,
-                CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
-                {
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
-                    },
-                }
-            });
-            grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
-            {
-                CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
-                Rodada = 3,
-                CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
-                {
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
-                    },
-                }
-            });
-        }
+            int num_teams = equipes.Count();
+            int[,] results = roundRobin.GenerateRoundRobin(num_teams);
 
-        private static void CompeticaoFaseGrupoJogosChave4(CompeticaoFaseGrupo grupo)
-        {
-            var equipe1 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 1);
-            var equipe2 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 2);
-            var equipe3 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 3);
-            var equipe4 = grupo.CompeticoesFasesGruposEquipes.FirstOrDefault(a => a.Numero == 4);
+            for (int round = 0; round <= results.GetUpperBound(1); round++)
+            {
+                var rodada = new CompeticaoFaseGrupoRodada()
+                {
+                    CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
+                    Rodada = round + 1,
+                    CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
+                };
+                for (int team = 0; team < num_teams; team++)
+                {
+                    if (team < results[team, round])
+                    {
+                        rodada.CompeticoesFasesGruposRodadasJogos.Add(new CompeticaoFaseGrupoRodadaJogo()
+                        {
+                            CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
+                            CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe()
+                            {
+                                CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(),
+                                CompeticaoFaseGrupoEquipeId = equipes[team].CompeticaoFaseGrupoEquipeId
+                            },
+                            CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe()
+                            {
+                                CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(),
+                                CompeticaoFaseGrupoEquipeId = equipes[results[team, round]].CompeticaoFaseGrupoEquipeId },
+                        });
+                    }
+                }
 
-            grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
-            {
-                CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
-                Rodada = 1,
-                CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
-                {
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
-                    },
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe4.CompeticaoFaseGrupoEquipeId },
-                    },
-                }
-            });
-            grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
-            {
-                CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
-                Rodada = 2,
-                CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
-                {
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
-                    },
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe4.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
-                    },
-                }
-            });
-            grupo.CompeticoesFasesGruposRodadas.Add(new CompeticaoFaseGrupoRodada()
-            {
-                CompeticaoFaseGrupoRodadaId = Guid.NewGuid(),
-                Rodada = 3,
-                CompeticoesFasesGruposRodadasJogos = new HashSet<CompeticaoFaseGrupoRodadaJogo>()
-                {
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe1.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe4.CompeticaoFaseGrupoEquipeId },
-                    },
-                    new CompeticaoFaseGrupoRodadaJogo() {
-                        CompeticaoFaseGrupoRodadaJogoId = Guid.NewGuid(),
-                        CompeticaoFaseGrupoRodadaJogoEquipeUm = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe2.CompeticaoFaseGrupoEquipeId },
-                        CompeticaoFaseGrupoRodadaJogoEquipeDois = new CompeticaoFaseGrupoRodadaJogoEquipe() { CompeticaoFaseGrupoRodadaJogoEquipeId = Guid.NewGuid(), CompeticaoFaseGrupoEquipeId = equipe3.CompeticaoFaseGrupoEquipeId },
-                    },
-                }
-            });
+                grupo.CompeticoesFasesGruposRodadas.Add(rodada);
+            }            
         }
 
         private static List<CompeticaoFaseGrupo> SorteioGeral(IList<CompeticaoEquipe> competicaoEquipes, int chaves)
@@ -1176,7 +1102,7 @@ namespace Truco.Controllers
             var equipesClassificacoes = classificar.Equipes.ToList();
 
             foreach (var e in equipesClassificacoes)
-            {                
+            {
                 if (e.Classificacao == ViewModels.Enums.Classificacao.Principal)
                 {
                     equipesPrincipal.Add(e.CompeticaoEquipe);
@@ -1432,7 +1358,7 @@ namespace Truco.Controllers
 
         }
 
-       
+
         // POST: /Equipes/Criar
         [HttpPost]
         [ValidateAntiForgeryToken]

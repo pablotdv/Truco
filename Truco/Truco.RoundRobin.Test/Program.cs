@@ -21,7 +21,7 @@ namespace Truco.RoundRobin.Test
                 new Robin { Equipe = "Equipe 6" },
             };
 
-            RoundRobin roundRobin = new RoundRobin();
+            Truco.Infraestrutura.RoundRobin roundRobin = new Truco.Infraestrutura.RoundRobin();
             int num_teams = equipes.Count();
             int[,] results = roundRobin.GenerateRoundRobin(num_teams);
 
@@ -32,7 +32,7 @@ namespace Truco.RoundRobin.Test
                 txt += "Round " + round + ":\r\n";
                 for (int team = 0; team < num_teams; team++)
                 {
-                    if (results[team, round] == -1)
+                    if (results[team, round] == Truco.Infraestrutura.RoundRobin.BYE)
                     {
                         txt += "    " + equipes[team].Equipe + " (bye)\r\n";
                     }
