@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,5 +23,7 @@ namespace Truco.Models
         public virtual Competicao Competicao { get; set; }
         
         public decimal? Aproveitamento { get; set; }        
+
+        public ICollection<CompeticaoFaseGrupoEquipe> CompeticoesFasesGruposEquipes { get; set; }
     }
 }

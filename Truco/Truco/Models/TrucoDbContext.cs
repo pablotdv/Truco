@@ -56,6 +56,18 @@ namespace Truco.Models
                 .HasForeignKey(a => a.CompeticaoFaseJogoEquipeDoisId)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<CompeticaoFase>()
+                .HasOptional(a => a.CompeticaoFasePrincipal)
+                .WithMany(a => a.CompeticoesFesesRepescagem)
+                .HasForeignKey(a => a.CompeticaoFasePrincipalId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CompeticaoFase>()
+                .HasRequired(a => a.Competicao)
+                .WithMany(a => a.CompeticoesFases)
+                .HasForeignKey(a => a.CompeticaoId)
+                .WillCascadeOnDelete(false);
+
             base.OnModelCreating(modelBuilder);
         }
 

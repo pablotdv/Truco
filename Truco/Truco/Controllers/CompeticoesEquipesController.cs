@@ -71,10 +71,13 @@ namespace Truco.Controllers
         //
         // GET: /CompeticoesEquipes/Criar        
           
-		public async Task<ActionResult> Criar()
+		public ActionResult Criar(Guid competicaoId)
         {
-			await ViewBags();
-            return View();
+            CompeticaoEquipe model = new CompeticaoEquipe()
+            {
+                CompeticaoId = competicaoId
+            };
+            return View(model);
         } 
 
         //
