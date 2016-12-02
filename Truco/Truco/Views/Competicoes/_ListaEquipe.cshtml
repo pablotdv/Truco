@@ -1,0 +1,60 @@
+﻿@using Truco.ViewModels
+@model List<CompeticaoEquipeViewModel>
+
+
+@* *********************************************************
+    *************    PAINEL ESPECIALIDADES    *****************
+    *********************************************************** *@
+@using (Ajax.BeginForm(actionName: "ExlcuirEquipeCompeticao", controllerName: "Competicoes",
+                                                                                                                    ajaxOptions: new AjaxOptions()
+                                                                                                                    {
+                                                                                                                        HttpMethod = "POST",
+
+                                                                                                                        UpdateTargetId = "equipesDiv"
+                                                                                                                    }))
+
+{
+
+
+    <div id="equipesDiv">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="col-lg-1"></th>
+                    <td>
+                        Equipes
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+
+                            @Ajax.ActionLink(linkText: "Excluir",
+                                        actionName: "ExlcuirEquipeCompeticao",
+                                        controllerName: "Competicoes",
+                                        routeValues: new { equipeId = item.Equipe.EquipeId, competicaoId = item.CompeticaoId },
+                                        ajaxOptions: new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "equipesDiv" },
+                                        htmlAttributes: new { @class = "btn btn-danger" })
+
+
+                        </td>
+                        <td>
+                            @item.Equipe.Nome
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
+
+
+
+

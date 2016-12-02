@@ -550,6 +550,9 @@
     <Content Include="Views\Competicoes\JogoMataMata.cshtml" />
     <Content Include="Views\Competicoes\_JogoMataMataSetDois.cshtml" />
     <Content Include="Views\Competicoes\_JogoMataMataSetUm.cshtml" />
+    <Content Include="Views\Competicoes\CompeticaoEquipe.cshtml" />
+    <Content Include="Views\Competicoes\_ListaEquipe.cshtml" />
+    <Content Include="Views\Competicoes\_CadEquipe.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -679,6 +682,7 @@
     <Compile Include="ViewModels\CidadesViewModel.cs" />
     <Compile Include="ViewModels\ClassificacaoViewModel.cs" />
     <Compile Include="ViewModels\ClassificacaoEquipeViewModel.cs" />
+    <Compile Include="ViewModels\CompeticaoEquipeViewModel.cs" />
     <Compile Include="ViewModels\CompeticaoSorteioViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />

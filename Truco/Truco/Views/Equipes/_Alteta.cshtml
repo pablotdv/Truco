@@ -21,7 +21,7 @@
         <input type="text" id="AtletaIdNome" name="AtletaIdNome" placeholder="Digite o Nome do Atleta" class="form-control" value="@(Model?.Atleta?.Nome)">
         @Html.HiddenFor(a => a.AtletaId)
         @*End TypeaHead PessoaAscendente *@
-        @Html.ValidationMessageFor(model => model.AtletaId "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(model => model.AtletaId, "", new { @class = "text-danger" })
         </div>
     </div>
 
