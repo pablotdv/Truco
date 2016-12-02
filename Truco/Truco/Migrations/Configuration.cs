@@ -43,7 +43,7 @@ namespace Truco.Migrations
 
             CriarRegioes(context, user1);
 
-            for (int i = 10; i <= 41; i++)
+            for (int i = 22; i <= 32; i++)
             {
                 CriarCompeticao(context, $"Torneio de teste com {i} trios", i);
             }

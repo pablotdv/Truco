@@ -1,0 +1,52 @@
+<script src="~/scripts/bootstrap3-typeahead.js"></script>
+<script>
+    $("#EstadoDescricao").typeahead({
+        source: function (query, process) {
+            return $.get('@Url.Action("PesquisarEstados", "CompeticoesEquipes")', { descricao: query }, function (data) {
+                return process(data);
+            }, "json");
+        },
+        autoSelect: true
+    });
+
+    $("#CidadeDescricao").typeahead({
+        source: function (query, process) {
+            return $.get('@Url.Action("PesquisarCidades", "CompeticoesEquipes")', { descricao: query, estadoId: $("#EstadoId").val() }, function (data) {
+                return process(data);
+            }, "json");
+        },
+        autoSelect: true
+    });
+
+
+    $("#EstadoDescricao").change(function () {
+        var current = $("#EstadoDescricao").typeahead("getActive");
+        if (current) {
+            if (current.name == $("#EstadoDescricao").val()) {
+                $("#EstadoId").val(current.id);
+            } else {
+                $("#EstadoId").val("");
+                $("#CidadeId").val("0");
+                $("#CidadeDescricao").val("");
+            }
+        } else {
+            $("#EstadoId").val("");
+            $("#CidadeId").val("0");
+            $("#CidadeDescricao").val("");
+        }
+    });
+
+    $("#CidadeDescricao").change(function () {
+        var current = $("#CidadeDescricao").typeahead("getActive");
+        if (current) {
+            if (current.name == $("#CidadeDescricao").val()) {
+                $("#CidadeId").val(current.id);
+            } else {
+                $("#CidadeId").val("");
+            }
+        } else {
+            $("#CidadeId").val("");
+        }
+    });
+
+</script>

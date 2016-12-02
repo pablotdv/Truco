@@ -185,6 +185,34 @@ namespace Truco.Controllers
             ViewBag.Cidades = new SelectList(await db.Cidades.ToListAsync(), "CidadeId", "Nome");
         }
 
+        public async Task<JsonResult> PesquisarEstados(string descricao)
+        {
+            var descricoes = String.IsNullOrEmpty(descricao) ? new string[0] : descricao.Split(' ');
+            var dados = await db.Estados
+                .Where(b => descricoes.All(c => b.Nome.Contains(c)))
+                .OrderBy(a => a.Nome)
+                .Select(a => new { id = a.EstadoId, name = a.Nome })
+                .Take(15)
+                .ToListAsync();
+
+            return Json(dados, JsonRequestBehavior.AllowGet);
+        }
+
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+        public async Task<JsonResult> PesquisarCidades(string descricao, Guid estadoId)
+        {
+            var descricaos = String.IsNullOrEmpty(descricao) ? new string[0] : descricao.Split(' ');
+            var dados = await db.Cidades
+                .Where(a => a.EstadoId == estadoId)
+                .Where(b => descricaos.All(c => b.Nome.Contains(c)))
+                .OrderBy(a => a.Nome)
+                .Select(a => new { id = a.CidadeId, name = a.Nome })
+                .Take(15)
+                .ToListAsync();
+
+            return Json(dados, JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

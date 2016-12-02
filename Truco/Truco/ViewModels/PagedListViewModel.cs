@@ -9,7 +9,7 @@ namespace Truco.ViewModels
         public PagedListViewModel()
         {
             Pagina = 1;
-            TamanhoPagina = 10;
+            TamanhoPagina = 20;
         }
                 
         [Display(Name = "Página")]

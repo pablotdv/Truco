@@ -12,25 +12,36 @@
     <div class="col-md-12">
         <table class="table table-bordered table-striped">
             <tbody>
-                @foreach (var jogo in Model.CompeticoesFasesJogos.OrderBy(a=>a.Jogo))
+                @foreach (var jogo in Model.CompeticoesFasesJogos.OrderBy(a => a.Jogo))
                 {
                     <tr>
                         <td>
                             @($"{jogo.Jogo}ª Jogo")
                         </td>
-                        
-                        <td align="right">
+
+                        <td align="right" @(jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0 ? "style=color:blue" : "")>
                             @jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.CompeticaoEquipe.Nome
                         </td>
                         <td align="center">
                             VS.
-                        </td>                        
-                        <td>@jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Nome</td>
+                        </td>
+                        <td @(jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0 ? "style=color:blue" : "")>
+                            @jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Nome
+                        </td>
                         <td>@Html.ActionLink("Lançar", "JogoMataMata", new { id = jogo.CompeticaoFaseJogoId })</td>
                     </tr>
                 }
             </tbody>
         </table>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-default">Próxima fase</button>
+        }
     </div>
 </div>

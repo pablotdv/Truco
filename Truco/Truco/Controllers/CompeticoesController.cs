@@ -903,75 +903,43 @@ namespace Truco.Controllers
                 principal = totalGrupos * 2;
             }
 
-            if (principal % totalGrupos == 0) //classifica 2 por grupo
+            var terceiros = new List<CompeticaoFaseGrupoEquipe>();
+            //classifica os dois primeiros de cada chave e mais 4 da chave de 3X3
+            foreach (var grupo in grupos)
             {
-                foreach (var grupo in grupos)
+                var numeroEquipes = grupo.CompeticoesFasesGruposEquipes.Count();
+                var equipes = grupo.CompeticoesFasesGruposEquipes
+                    .OrderByDescending(a => a.Vitorias)
+                    .ThenByDescending(a => a.Sets)
+                    .ThenByDescending(a => a.Tentos)
+                    .ToList();
+
+                foreach (var equipe in equipes)
                 {
-                    var numeroEquipes = grupo.CompeticoesFasesGruposEquipes.Count();
-                    var equipes = grupo.CompeticoesFasesGruposEquipes
-                        .OrderByDescending(a => a.Vitorias)
-                        .ThenByDescending(a => a.Sets)
-                        .ThenByDescending(a => a.Tentos)
-                        .ToList();
+                    var posicao = equipes.IndexOf(equipe) + 1;
 
-                    foreach (var equipe in equipes)
+                    var classificacao = ViewModels.Enums.Classificacao.Principal;
+
+                    if (((numeroEquipes == 4 || numeroEquipes == 3) && posicao > 2) || (numeroEquipes == 6 && posicao > 4))
+                        classificacao = ViewModels.Enums.Classificacao.Repescagem;
+
+                    if ((numeroEquipes == 3 || numeroEquipes == 4) && posicao == 3)
+                        terceiros.Add(equipe);
+
+                    model.Equipes.Add(new ClassificacaoEquipeViewModel()
                     {
-                        var posicao = equipes.IndexOf(equipe) + 1;
-
-                        var classificacao = ViewModels.Enums.Classificacao.Principal;
-
-                        if (((numeroEquipes == 4 || numeroEquipes == 3) && posicao > 2) || (numeroEquipes == 6 && posicao > 4))
-                            classificacao = ViewModels.Enums.Classificacao.Repescagem;
-
-                        model.Equipes.Add(new ClassificacaoEquipeViewModel()
-                        {
-                            Posicao = posicao,
-                            CompeticaoFaseGrupoEquipe = equipe,
-                            Classificacao = classificacao,
-                            Aproveitamento = equipe.Aproveitamento,
-                            CompeticaoEquipeId = equipe.CompeticaoEquipeId,
-                            CompeticaoEquipe = equipe.CompeticaoEquipe,
-                        });
-                    }
+                        Posicao = posicao,
+                        CompeticaoFaseGrupoEquipe = equipe,
+                        Classificacao = classificacao,
+                        Aproveitamento = equipe.Aproveitamento,
+                        CompeticaoEquipeId = equipe.CompeticaoEquipeId,
+                        CompeticaoEquipe = equipe.CompeticaoEquipe,
+                    });
                 }
             }
-            else //classificar 2 por grupo e mais 2 melhores terceiros (menos da chave de 6 que passa 4)
+
+            if (model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal).Count() < principal)
             {
-                var terceiros = new List<CompeticaoFaseGrupoEquipe>();
-
-                foreach (var grupo in grupos)
-                {
-                    var numeroEquipes = grupo.CompeticoesFasesGruposEquipes.Count();
-                    var equipes = grupo.CompeticoesFasesGruposEquipes
-                        .OrderByDescending(a => a.Vitorias)
-                        .ThenByDescending(a => a.Sets)
-                        .ThenByDescending(a => a.Tentos)
-                        .ToList();
-
-                    foreach (var equipe in equipes)
-                    {
-                        var posicao = equipes.IndexOf(equipe) + 1;
-
-                        var classificacao = ViewModels.Enums.Classificacao.Principal;
-
-                        if ((numeroEquipes == 4 && posicao == 4) || (numeroEquipes == 6 && posicao > 4))
-                            classificacao = ViewModels.Enums.Classificacao.Repescagem;
-
-                        if ((numeroEquipes == 3 || numeroEquipes == 4) && posicao == 3)
-                            terceiros.Add(equipe);
-                        else
-                            model.Equipes.Add(new ClassificacaoEquipeViewModel()
-                            {
-                                Posicao = posicao,
-                                CompeticaoFaseGrupoEquipe = equipe,
-                                Classificacao = classificacao,
-                                Aproveitamento = equipe.Aproveitamento,
-                                CompeticaoEquipeId = equipe.CompeticaoEquipeId,
-                                CompeticaoEquipe = equipe.CompeticaoEquipe
-                            });
-                    }
-                }
-
                 terceiros = terceiros.OrderByDescending(a => a.Aproveitamento).ThenBy(a => a.CompeticaoEquipe.Nome).ToList();
                 int classificadosPrincipal = model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal).Count();
                 foreach (var t in terceiros)
@@ -979,6 +947,11 @@ namespace Truco.Controllers
                     var classificacao = ViewModels.Enums.Classificacao.Principal;
                     if (terceiros.IndexOf(t) >= (principal - (classificadosPrincipal)))
                         classificacao = ViewModels.Enums.Classificacao.Repescagem;
+                    else
+                    {
+                        var terceiro = model.Equipes.Where(a => a.CompeticaoEquipeId == t.CompeticaoEquipeId).First();
+                        model.Equipes.Remove(terceiro);
+                    }
 
                     model.Equipes.Add(new ClassificacaoEquipeViewModel()
                     {
@@ -990,6 +963,7 @@ namespace Truco.Controllers
                         CompeticaoEquipe = t.CompeticaoEquipe,
                     });
                 }
+
             }
             model.Principal = model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal).Count();
 
@@ -1028,6 +1002,11 @@ namespace Truco.Controllers
                 Modo = CompeticaoFaseModo.MataMata,
                 CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
             };
+
+            if (classificar.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+            {
+                fase.CompeticaoFasePrincipalId = classificar.CompeticaoFase.CompeticaoFasePrincipalId;
+            }
 
             var equipesPrincipal = classificar.Equipes
                 .Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal)
@@ -1087,6 +1066,23 @@ namespace Truco.Controllers
             var competicaoFase = await db.CompeticoesFases
                 .Include(a => a.CompeticoesFasesJogos)
                 .FirstOrDefaultAsync(a => a.CompeticaoFaseId == id);
+
+            if (competicaoFase == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(competicaoFase);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("FaseMataMata")]
+        public async Task<ActionResult> FaseMataMataConfirmacao(Guid id)
+        {
+            var competicaoFase = await db.CompeticoesFasesJogosEquipes
+                .Where(a => a.CompeticaoFaseEquipe.CompeticaoFaseId == id)
+                .ToListAsync();
 
             if (competicaoFase == null)
             {

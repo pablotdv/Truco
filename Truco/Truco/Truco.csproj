@@ -377,6 +377,7 @@
     <None Include="Resources\Logradouros.csv" />
     <None Include="Resources\Pais.csv" />
     <None Include="scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="scripts\bootstrap3-typeahead.js" />
     <Content Include="scripts\jquery-3.1.1.js" />
     <Content Include="scripts\jquery-3.1.1.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.js" />
