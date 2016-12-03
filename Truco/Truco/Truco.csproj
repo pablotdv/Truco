@@ -554,6 +554,15 @@
     <Content Include="Views\Competicoes\CompeticaoEquipe.cshtml" />
     <Content Include="Views\Competicoes\_ListaEquipe.cshtml" />
     <Content Include="Views\Competicoes\_CadEquipe.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\Indice.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\_Pesquisa.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\_ParametrosPesquisa.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\_CriarOuEditar.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\Criar.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\Editar.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\Detalhes.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\Excluir.cshtml" />
+    <Content Include="Views\CompeticoesFasesGrupos\_Scripts.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -610,6 +619,7 @@
     <Compile Include="Controllers\CidadesController.cs" />
     <Compile Include="Controllers\CompeticoesController.cs" />
     <Compile Include="Controllers\CompeticoesEquipesController.cs" />
+    <Compile Include="Controllers\CompeticoesFasesGruposController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EnderecosController.cs" />
@@ -683,6 +693,7 @@
     <Compile Include="ViewModels\CompeticaoEquipeViewModel.cs" />
     <Compile Include="ViewModels\CompeticaoSorteioViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesEquipesViewModel.cs" />
+    <Compile Include="ViewModels\CompeticoesFasesGruposViewModel.cs" />
     <Compile Include="ViewModels\CompeticoesViewModel.cs" />
     <Compile Include="ViewModels\EnderecosViewModel.cs" />
     <Compile Include="ViewModels\EntidadesViewModel.cs" />

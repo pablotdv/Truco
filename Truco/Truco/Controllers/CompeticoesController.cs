@@ -924,7 +924,7 @@ namespace Truco.Controllers
 
                     var classificacao = ViewModels.Enums.Classificacao.Principal;
 
-                    if (((numeroEquipes == 4 || numeroEquipes == 3) && posicao > 2) || (numeroEquipes == 6 && posicao > 4))
+                    if (((numeroEquipes == 4 || numeroEquipes == 3) && posicao > equipe.CompeticaoFaseGrupo.Classificar) || (numeroEquipes == 6 && posicao > equipe.CompeticaoFaseGrupo.Classificar))
                         classificacao = ViewModels.Enums.Classificacao.Repescagem;
 
                     if ((numeroEquipes == 3 || numeroEquipes == 4) && posicao == 3)
@@ -954,7 +954,7 @@ namespace Truco.Controllers
                     var terceiro = model.Equipes.Where(a => a.CompeticaoEquipeId == t.CompeticaoEquipeId).First();
                     model.Equipes.Remove(terceiro);
                     if (classificadosPrincipal < principal)
-                    {                       
+                    {
                         classificadosPrincipal++;
                     }
                     else
@@ -1040,6 +1040,8 @@ namespace Truco.Controllers
         {
             var classificar = await Classificar(model.CompeticaoFaseId, model.Principal);
 
+            var faseAtual = classificar.CompeticaoFase;
+
             var competicao = await db.Competicoes.Include(a => a.CompeticoesFases)
                 .FirstOrDefaultAsync(a => a.CompeticaoId == classificar.CompeticaoFase.CompeticaoId);
 
@@ -1102,8 +1104,6 @@ namespace Truco.Controllers
                 j--;
             }
 
-
-
             if (fase.Tipo == CompeticaoFaseTipo.Principal)
             {
                 MontarMataMataRepescagem(fase, competicao, classificar);
@@ -1117,15 +1117,20 @@ namespace Truco.Controllers
 
         private void MontarMataMataRepescagem(CompeticaoFase fase, Competicao competicao, ClassificacaoViewModel classificar)
         {
-            CompeticaoFase faseRepescagem = new CompeticaoFase()
+            CompeticaoFase faseRepescagem = UnirRepescagem(competicao);
+
+            if (faseRepescagem == null)
             {
-                CompeticaoFaseId = Guid.NewGuid(),
-                CompeticaoId = competicao.CompeticaoId,
-                Tipo = CompeticaoFaseTipo.Repescagem,
-                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem).Count() + 1,
-                Modo = CompeticaoFaseModo.MataMata,
-                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
-            };
+                faseRepescagem = new CompeticaoFase()
+                {
+                    CompeticaoFaseId = Guid.NewGuid(),
+                    CompeticaoId = competicao.CompeticaoId,
+                    Tipo = CompeticaoFaseTipo.Repescagem,
+                    Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem).Count() + 1,
+                    Modo = CompeticaoFaseModo.MataMata,
+                    CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
+                };
+            }
 
             var equipesRepescagem = classificar.Equipes
                 .Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Repescagem)
@@ -1142,7 +1147,7 @@ namespace Truco.Controllers
                 faseRepescagem.CompeticoesFasesJogos.Add(new CompeticaoFaseJogo()
                 {
                     CompeticaoFaseJogoId = Guid.NewGuid(),
-                    Jogo = jogo + 1,
+                    Jogo = faseRepescagem.CompeticoesFasesJogos.Count() + 1,
                     CompeticaoFaseJogoEquipeUm = new CompeticaoFaseJogoEquipe()
                     {
                         CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
@@ -1172,6 +1177,43 @@ namespace Truco.Controllers
 
 
             fase.CompeticoesFesesRepescagem.Add(faseRepescagem);
+        }
+
+        private CompeticaoFase UnirRepescagem(Competicao competicao)
+        {
+            var ultimaRepescagem = db.CompeticoesFases
+                .Where(a => a.CompeticaoId == competicao.CompeticaoId)
+                .Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem)
+                .OrderByDescending(a => a.Fase)
+                .FirstOrDefault();
+            var competicaoFaseEquipes = db.CompeticoesFasesJogos
+                .Where(a => a.CompeticaoFaseId == ultimaRepescagem.CompeticaoFaseId)
+                .OrderBy(a => a.Jogo)
+                .ToList();
+
+            var ganhadoresUm = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe)
+                    .ToList();
+
+            var ganhadoresDois = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe)
+                    .ToList();
+
+            CompeticaoFase faseRepescagem = null;
+
+            if (ganhadoresUm.Count() + ganhadoresDois.Count() == 0)
+            {
+                faseRepescagem = db.CompeticoesFases
+                    .Include(a => a.CompeticoesFasesJogos)
+                    .Where(a => a.CompeticaoId == competicao.CompeticaoId)
+                    .Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem)
+                    .OrderByDescending(a => a.Fase)
+                    .FirstOrDefault();
+            }
+
+            return faseRepescagem;
         }
 
         public async Task<ActionResult> FaseMataMata(Guid? id)

@@ -127,6 +127,6 @@ namespace Truco.Models
         public DbSet<RegiaoCidade> RegioesCidades { get; set; }
         public DbSet<PesquisaModel> PesquisasModels { get; set; }
         public DbSet<CompeticaoFaseGrupoRodadaJogoEquipe> CompeticoesFasesGruposRodadasJogosEquipes { get; set; }
-        public DbSet<CompeticaoFaseEquipe> CompeticoesFasesEquipes { get; set; }
+        public DbSet<CompeticaoFaseEquipe> CompeticoesFasesEquipes { get; set; }        
     }
 }

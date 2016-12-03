@@ -1,0 +1,24 @@
+<script>
+	
+	var engineCompeticaoFases = new Bloodhound({
+        remote: { url: '@Url.Action("PesquisarCompeticaoFases", "CompeticoesFasesGrupos")?=%QUERY', wildcard: '%QUERY' },
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace(''),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+
+    engineCompeticaoFases.initialize();
+
+    $('#CompeticaoFase').typeahead(null, {
+        source: engineCompeticaoFases.ttAdapter(),
+		limit: 15,
+        displayKey: "",
+        templates: {
+            suggestion: function (data) {
+                return '<p><strong>' + data. + '</strong></p>';
+            }
+        }
+    }).on('typeahead:selected', function (e, suggestion, name) {
+        $("#CompeticaoFaseId").val(suggestion.CompeticaoFaseId);
+    });
+</script>
+

@@ -15,6 +15,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title pull-left">@grupo.Nome</h3>
+
                         <a href="@Url.Action("Jogos", new { id = grupo.CompeticaoFaseGrupoId })" class="btn btn-primary pull-right hidden-print">Jogos</a>
                         <div class="clearfix"></div>
                     </div>
@@ -73,6 +74,13 @@
                             </tbody>
                         </table>
 
+                    </div>
+                    <div class="panel panel-footer">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="@Url.Action("Editar", "CompeticoesFasesGrupos", new { id = grupo.CompeticaoFaseGrupoId })" class="btn btn-default hidden-print">Editar</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
