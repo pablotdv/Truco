@@ -1080,16 +1080,17 @@ namespace Truco.Controllers
         [ActionName("FaseMataMata")]
         public async Task<ActionResult> FaseMataMataConfirmacao(Guid id)
         {
-            var competicaoFase = await db.CompeticoesFasesJogosEquipes
-                .Where(a => a.CompeticaoFaseEquipe.CompeticaoFaseId == id)
+            var competicaoFaseEquipes = await db.CompeticoesFasesJogos
+                .Where(a => a.CompeticaoFaseId == id)
+                .OrderBy(a => a.Jogo)
                 .ToListAsync();
 
-            if (competicaoFase == null)
-            {
-                return HttpNotFound();
-            }
+            //var ganhadores = competicaoFaseEquipes.Where(a => a.CompeticaoFaseEquipe.Vitorias > 0).ToList();
+            //var perdedores = competicaoFaseEquipes.Where(a => a.CompeticaoFaseEquipe.Vitorias == 0).ToList();
 
-            return View(competicaoFase);
+
+
+            return View(competicaoFaseEquipes);
         }
 
         private async Task<ActionResult> ClassificarGrupos(ClassificacaoViewModel model)
