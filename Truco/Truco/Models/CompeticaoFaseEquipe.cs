@@ -16,6 +16,7 @@ namespace Truco.Models
         public Guid CompeticaoEquipeId { get; set; }
         public virtual CompeticaoFase CompeticaoFase { get; set; }
         public virtual CompeticaoEquipe CompeticaoEquipe { get; set; }
+        public int Jogo { get; set; }
         public int Jogos { get; set; }
         public int Vitorias { get; set; }
         public int Sets { get; set; }

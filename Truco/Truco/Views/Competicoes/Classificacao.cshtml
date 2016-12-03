@@ -10,7 +10,7 @@
 </hgroup>
 
 <div class="row">
-    @foreach (var posicao in Model.Equipes.OrderBy(a => a.Posicao).GroupBy(a => a.Classificacao).ToList())
+    @foreach (var posicao in Model.Equipes.OrderBy(a=>a.Classificacao).ThenBy(a => a.Posicao).GroupBy(a => a.Classificacao).ToList())
     {
         <div class="col-md-12">
             <div class="panel panel-default">
@@ -45,17 +45,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @{ var equipes = posicao.OrderByDescending(a => a.CompeticaoFaseGrupoEquipe.Aproveitamento).ToList();}
+                            @{ var equipes = posicao.OrderByDescending(a => a.Aproveitamento).ToList();}
                             @foreach (var equipe in equipes)
                             {
                                 <tr>
                                     <td>@($"{equipes.IndexOf(equipe) + 1}º Lugar")</td>
-                                    <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoFaseGrupo.Nome</td>
-                                    <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome</td>
-                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Vitorias</td>
-                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Sets</td>
-                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Tentos</td>
-                                    <td>@equipe.CompeticaoFaseGrupoEquipe.Aproveitamento</td>
+                                    @if (equipe.CompeticaoFaseGrupoEquipe != null)
+                                    {
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoFaseGrupo.Nome</td>
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome</td>
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.Vitorias</td>
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.Sets</td>
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.Tentos</td>
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.Aproveitamento</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@($"{equipe.CompeticaoFaseEquipe.CompeticaoFase.Fase}ª Fase {equipe.CompeticaoFaseEquipe.CompeticaoFase.Tipo}")</td>
+                                        <td>@equipe.CompeticaoFaseEquipe.CompeticaoEquipe.Nome</td>
+                                        <td>@equipe.CompeticaoFaseEquipe.Vitorias</td>
+                                        <td>@equipe.CompeticaoFaseEquipe.Sets</td>
+                                        <td>@equipe.CompeticaoFaseEquipe.Tentos</td>
+                                        <td>@equipe.CompeticaoFaseEquipe.Aproveitamento</td>
+                                    }
                                 </tr>
                             }
                         </tbody>
@@ -80,7 +92,7 @@
                     @Html.LabelFor(model => model.Principal, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Principal, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Principal, "", new { @class = "text-danger" })
-                </div>                
+                </div>
             </div>
             <div class="row form-group">
                 <div class="col-md-12">

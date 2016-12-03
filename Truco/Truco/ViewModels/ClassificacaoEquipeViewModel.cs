@@ -12,5 +12,6 @@ namespace Truco.ViewModels
         public decimal Aproveitamento { get; set; }
         public CompeticaoEquipe CompeticaoEquipe { get; set; }
         public Guid CompeticaoEquipeId { get; set; }
+        public CompeticaoFaseEquipe CompeticaoFaseEquipe { get; set; }
     }
 }

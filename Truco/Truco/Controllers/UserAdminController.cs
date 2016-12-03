@@ -14,7 +14,7 @@ using Truco.ViewModels;
 
 namespace Truco.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administradores")]
     public class UsersAdminController : Controller
     {
         public UsersAdminController()

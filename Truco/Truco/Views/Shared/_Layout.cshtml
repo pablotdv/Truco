@@ -24,9 +24,9 @@
                 <ul class="nav navbar-nav">                    
                     <li>@Html.ActionLink("Competições", "Indice", "Competicoes")</li>
 
-                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    @if (Request.IsAuthenticated && User.IsInRole("Administradores"))
                     {
-                        <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
+                        <li>@Html.ActionLink("Grupos", "Indice", "Grupos")</li>
                         <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
                     }
                 </ul>

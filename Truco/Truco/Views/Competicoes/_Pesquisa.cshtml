@@ -38,19 +38,35 @@
                         @item.CompeticoesEquipes.Count
                     </td>
                     <td>
-                        <div class="btn-group">
-                            @foreach (var fase in item.CompeticoesFases.OrderBy(a => a.Tipo).ThenBy(a => a.Fase))
-                            {
-                                if (fase.Modo == Truco.Models.Enums.CompeticaoFaseModo.Chaveamento)
+                        <div>
+                            <div class="btn-group">
+                                @foreach (var fase in item.CompeticoesFases.Where(a => a.Tipo == Truco.Models.Enums.CompeticaoFaseTipo.Principal).OrderBy(a => a.Tipo).ThenBy(a => a.Fase))
                                 {
-                                    <a href="@Url.Action("Fase", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@($"{fase.Fase}ª Fase {fase.Tipo}")</a>
+                                    if (fase.Modo == Truco.Models.Enums.CompeticaoFaseModo.Chaveamento)
+                                    {
+                                        <a href="@Url.Action("Fase", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@($"{fase.Fase}ª Fase {fase.Tipo}")</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("FaseMataMata", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@($"{fase.Fase}ª Fase {fase.Tipo}")</a>
+                                    }
                                 }
-                                else
+                            </div>
+                        </div>
+                        <div>
+                            <div class="btn-group">
+                                @foreach (var fase in item.CompeticoesFases.Where(a => a.Tipo == Truco.Models.Enums.CompeticaoFaseTipo.Repescagem).OrderBy(a => a.Tipo).ThenBy(a => a.Fase))
                                 {
-                                    <a href="@Url.Action("FaseMataMata", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@($"{fase.Fase}ª Fase {fase.Tipo}")</a>
+                                    if (fase.Modo == Truco.Models.Enums.CompeticaoFaseModo.Chaveamento)
+                                    {
+                                        <a href="@Url.Action("Fase", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@($"{fase.Fase}ª Fase {fase.Tipo}")</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("FaseMataMata", new { id = fase.CompeticaoFaseId })" class="btn btn-default">@($"{fase.Fase}ª Fase {fase.Tipo}")</a>
+                                    }
                                 }
-                            }
-
+                            </div>
                         </div>
                     </td>
                 </tr>

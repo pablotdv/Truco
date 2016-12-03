@@ -688,8 +688,10 @@
     <Compile Include="ViewModels\EntidadesViewModel.cs" />
     <Compile Include="ViewModels\Enums\Classificacao.cs" />
     <Compile Include="ViewModels\Enums\CompeticaoSorteioModo.cs" />
+    <Compile Include="ViewModels\Enums\FaseMataMataSubirDescerRepescagem.cs" />
     <Compile Include="ViewModels\Equipe_AtletaViewModel.cs" />
     <Compile Include="ViewModels\EstadosViewModel.cs" />
+    <Compile Include="ViewModels\FaseMataMataViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoGrupos\GrupoViewModel.cs" />
     <Compile Include="ViewModels\Identity\AdministracaoUsuarios\EditarUsuarioViewModel.cs" />
     <Compile Include="ViewModels\Identity\Conta\AutenticacaoExternaConfirmacaoViewModel.cs" />

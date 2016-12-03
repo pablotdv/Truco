@@ -19,5 +19,6 @@ namespace Truco.Models
         public virtual CompeticaoFase CompeticaoFase { get; set; }
         public ICollection<CompeticaoFaseGrupoEquipe> CompeticoesFasesGruposEquipes { get; set; }
         public ICollection<CompeticaoFaseGrupoRodada> CompeticoesFasesGruposRodadas { get; set; }
+        public int Classificar { get; set; }
     }
 }

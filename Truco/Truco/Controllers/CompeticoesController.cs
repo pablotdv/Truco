@@ -268,6 +268,7 @@ namespace Truco.Controllers
                     CompeticaoFaseGrupoId = Guid.NewGuid(),
                     Grupo = chaves3[0].Grupo,
                     Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                    Classificar = 4,
                     CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
                 };
 
@@ -301,6 +302,7 @@ namespace Truco.Controllers
                     CompeticaoFaseGrupoId = Guid.NewGuid(),
                     Grupo = chaves3[0].Grupo,
                     Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                    Classificar = 4,
                     CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
                 };
 
@@ -336,6 +338,7 @@ namespace Truco.Controllers
                     CompeticaoFaseGrupoId = Guid.NewGuid(),
                     Grupo = chaves3[0].Grupo,
                     Nome = $"Chave {chaves3[0].Grupo} & {chaves3[1].Grupo}",
+                    Classificar = 4,
                     CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
                 };
 
@@ -366,6 +369,7 @@ namespace Truco.Controllers
                     CompeticaoFaseGrupoId = Guid.NewGuid(),
                     Grupo = chaves3[0].Grupo,
                     Nome = $"Chave {chaves3[2].Grupo} & {chaves3[3].Grupo}",
+                    Classificar = 4,
                     CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
                 };
 
@@ -654,6 +658,7 @@ namespace Truco.Controllers
                     CompeticaoFaseGrupoId = Guid.NewGuid(),
                     Nome = $"Chave {i}",
                     Grupo = i,
+                    Classificar = 2,
                     CompeticoesFasesGruposEquipes = new HashSet<CompeticaoFaseGrupoEquipe>()
                 });
             }
@@ -884,7 +889,6 @@ namespace Truco.Controllers
                              .Where(a => a.CompeticaoFaseId == id)
                              .ToListAsync();
 
-
             ClassificacaoViewModel model = new ClassificacaoViewModel()
             {
                 CompeticaoFaseId = id,
@@ -926,6 +930,7 @@ namespace Truco.Controllers
                     if ((numeroEquipes == 3 || numeroEquipes == 4) && posicao == 3)
                         terceiros.Add(equipe);
 
+
                     model.Equipes.Add(new ClassificacaoEquipeViewModel()
                     {
                         Posicao = posicao,
@@ -945,12 +950,16 @@ namespace Truco.Controllers
                 foreach (var t in terceiros)
                 {
                     var classificacao = ViewModels.Enums.Classificacao.Principal;
-                    if (terceiros.IndexOf(t) >= (principal - (classificadosPrincipal)))
-                        classificacao = ViewModels.Enums.Classificacao.Repescagem;
+
+                    var terceiro = model.Equipes.Where(a => a.CompeticaoEquipeId == t.CompeticaoEquipeId).First();
+                    model.Equipes.Remove(terceiro);
+                    if (classificadosPrincipal < principal)
+                    {                       
+                        classificadosPrincipal++;
+                    }
                     else
                     {
-                        var terceiro = model.Equipes.Where(a => a.CompeticaoEquipeId == t.CompeticaoEquipeId).First();
-                        model.Equipes.Remove(terceiro);
+                        classificacao = ViewModels.Enums.Classificacao.Repescagem;
                     }
 
                     model.Equipes.Add(new ClassificacaoEquipeViewModel()
@@ -963,9 +972,49 @@ namespace Truco.Controllers
                         CompeticaoEquipe = t.CompeticaoEquipe,
                     });
                 }
-
             }
+
             model.Principal = model.Equipes.Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal).Count();
+            var competicaoFaseId = grupos.First().CompeticaoFaseId;
+
+            var faseAtual = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFesesRepescagem)
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseId == competicaoFaseId);
+
+            if (faseAtual.CompeticoesFesesRepescagem.Any())
+            {
+                var ultimaRepescagem = faseAtual.CompeticoesFesesRepescagem.OrderByDescending(a => a.Fase).First();
+
+                var competicaoFaseEquipes = await db.CompeticoesFasesJogos
+                    .Where(a => a.CompeticaoFaseId == ultimaRepescagem.CompeticaoFaseId)
+                    .OrderBy(a => a.Jogo)
+                    .ToListAsync();
+
+                var ganhadoresUm = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe)
+                    .ToList();
+
+                var ganhadoresDois = competicaoFaseEquipes
+                        .Where(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0)
+                        .Select(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe)
+                        .ToList();
+
+                var ganhadores = ganhadoresUm.Union(ganhadoresDois).OrderBy(a => a.Jogo);
+
+                foreach (var ganhador in ganhadores)
+                {
+                    model.Equipes.Add(new ClassificacaoEquipeViewModel()
+                    {
+                        Posicao = 0,
+                        CompeticaoFaseEquipe = ganhador,
+                        Classificacao = ViewModels.Enums.Classificacao.Repescagem,
+                        Aproveitamento = ganhador.Aproveitamento,
+                        CompeticaoEquipeId = ganhador.CompeticaoEquipeId,
+                        CompeticaoEquipe = ganhador.CompeticaoEquipe,
+                    });
+                }
+            }
 
             return model;
         }
@@ -991,7 +1040,8 @@ namespace Truco.Controllers
         {
             var classificar = await Classificar(model.CompeticaoFaseId, model.Principal);
 
-            var competicao = classificar.CompeticaoFase.Competicao;
+            var competicao = await db.Competicoes.Include(a => a.CompeticoesFases)
+                .FirstOrDefaultAsync(a => a.CompeticaoId == classificar.CompeticaoFase.CompeticaoId);
 
             CompeticaoFase fase = new CompeticaoFase()
             {
@@ -1000,7 +1050,8 @@ namespace Truco.Controllers
                 Tipo = classificar.CompeticaoFase.Tipo,
                 Fase = competicao.CompeticoesFases.Where(a => a.Tipo == classificar.CompeticaoFase.Tipo).Count() + 1,
                 Modo = CompeticaoFaseModo.MataMata,
-                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
+                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>(),
+                CompeticoesFesesRepescagem = new HashSet<CompeticaoFase>()
             };
 
             if (classificar.CompeticaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
@@ -1030,6 +1081,7 @@ namespace Truco.Controllers
                         CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
                         {
                             CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
                             CompeticaoFaseId = fase.CompeticaoFaseId,
                             CompeticaoEquipeId = equipesPrincipal[i].CompeticaoFaseGrupoEquipe.CompeticaoEquipeId
                         }
@@ -1040,6 +1092,7 @@ namespace Truco.Controllers
                         CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
                         {
                             CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
                             CompeticaoFaseId = fase.CompeticaoFaseId,
                             CompeticaoEquipeId = equipesPrincipal[j].CompeticaoFaseGrupoEquipe.CompeticaoEquipeId
                         }
@@ -1049,11 +1102,76 @@ namespace Truco.Controllers
                 j--;
             }
 
-            db.CompeticoesFases.Add(fase);
 
+
+            if (fase.Tipo == CompeticaoFaseTipo.Principal)
+            {
+                MontarMataMataRepescagem(fase, competicao, classificar);
+            }
+
+            db.CompeticoesFases.Add(fase);
             await db.SaveChangesAsync();
 
             return RedirectToAction("FaseMataMata", new { id = fase.CompeticaoFaseId });
+        }
+
+        private void MontarMataMataRepescagem(CompeticaoFase fase, Competicao competicao, ClassificacaoViewModel classificar)
+        {
+            CompeticaoFase faseRepescagem = new CompeticaoFase()
+            {
+                CompeticaoFaseId = Guid.NewGuid(),
+                CompeticaoId = competicao.CompeticaoId,
+                Tipo = CompeticaoFaseTipo.Repescagem,
+                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem).Count() + 1,
+                Modo = CompeticaoFaseModo.MataMata,
+                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
+            };
+
+            var equipesRepescagem = classificar.Equipes
+                .Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Repescagem)
+                .OrderByDescending(a => a.Aproveitamento)
+                .ToList();
+
+            int equipes = equipesRepescagem.Count();
+            int jogos = equipes / 2;
+
+            int i = 0;
+            int j = equipes - 1;
+            for (int jogo = 0; jogo < jogos; jogo++)
+            {
+                faseRepescagem.CompeticoesFasesJogos.Add(new CompeticaoFaseJogo()
+                {
+                    CompeticaoFaseJogoId = Guid.NewGuid(),
+                    Jogo = jogo + 1,
+                    CompeticaoFaseJogoEquipeUm = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            CompeticaoEquipeId = equipesRepescagem[i].CompeticaoEquipeId
+                        }
+                    },
+                    CompeticaoFaseJogoEquipeDois = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            CompeticaoEquipeId = equipesRepescagem[j].CompeticaoEquipeId
+                        }
+                    },
+                });
+                i++;
+                j--;
+            }
+
+
+            fase.CompeticoesFesesRepescagem.Add(faseRepescagem);
         }
 
         public async Task<ActionResult> FaseMataMata(Guid? id)
@@ -1072,25 +1190,224 @@ namespace Truco.Controllers
                 return HttpNotFound();
             }
 
-            return View(competicaoFase);
+            FaseMataMataViewModel model = new FaseMataMataViewModel()
+            {
+                CompeticaoFase = competicaoFase,
+                CompeticaoFaseId = id.Value,
+                SubirDescerRepescagem = FaseMataMataSubirDescerRepescagem.Descer
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("FaseMataMata")]
-        public async Task<ActionResult> FaseMataMataConfirmacao(Guid id)
+        public async Task<ActionResult> FaseMataMataConfirmacao(FaseMataMataViewModel model)
         {
             var competicaoFaseEquipes = await db.CompeticoesFasesJogos
-                .Where(a => a.CompeticaoFaseId == id)
+                .Where(a => a.CompeticaoFaseId == model.CompeticaoFaseId)
                 .OrderBy(a => a.Jogo)
                 .ToListAsync();
 
-            //var ganhadores = competicaoFaseEquipes.Where(a => a.CompeticaoFaseEquipe.Vitorias > 0).ToList();
-            //var perdedores = competicaoFaseEquipes.Where(a => a.CompeticaoFaseEquipe.Vitorias == 0).ToList();
+            var ganhadoresUm = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe)
+                    .ToList();
+
+            var ganhadoresDois = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe)
+                    .ToList();
+
+            var perdedoresUm = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias == 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe)
+                    .ToList();
+
+            var perdedoresDois = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias == 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe)
+                    .ToList();
+
+            var perdedores = perdedoresUm.Union(perdedoresDois).OrderBy(a => a.Jogo).ToList();
+            var ganhadores = ganhadoresUm.Union(ganhadoresDois).OrderBy(a => a.Jogo).ToList();
+
+            var faseAtual = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFesesRepescagem)
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseId == model.CompeticaoFaseId);
+
+            if (model.SubirDescerRepescagem == FaseMataMataSubirDescerRepescagem.Subir)
+            {
+                var ultimaRepescagem = await db.CompeticoesFases
+                    .Where(a => a.CompeticaoId == faseAtual.CompeticaoId)
+                    .Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem)
+                    .OrderByDescending(a => a.Fase)
+                    .FirstOrDefaultAsync();
+
+                var competicaoFaseEquipesRepescagem = db.CompeticoesFasesJogos
+                    .Where(a => a.CompeticaoFaseId == ultimaRepescagem.CompeticaoFaseId)
+                    .OrderBy(a => a.Jogo)
+                    .ToList();
+
+                var ganhadoresRepescagemUm = competicaoFaseEquipesRepescagem
+                        .Where(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0)
+                        .Select(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe)
+                        .ToList();
+
+                var ganhadoresRepescagemDois = competicaoFaseEquipesRepescagem
+                        .Where(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0)
+                        .Select(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe)
+                        .ToList();
+
+                var ganhadoresRepescagem = ganhadoresRepescagemUm.Union(ganhadoresRepescagemDois).OrderBy(a => a.Jogo).ToList();
+
+                ganhadores = ganhadores.Union(ganhadoresRepescagem).ToList();
+            }
+
+            int equipes = ganhadores.Count();
+            int jogos = equipes / 2;
+
+            var competicao = await db.Competicoes.Include(a => a.CompeticoesFases).FirstOrDefaultAsync(a => a.CompeticaoId == faseAtual.CompeticaoId);
+
+            CompeticaoFase fase = new CompeticaoFase()
+            {
+                CompeticaoFaseId = Guid.NewGuid(),
+                CompeticaoId = competicao.CompeticaoId,
+                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == faseAtual.Tipo).Count() + 1,
+                Modo = CompeticaoFaseModo.MataMata,
+                Tipo = faseAtual.Tipo,
+                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>(),
+                CompeticoesFesesRepescagem = new HashSet<CompeticaoFase>()
+            };
+
+            if (faseAtual.Tipo == CompeticaoFaseTipo.Repescagem)
+            {
+                fase.CompeticaoFasePrincipalId = faseAtual.CompeticaoFasePrincipalId;
+            }
+
+            int i = 0;
+            int j = equipes - 1;
+            for (int jogo = 0; jogo < jogos; jogo++)
+            {
+                fase.CompeticoesFasesJogos.Add(new CompeticaoFaseJogo()
+                {
+                    CompeticaoFaseJogoId = Guid.NewGuid(),
+                    Jogo = jogo + 1,
+                    CompeticaoFaseJogoEquipeUm = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            CompeticaoEquipeId = ganhadores[i].CompeticaoEquipeId
+                        }
+                    },
+                    CompeticaoFaseJogoEquipeDois = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            CompeticaoEquipeId = ganhadores[j].CompeticaoEquipeId
+                        }
+                    },
+                });
+                i++;
+                j--;
+            }
+
+            if (fase.Tipo == CompeticaoFaseTipo.Principal && model.SubirDescerRepescagem == FaseMataMataSubirDescerRepescagem.Descer)
+            {
+                MontarMataMataRepescagem2(fase, faseAtual, competicao, perdedores);
+            }
+
+            db.CompeticoesFases.Add(fase);
+
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("FaseMataMata", new { id = fase.CompeticaoFaseId });
+        }
+
+        private void MontarMataMataRepescagem2(CompeticaoFase fasePrincipal, CompeticaoFase faseAtual, Competicao competicao, List<CompeticaoFaseEquipe> perdedores)
+        {
+            var ultimaRepescagem = faseAtual.CompeticoesFesesRepescagem.OrderByDescending(a => a.Fase).First();
 
 
+            var competicaoFaseEquipes = db.CompeticoesFasesJogos
+                .Where(a => a.CompeticaoFaseId == ultimaRepescagem.CompeticaoFaseId)
+                .OrderBy(a => a.Jogo)
+                .ToList();
 
-            return View(competicaoFaseEquipes);
+            var ganhadoresUm = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe)
+                    .ToList();
+
+            var ganhadoresDois = competicaoFaseEquipes
+                    .Where(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0)
+                    .Select(a => a.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe)
+                    .ToList();
+
+            perdedores = perdedores.OrderBy(a => a.Jogo).ToList();
+
+            var ganhadoresRepescagem = ganhadoresUm.Union(ganhadoresDois).OrderBy(a => a.Jogo).ToList();
+
+            var ganhadores = perdedores.Union(ganhadoresRepescagem).ToList();
+
+            int equipes = ganhadores.Count();
+            int jogos = equipes / 2;
+
+            CompeticaoFase fase = new CompeticaoFase()
+            {
+                CompeticaoFaseId = Guid.NewGuid(),
+                CompeticaoId = competicao.CompeticaoId,
+                Fase = competicao.CompeticoesFases.Where(a => a.Tipo == CompeticaoFaseTipo.Repescagem).Count() + 1,
+                Modo = CompeticaoFaseModo.MataMata,
+                Tipo = CompeticaoFaseTipo.Repescagem,
+                CompeticoesFasesJogos = new HashSet<CompeticaoFaseJogo>()
+            };
+
+            int i = 0;
+            int j = equipes - 1;
+            for (int jogo = 0; jogo < jogos; jogo++)
+            {
+                fase.CompeticoesFasesJogos.Add(new CompeticaoFaseJogo()
+                {
+                    CompeticaoFaseJogoId = Guid.NewGuid(),
+                    Jogo = jogo + 1,
+                    CompeticaoFaseJogoEquipeUm = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            CompeticaoEquipeId = ganhadores[i].CompeticaoEquipeId
+                        }
+                    },
+                    CompeticaoFaseJogoEquipeDois = new CompeticaoFaseJogoEquipe()
+                    {
+                        CompeticaoFaseJogoEquipeId = Guid.NewGuid(),
+                        CompeticaoFaseEquipe = new CompeticaoFaseEquipe()
+                        {
+                            CompeticaoFaseEquipeId = Guid.NewGuid(),
+                            Jogo = jogo,
+                            CompeticaoFaseId = fase.CompeticaoFaseId,
+                            CompeticaoEquipeId = ganhadores[j].CompeticaoEquipeId
+                        }
+                    },
+                });
+                i++;
+                j--;
+            }
+
+            faseAtual.CompeticoesFesesRepescagem.Add(fase);
         }
 
         private async Task<ActionResult> ClassificarGrupos(ClassificacaoViewModel model)
