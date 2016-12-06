@@ -20,13 +20,13 @@
                         </td>
 
                         <td align="right" @(jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.Vitorias > 0 ? "style=color:blue" : "")>
-                            @jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.CompeticaoEquipe.Nome
+                            @jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.CompeticaoEquipe.Nome (@jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.CompeticaoEquipe.Cidade.Nome)
                         </td>
                         <td align="center">
                             VS.
                         </td>
                         <td @(jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.Vitorias > 0 ? "style=color:blue" : "")>
-                            @jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Nome
+                            @jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Nome (@jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Cidade.Nome)
                         </td>
                         <td>@Html.ActionLink("Lançar", "JogoMataMata", new { id = jogo.CompeticaoFaseJogoId })</td>
                     </tr>

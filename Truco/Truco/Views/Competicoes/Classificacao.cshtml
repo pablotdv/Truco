@@ -53,7 +53,7 @@
                                     @if (equipe.CompeticaoFaseGrupoEquipe != null)
                                     {
                                         <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoFaseGrupo.Nome</td>
-                                        <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome</td>
+                                        <td>@equipe.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome (@equipe.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Cidade.Nome)</td>
                                         <td>@equipe.CompeticaoFaseGrupoEquipe.Vitorias</td>
                                         <td>@equipe.CompeticaoFaseGrupoEquipe.Sets</td>
                                         <td>@equipe.CompeticaoFaseGrupoEquipe.Tentos</td>
@@ -62,7 +62,7 @@
                                     else
                                     {
                                         <td>@($"{equipe.CompeticaoFaseEquipe.CompeticaoFase.Fase}ª Fase {equipe.CompeticaoFaseEquipe.CompeticaoFase.Tipo}")</td>
-                                        <td>@equipe.CompeticaoFaseEquipe.CompeticaoEquipe.Nome</td>
+                                        <td>@equipe.CompeticaoFaseEquipe.CompeticaoEquipe.Nome (@equipe.CompeticaoFaseEquipe.CompeticaoEquipe.Cidade.Nome)</td>
                                         <td>@equipe.CompeticaoFaseEquipe.Vitorias</td>
                                         <td>@equipe.CompeticaoFaseEquipe.Sets</td>
                                         <td>@equipe.CompeticaoFaseEquipe.Tentos</td>

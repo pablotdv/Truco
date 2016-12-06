@@ -1023,7 +1023,6 @@ namespace Truco.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Classificacao(ClassificacaoViewModel model)
         {
-
             if (model.Modo == CompeticaoFaseModo.Chaveamento)
             {
                 return await ClassificarGrupos(model);
@@ -1032,8 +1031,6 @@ namespace Truco.Controllers
             {
                 return await ClassificarMataMata(model);
             }
-
-            //return RedirectToAction("Indice");
         }
 
         private async Task<ActionResult> ClassificarMataMata(ClassificacaoViewModel model)
@@ -1456,22 +1453,25 @@ namespace Truco.Controllers
         {
             var classificar = await Classificar(model.CompeticaoFaseId, model.Principal);
 
-            IList<CompeticaoEquipe> equipesPrincipal = new List<CompeticaoEquipe>();
-            IList<CompeticaoEquipe> equipesRepescagem = new List<CompeticaoEquipe>();
 
-            var equipesClassificacoes = classificar.Equipes.ToList();
+            List<CompeticaoEquipe> equipesPrincipal = new List<CompeticaoEquipe>();
+            List<CompeticaoEquipe> equipesRepescagem = new List<CompeticaoEquipe>();
 
-            foreach (var e in equipesClassificacoes)
-            {
-                if (e.Classificacao == ViewModels.Enums.Classificacao.Principal)
-                {
-                    equipesPrincipal.Add(e.CompeticaoEquipe);
-                }
-                else if (e.Classificacao == ViewModels.Enums.Classificacao.Repescagem)
-                {
-                    equipesRepescagem.Add(e.CompeticaoEquipe);
-                }
-            }
+            var equipesClassificacoesPrincipal = classificar.Equipes
+                .Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Principal)
+                .OrderByDescending(a => a.Aproveitamento)
+                .Select(a => a.CompeticaoEquipe)
+                .ToList();
+
+            equipesPrincipal.AddRange(equipesClassificacoesPrincipal);
+
+            var equipesClassificacoesRepescagem = classificar.Equipes
+                .Where(a => a.Classificacao == ViewModels.Enums.Classificacao.Repescagem)
+                .OrderByDescending(a => a.Aproveitamento)
+                .Select(a => a.CompeticaoEquipe)
+                .ToList();
+
+            equipesRepescagem.AddRange(equipesClassificacoesPrincipal);
 
             var competicao = classificar.CompeticaoFase.Competicao;
 
@@ -1496,8 +1496,8 @@ namespace Truco.Controllers
                 CompeticoesFasesGrupos = new HashSet<CompeticaoFaseGrupo>()
             };
 
-            var gruposPrincipal = SortearPrincipal(equipesPrincipal.OrderByDescending(a => a.Aproveitamento).ToList());
-            var gruposRepescagem = SortearRepescagem(equipesRepescagem.OrderByDescending(a => a.Aproveitamento).ToList());
+            var gruposPrincipal = SortearPrincipal(equipesPrincipal.ToList());
+            var gruposRepescagem = SortearRepescagem(equipesRepescagem.ToList());
 
             gruposPrincipal = ReorganizaChaves(gruposPrincipal, 4);
             gruposRepescagem = ReorganizaChaves(gruposRepescagem, 4);
@@ -1749,6 +1749,24 @@ namespace Truco.Controllers
             ViewBag.Regiaos = new SelectList(await db.Regioes.ToListAsync(), "RegiaoId", "Numero");
             ViewBag.Cidades = new SelectList(await db.Cidades.ToListAsync(), "CidadeId", "Nome");
 
+        }
+
+        public async Task<ActionResult> FaseJogos(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var competicaoFase = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFasesGrupos.Select(b => b.CompeticoesFasesGruposRodadas.Select(c => c.CompeticoesFasesGruposRodadasJogos)))
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseId == id);
+
+            if (competicaoFase == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(competicaoFase);
         }
 
 

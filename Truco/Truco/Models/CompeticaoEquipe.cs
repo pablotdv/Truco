@@ -22,8 +22,6 @@ namespace Truco.Models
 
         public virtual Competicao Competicao { get; set; }
         
-        public decimal? Aproveitamento { get; set; }        
-
         public ICollection<CompeticaoFaseGrupoEquipe> CompeticoesFasesGruposEquipes { get; set; }
     }
 }

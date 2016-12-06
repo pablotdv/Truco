@@ -219,7 +219,9 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -369,6 +371,7 @@
     <None Include="CodeTemplates\Scaffolders\All\All.ps1" />
     <Content Include="CodeTemplates\Scaffolders\All\AllTemplate.cs.t4" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
+    <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\trucotche - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\trucotche - Web Deploy.pubxml" />
     <None Include="Resources\Bairros.csv" />
@@ -563,6 +566,7 @@
     <Content Include="Views\CompeticoesFasesGrupos\Detalhes.cshtml" />
     <Content Include="Views\CompeticoesFasesGrupos\Excluir.cshtml" />
     <Content Include="Views\CompeticoesFasesGrupos\_Scripts.cshtml" />
+    <Content Include="Views\Competicoes\FaseJogos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

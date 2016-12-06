@@ -7,7 +7,7 @@
 
 <hgroup>
     <h1>@roda.CompeticaoFaseGrupo.CompeticaoFase.Competicao.Nome</h1>
-    <h3>@($"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo}").</h3>
+    <h3><a href="@Url.Action("Fase", new { id = competicaoFase.CompeticaoFaseId })"> @($"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo}").</a></h3>
     <h3>@roda.CompeticaoFaseGrupo.Nome - @($"{roda.Rodada}ª Rodada")</h3>
 </hgroup>
 <div class="row">
@@ -29,13 +29,13 @@
                                     </td>
                                     <td>@jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Numero</td>
                                     <td align="right">
-                                        @jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome
+                                        @jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome (@jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Cidade.Nome)
                                     </td>
                                     <td align="center">
                                         VS.
                                     </td>
                                     <td>
-                                        @jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome
+                                        @jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome (@jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Cidade.Nome)
                                     </td>
                                     <td>@jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Numero</td>
                                     <td>@Html.ActionLink("Lançar", "Jogo", new { id = jogo.CompeticaoFaseGrupoRodadaJogoId })</td>

@@ -9,6 +9,11 @@
 </hgroup>
 <div class="row">
     <div class="col-md-12">
+        <a href="@Url.Action("FaseJogos", new { id = Model.CompeticaoFaseId})">Todos os Jogos</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         @foreach (var grupo in Model.CompeticoesFasesGrupos.OrderBy(a => a.Grupo))
         {
             <div class="col-md-6">
@@ -56,7 +61,7 @@
                                         {
                                             <td>@equipe.Lado</td>
                                         }
-                                        <td>@equipe.CompeticaoEquipe.Nome</td>
+                                        <td>@equipe.CompeticaoEquipe.Nome (@equipe.CompeticaoEquipe.Cidade.Nome)</td>
                                         <td>@equipe.Jogos</td>
                                         <td>@equipe.Vitorias</td>
                                         <td>@equipe.Sets</td>
