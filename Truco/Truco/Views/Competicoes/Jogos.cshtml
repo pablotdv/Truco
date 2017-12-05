@@ -38,7 +38,16 @@
                                         @jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome (@jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Cidade.Nome)
                                     </td>
                                     <td>@jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.Numero</td>
-                                    <td>@Html.ActionLink("Lançar", "Jogo", new { id = jogo.CompeticaoFaseGrupoRodadaJogoId })</td>
+                                    <td>
+                                        @if (jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets.Any())
+                                        {
+                                    @Html.ActionLink("Editar", "Jogo", new { id = jogo.CompeticaoFaseGrupoRodadaJogoId })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Lançar", "Jogo", new { id = jogo.CompeticaoFaseGrupoRodadaJogoId })
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>

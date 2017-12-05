@@ -15,6 +15,9 @@ using Truco.Models;
 using Truco.ViewModels.Enums;
 using Truco.Models.Enums;
 using Truco.Infraestrutura;
+using Truco.Relatorios;
+using Microsoft.Reporting.WebForms;
+using System.IO;
 
 namespace Truco.Controllers
 {
@@ -686,7 +689,7 @@ namespace Truco.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var competicaoFaseGruposRodadasJogos = await db.CompeticoesFasesGruposRodadasJogos
-
+                .Include(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticoesFasesGruposRodadasJogosEquipesSets)
                 .Where(a => a.CompeticaoFaseGrupoRodada.CompeticaoFaseGrupoId == id)
                 .OrderBy(a => a.CompeticaoFaseGrupoRodada.Rodada)
                 .ThenBy(a => a.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.Numero)
@@ -1766,7 +1769,84 @@ namespace Truco.Controllers
                 return HttpNotFound();
             }
 
+
+
             return View(competicaoFase);
+        }
+
+        public async Task<ActionResult> SumulasJogos(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var competicaoFase = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFasesGrupos.Select(b => b.CompeticoesFasesGruposRodadas.Select(c => c.CompeticoesFasesGruposRodadasJogos)))
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseId == id);
+
+            if (competicaoFase == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<SumulaModel> sumulas = new List<SumulaModel>();
+
+            foreach (var chave in competicaoFase.CompeticoesFasesGrupos.OrderBy(a => a.Grupo))
+            {
+                foreach (var jogo in chave.CompeticoesFasesGruposRodadas.OrderBy(a => a.Rodada).SelectMany(a => a.CompeticoesFasesGruposRodadasJogos))
+                {
+                    sumulas.Add(new SumulaModel()
+                    {
+                        Torneio = competicaoFase.Competicao.Nome,
+                        Chave = chave.Nome,
+                        Fase = $"{competicaoFase.Fase}ª Fase {competicaoFase.Tipo}",
+                        Rodada = $"{jogo.CompeticaoFaseGrupoRodada.Rodada}ª Rodada",
+                        TrioA = $"{jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome} ({jogo.CompeticaoFaseGrupoRodadaJogoEquipeUm.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Cidade.Nome})",
+                        TrioB = $"{jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Nome} ({jogo.CompeticaoFaseGrupoRodadaJogoEquipeDois.CompeticaoFaseGrupoEquipe.CompeticaoEquipe.Cidade.Nome})"
+                    });
+                }
+            };
+
+            string reportPath = Server.MapPath("~/Relatorios/SumulasPrincipalReport.rdlc");
+            if (competicaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
+                reportPath = Server.MapPath("~/Relatorios/SumulasRepescagemReport.rdlc");
+
+            LocalReport relat = new LocalReport
+            {
+                ReportPath = reportPath,
+                EnableExternalImages = true,
+            };
+
+            relat.DataSources.Add(new ReportDataSource
+            {
+                Name = "SumulaDataSet",
+                Value = sumulas.OrderBy(a => a.Rodada).ThenBy(a => a.Chave)
+            });
+
+            string reportType = "PDF";
+
+            //configurações da página ex: margin, top, left ...
+            string deviceInfo =
+            "<DeviceInfo>" +
+            "<OutputFormat>PDF</OutputFormat>" +
+            "<PageWidth>21cm</PageWidth>" +
+            "<PageHeight>29.7cm</PageHeight>" +
+            "<MarginTop>0.5cm</MarginTop>" +
+            "<MarginLeft>0.5cm</MarginLeft>" +
+            "<MarginRight>0.5cm</MarginRight>" +
+            "<MarginBottom>0.5cm</MarginBottom>" +
+            "</DeviceInfo>";
+
+            byte[] bytes;
+            //Renderizando o relatório o bytes
+            bytes = relat.Render(reportType, deviceInfo,
+                out string mimeType,
+                out string encoding,
+                out string fileNameExtension,
+                out string[] streams,
+                out Warning[] warnings);
+
+            return File(bytes, mimeType);
         }
 
 

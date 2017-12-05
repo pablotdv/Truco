@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SumulasDataSet" targetNamespace="http://tempuri.org/SumulasDataSet.xsd" xmlns:mstns="http://tempuri.org/SumulasDataSet.xsd" xmlns="http://tempuri.org/SumulasDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SumulasDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="SumulasDataSet" msprop:Generator_UserDSName="SumulasDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="SumulaDataTable" msprop:Generator_TableClassName="SumulaDataTableDataTable" msprop:Generator_TableVarName="tableSumulaDataTable" msprop:Generator_TablePropName="SumulaDataTable" msprop:Generator_RowDeletingName="SumulaDataTableRowDeleting" msprop:Generator_RowChangingName="SumulaDataTableRowChanging" msprop:Generator_RowEvHandlerName="SumulaDataTableRowChangeEventHandler" msprop:Generator_RowDeletedName="SumulaDataTableRowDeleted" msprop:Generator_UserTableName="SumulaDataTable" msprop:Generator_RowChangedName="SumulaDataTableRowChanged" msprop:Generator_RowEvArgName="SumulaDataTableRowChangeEvent" msprop:Generator_RowClassName="SumulaDataTableRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Torneio" msprop:Generator_ColumnVarNameInTable="columnTorneio" msprop:Generator_ColumnPropNameInRow="Torneio" msprop:Generator_ColumnPropNameInTable="TorneioColumn" msprop:Generator_UserColumnName="Torneio" type="xs:string" minOccurs="0" />
+              <xs:element name="Chave" msprop:Generator_ColumnVarNameInTable="columnChave" msprop:Generator_ColumnPropNameInRow="Chave" msprop:Generator_ColumnPropNameInTable="ChaveColumn" msprop:Generator_UserColumnName="Chave" type="xs:string" minOccurs="0" />
+              <xs:element name="Rodada" msprop:Generator_ColumnVarNameInTable="columnRodada" msprop:Generator_ColumnPropNameInRow="Rodada" msprop:Generator_ColumnPropNameInTable="RodadaColumn" msprop:Generator_UserColumnName="Rodada" type="xs:string" minOccurs="0" />
+              <xs:element name="TrioA" msprop:Generator_ColumnVarNameInTable="columnTrioA" msprop:Generator_ColumnPropNameInRow="TrioA" msprop:Generator_ColumnPropNameInTable="TrioAColumn" msprop:Generator_UserColumnName="TrioA" type="xs:string" minOccurs="0" />
+              <xs:element name="TrioB" msprop:Generator_ColumnVarNameInTable="columnTrioB" msprop:Generator_ColumnPropNameInRow="TrioB" msprop:Generator_ColumnPropNameInTable="TrioBColumn" msprop:Generator_UserColumnName="TrioB" type="xs:string" minOccurs="0" />
+              <xs:element name="Fase" msprop:Generator_ColumnVarNameInTable="columnFase" msprop:Generator_ColumnPropNameInRow="Fase" msprop:Generator_ColumnPropNameInTable="FaseColumn" msprop:Generator_UserColumnName="Fase" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

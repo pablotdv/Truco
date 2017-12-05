@@ -105,6 +105,18 @@
     <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.WebForms.10.0.40219.1\lib\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -361,6 +373,17 @@
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\trucotche - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\trucotche - Web Deploy.pubxml" />
+    <Content Include="Relatorios\SumulasDataSet.xsc">
+      <DependentUpon>SumulasDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="Relatorios\SumulasDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SumulasDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Relatorios\SumulasDataSet.xss">
+      <DependentUpon>SumulasDataSet.xsd</DependentUpon>
+    </Content>
     <None Include="Resources\Bairros.csv" />
     <None Include="Resources\Cidades.csv" />
     <None Include="Resources\Estados.csv" />
@@ -675,6 +698,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Relatorios\SumulaModel.cs" />
+    <Compile Include="Relatorios\SumulasDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SumulasDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AtletasViewModel.cs" />
     <Compile Include="ViewModels\BairrosViewModel.cs" />
@@ -728,6 +757,8 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Relatorios\SumulasRepescagemReport.rdlc" />
+    <EmbeddedResource Include="Relatorios\SumulasPrincipalReport.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
