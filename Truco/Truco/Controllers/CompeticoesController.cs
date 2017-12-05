@@ -1806,7 +1806,43 @@ namespace Truco.Controllers
                     });
                 }
             };
+            return Sumula(competicaoFase, sumulas);
+        }
 
+        public async Task<ActionResult> SumulasJogosMataMata(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var competicaoFase = await db.CompeticoesFases
+                .Include(a => a.CompeticoesFasesJogos)
+                .FirstOrDefaultAsync(a => a.CompeticaoFaseId == id);
+
+            if (competicaoFase == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<SumulaModel> sumulas = new List<SumulaModel>();
+
+            foreach (var jogo in competicaoFase.CompeticoesFasesJogos.OrderBy(a => a.Jogo))
+            {
+                
+                    sumulas.Add(new SumulaModel()
+                    {
+                        Torneio = competicaoFase.Competicao.Nome,                        
+                        Fase = $"{jogo.CompeticaoFase.Fase}ª Fase {jogo.CompeticaoFase.Tipo} - {jogo.CompeticaoFase.Modo}",                        
+                        TrioA = $"{jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.CompeticaoEquipe.Nome} ({jogo.CompeticaoFaseJogoEquipeUm.CompeticaoFaseEquipe.CompeticaoEquipe.Cidade.Nome})",
+                        TrioB = $"{jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Nome} ({jogo.CompeticaoFaseJogoEquipeDois.CompeticaoFaseEquipe.CompeticaoEquipe.Cidade.Nome})"
+                    });
+                
+            };
+            return Sumula(competicaoFase, sumulas);
+        }
+
+        private ActionResult Sumula(CompeticaoFase competicaoFase, List<SumulaModel> sumulas)
+        {
             string reportPath = Server.MapPath("~/Relatorios/SumulasPrincipalReport.rdlc");
             if (competicaoFase.Tipo == CompeticaoFaseTipo.Repescagem)
                 reportPath = Server.MapPath("~/Relatorios/SumulasRepescagemReport.rdlc");
@@ -1848,7 +1884,6 @@ namespace Truco.Controllers
 
             return File(bytes, mimeType);
         }
-
 
         protected override void Dispose(bool disposing)
         {

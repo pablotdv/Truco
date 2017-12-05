@@ -8,6 +8,7 @@
     <h3>@($"{Model.CompeticaoFase.Fase}ª Fase {Model.CompeticaoFase.Tipo} - {Model.CompeticaoFase.Modo}").</h3>
     <h3>@ViewBag.Message</h3>
 </hgroup>
+<a href="@Url.Action("SumulasJogosMataMata", new { id = Model.CompeticaoFaseId})" target="_blank">Sumulas</a>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-bordered table-striped">
