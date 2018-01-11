@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Truco.Backend", "Truco.Backend\Truco.Backend.csproj", "{C5A6F877-434D-4ED9-A2EF-4A3F77D66A05}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Truco.Backend.Tests", "Truco.Backend.Tests\Truco.Backend.Tests.csproj", "{8EF2C9CE-6B28-447A-9992-CC168F751D2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5A6F877-434D-4ED9-A2EF-4A3F77D66A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5A6F877-434D-4ED9-A2EF-4A3F77D66A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5A6F877-434D-4ED9-A2EF-4A3F77D66A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5A6F877-434D-4ED9-A2EF-4A3F77D66A05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF2C9CE-6B28-447A-9992-CC168F751D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF2C9CE-6B28-447A-9992-CC168F751D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF2C9CE-6B28-447A-9992-CC168F751D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF2C9CE-6B28-447A-9992-CC168F751D2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0519F7B-BABC-4ABA-809B-3338DDA9AD94}
+	EndGlobalSection
+EndGlobal
