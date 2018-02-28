@@ -9,6 +9,12 @@ namespace Truco.Backend.Data
 {
     public class TrucoDbContext : DbContext
     {
+        public TrucoDbContext(DbContextOptions<TrucoDbContext> options)
+            : base(options)
+        {
+
+        }
+
         public DbSet<Pais> Paises { get; set; }
     }
 }

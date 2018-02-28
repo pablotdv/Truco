@@ -81,7 +81,7 @@ namespace Truco.Backend.Tests.Models
                 Sigla = "BR",
             };
             
-            Assert.NotEqual(Guid.Empty, pais.PaisId);
+            Assert.Equal(Guid.Empty, pais.PaisId);
         }
 
         private IList<ValidationResult> ValidateModel(object model)
