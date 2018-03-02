@@ -1,6 +1,19 @@
 <h2>Lista de países</h2>
 <ul class="heroes">
-  <li *ngFor="let pais of paises">
+  <li *ngFor="let pais of paises" 
+    (click)="onSelect(pais)"
+    [class.selected]="pais === selectedPais">
     <span class="badge">{{pais.id}}</span> {{pais.name}}
   </li>
 </ul>
+
+<div *ngIf="selectedPais">
+  <h2>{{ selectedPais.name | uppercase }} Details</h2>
+  <div>
+    <span>id: </span>{{selectedPais.id}}</div>
+  <div>
+    <label>name:
+      <input [(ngModel)]="selectedPais.name" placeholder="name">
+    </label>
+  </div>
+</div>

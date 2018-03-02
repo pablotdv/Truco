@@ -11,9 +11,15 @@ export class PaisesComponent implements OnInit {
 
   paises = PAISES;
 
+  selectedPais: Pais;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSelect(pais: Pais): void {
+    this.selectedPais = pais;
   }
 
 }
