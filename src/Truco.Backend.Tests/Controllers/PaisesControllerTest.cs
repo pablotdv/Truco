@@ -354,7 +354,8 @@ namespace Truco.Backend.Tests.Controllers
             return pais;
         }
 
-        private static DbContextOptions<TrucoDbContext> Options => new DbContextOptionsBuilder<TrucoDbContext>()
+        private static DbContextOptions<TrucoDbContext> Options => 
+            new DbContextOptionsBuilder<TrucoDbContext>()
                         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                         .Options;
     }
