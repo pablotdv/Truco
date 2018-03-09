@@ -8,6 +8,8 @@ import { PaisDetailComponent } from './pais-detail/pais-detail.component';
 import { PaisService } from './pais.service';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageService } from './message.service';
+import { AppRoutingModule } from './/app-routing.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({
@@ -15,11 +17,13 @@ import { MessageService } from './message.service';
     AppComponent,
     PaisesComponent,
     PaisDetailComponent,
-    MessagesComponent
+    MessagesComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule
   ],
   providers: [PaisService, MessageService],
   bootstrap: [AppComponent]
