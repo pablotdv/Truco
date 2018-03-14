@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Truco.Backend.Models;
+using Truco.Backend.Tests.Infraestrutura;
 using Xunit;
 
 namespace Truco.Backend.Tests.Models
@@ -20,7 +21,7 @@ namespace Truco.Backend.Tests.Models
                 Sigla = "BR",
             };
 
-            var result = ValidateModel(pais);
+            var result = pais.ValidateModel();
 
             Assert.True(result.Count == 1);
             Assert.Equal("O campo País é obrigatório", result.First().ErrorMessage);
@@ -36,7 +37,7 @@ namespace Truco.Backend.Tests.Models
                 Sigla = "BR",
             };
 
-            var result = ValidateModel(pais);
+            var result = pais.ValidateModel();
             Assert.True(result.Count == 1);
             Assert.Equal("O campo País deve ser uma string com um comprimento máximo de 200", result.First().ErrorMessage);
         }
@@ -51,7 +52,7 @@ namespace Truco.Backend.Tests.Models
                 Sigla = "",
             };
 
-            var result = ValidateModel(pais);
+            var result = pais.ValidateModel();
 
             Assert.True(result.Count == 1);
             Assert.Equal("O campo Sigla é obrigatório", result.First().ErrorMessage);
@@ -67,7 +68,7 @@ namespace Truco.Backend.Tests.Models
                 Sigla = new string('*', 4),
             };
 
-            var result = ValidateModel(pais);
+            var result = pais.ValidateModel();
             Assert.True(result.Count == 1);
             Assert.Equal("O campo Sigla deve ser uma string com um comprimento máximo de 3", result.First().ErrorMessage);
         }
@@ -82,14 +83,6 @@ namespace Truco.Backend.Tests.Models
             };
             
             Assert.Equal(Guid.Empty, pais.PaisId);
-        }
-
-        private IList<ValidationResult> ValidateModel(object model)
-        {
-            var validationResults = new List<ValidationResult>();
-            var ctx = new ValidationContext(model, null, null);
-            Validator.TryValidateObject(model, ctx, validationResults, true);
-            return validationResults;
-        }
+        }        
     }
 }

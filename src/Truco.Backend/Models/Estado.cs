@@ -5,27 +5,31 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Truco.Backend.Models;
 using Truco.Backend.Models.Resources;
 
 namespace Truco.Backend.Models
 {
-    [Table("Paises")]
+    [Table("Estados")]
     [DisplayColumn("Nome")]
-    public class Pais : IEntity
+    public class Estado : IEntity
     {
         [Key]
+        public Guid EstadoId { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(PadraoResource), ErrorMessageResourceName = nameof(PadraoResource.Required))]
         public Guid PaisId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(PadraoResource), ErrorMessageResourceName = nameof(PadraoResource.Required))]
         [StringLength(200, ErrorMessageResourceType = typeof(PadraoResource), ErrorMessageResourceName = nameof(PadraoResource.StringLength))]
-        [Display(Name = "País")]
-        public string Nome { get; set; }
+        [Display(Name = "Estado")]
+        public String Nome { get; set; }
 
+        [StringLength(2, ErrorMessageResourceType = typeof(PadraoResource), ErrorMessageResourceName = nameof(PadraoResource.StringLength))]
         [Required(ErrorMessageResourceType = typeof(PadraoResource), ErrorMessageResourceName = nameof(PadraoResource.Required))]
-        [StringLength(3, ErrorMessageResourceType = typeof(PadraoResource), ErrorMessageResourceName = nameof(PadraoResource.StringLength))]
-        [Display(Name = "Sigla")]
-        public string Sigla { get; set; }
+        public String Sigla { get; set; }
 
-        public virtual ICollection<Estado> Estados { get; set; }
+        [ForeignKey(nameof(PaisId))]        
+        public virtual Pais Pais { get; set; }
     }
 }
