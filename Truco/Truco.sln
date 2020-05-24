@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Truco", "Truco\Truco.csproj", "{975A52E7-5A86-45C8-9CAD-BF20AE52892B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Truco.RoundRobin.Test", "Truco.RoundRobin.Test\Truco.RoundRobin.Test.csproj", "{490233D9-E5F1-4D97-BC45-D047E02A53E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4FB9A3D0-EBB3-4AC6-AD57-734420B81620}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +29,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1E95B564-4E3F-4343-A8C7-112788D344DA}
 	EndGlobalSection
 EndGlobal
